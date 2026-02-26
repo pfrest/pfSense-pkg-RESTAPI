@@ -20,6 +20,7 @@ run pfSense. It's recommended to follow Netgate's [minimum hardware requirements
 - pfSense Plus 25.07
 - pfSense Plus 25.07.1
 - pfSense Plus 25.11
+- pfSense Plus 25.11.1
 
 !!! Warning
     Installation of the package on unsupported versions of pfSense may result in unexpected behavior and/or system instability.
