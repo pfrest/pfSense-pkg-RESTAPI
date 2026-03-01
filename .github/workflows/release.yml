@@ -62,7 +62,7 @@ jobs:
           /usr/local/bin/VBoxManage controlvm ${{ matrix.FREEBSD_VERSION }} poweroff || true
           /usr/local/bin/VBoxManage snapshot ${{matrix.FREEBSD_VERSION}} restore initial
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
           path: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
@@ -114,13 +114,13 @@ jobs:
           /usr/local/bin/VBoxManage snapshot pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-RELEASE restore initial
 
       - name: Upload OpenAPI schema
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: openapi.json
           path: openapi.json
 
       - name: Upload GraphQL schema
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: schema.graphql
           path: schema.graphql
