@@ -63,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: pfSense-pkg-API-${{ env.build_version }}_${{ matrix.freebsd_id }}.pkg
           path: pfSense-pkg-API-${{ env.build_version }}_${{ matrix.freebsd_id }}.pkg
