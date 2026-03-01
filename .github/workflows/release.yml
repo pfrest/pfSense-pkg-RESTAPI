@@ -78,7 +78,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-pkg-RESTAPI.pkg
           path: pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-pkg-RESTAPI.pkg
@@ -153,13 +153,13 @@ jobs:
           mv ./site/* ./www/
 
       - name: Download OpenAPI schema
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: openapi.json
           path: openapi.json
 
       - name: Download GraphQL schema
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: schema.graphql
           path: schema.graphql
