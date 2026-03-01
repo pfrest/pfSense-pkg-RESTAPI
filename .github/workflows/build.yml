@@ -43,7 +43,7 @@ jobs:
           /usr/local/bin/VBoxManage controlvm ${{ matrix.freebsd_version }} poweroff || true
           /usr/local/bin/VBoxManage snapshot ${{matrix.freebsd_version}} restore initial
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: pfSense-pkg-API-${{ env.build_version }}_${{ matrix.freebsd_id }}.pkg
           path: pfSense-pkg-API-${{ env.build_version }}_${{ matrix.freebsd_id }}.pkg
