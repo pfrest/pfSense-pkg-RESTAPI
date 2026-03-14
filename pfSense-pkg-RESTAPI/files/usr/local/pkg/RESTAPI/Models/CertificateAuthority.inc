@@ -115,7 +115,7 @@ class CertificateAuthority extends Model {
      */
     public function _delete(): void {
         # Do not allow this CertificateAuthority to be deleted if it is in use
-        if (cert_in_use($this->refid->value)) {
+        if (ca_in_use($this->refid->value)) {
             throw new ForbiddenError(
                 message: 'Certificate authority cannot be deleted because it is in use.',
                 response_id: 'CERTIFICATE_AUTHORITY_CANNOT_BE_DELETED_WHILE_IN_USE',
