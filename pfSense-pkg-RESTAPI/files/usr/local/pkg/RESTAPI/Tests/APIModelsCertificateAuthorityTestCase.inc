@@ -131,18 +131,13 @@ R02Pul8ulWQ8Kl3Q3pou8As7W1mMzA2DxQ==
     /**
      * Checks that we cannot delete a CA that is in use.
      */
-    public function test_cannot_delete_ca_in_use(): void
-    {
+    public function test_cannot_delete_ca_in_use(): void {
         # Create a CA to test with
-        $ca = new CertificateAuthority(
-            descr: 'test',
-            crt: self::EXAMPLE_CRT,
-            prv: self::EXAMPLE_PRV,
-        );
+        $ca = new CertificateAuthority(descr: 'test', crt: self::EXAMPLE_CRT, prv: self::EXAMPLE_PRV);
         $ca->create();
 
         # Mock an OpenVPN server using this CA to be in use
-        Model::set_config(path: "openvpn/openvpn-server/0/caref", value: $ca->refid->value);
+        Model::set_config(path: 'openvpn/openvpn-server/0/caref', value: $ca->refid->value);
 
         # Ensure an error is thrown if we try to delete the CA while it's in use
         $this->assert_throws_response(
