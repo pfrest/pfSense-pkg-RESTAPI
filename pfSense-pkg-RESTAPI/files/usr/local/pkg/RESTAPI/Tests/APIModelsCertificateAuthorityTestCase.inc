@@ -3,6 +3,7 @@
 namespace RESTAPI\Tests;
 
 use RESTAPI\Core\Command;
+use RESTAPI\Core\Model;
 use RESTAPI\Core\TestCase;
 use RESTAPI\Models\CertificateAuthority;
 
@@ -127,6 +128,30 @@ R02Pul8ulWQ8Kl3Q3pou8As7W1mMzA2DxQ==
         $ca->delete();
     }
 
-    # TODO: Need test to ensure CA cannot be deleted while in use
+    /**
+     * Checks that we cannot delete a CA that is in use.
+     */
+    public function test_cannot_delete_ca_in_use(): void
+    {
+        # Create a CA to test with
+        $ca = new CertificateAuthority(
+            descr: 'test',
+            crt: self::EXAMPLE_CRT,
+            prv: self::EXAMPLE_PRV,
+        );
+        $ca->create();
+
+        # Mock an OpenVPN server using this CA to be in use
+        Model::set_config(path: "openvpn/openvpn-server/0/caref", value: $ca->refid->value);
+
+        # Ensure an error is thrown if we try to delete the CA while it's in use
+        $this->assert_throws_response(
+            response_id: 'CERTIFICATE_AUTHORITY_CANNOT_BE_DELETED_WHILE_IN_USE',
+            code: 409,
+            callable: function () use ($ca) {
+                $ca->delete();
+            },
+        );
+    }
     # TODO: Need test to ensure crt must be CA capable
 }
