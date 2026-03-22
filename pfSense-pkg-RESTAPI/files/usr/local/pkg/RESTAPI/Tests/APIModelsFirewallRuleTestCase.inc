@@ -993,4 +993,21 @@ class APIModelsFirewallRuleTestCase extends TestCase {
             $this->assert_equals($rule->updated_by->value, "$client->username@$client->ip_address (API)");
         }
     }
+
+    /**
+     * Checks that we can create a floating firewall rule with the 'any' interface
+     */
+    public function test_floating_rule_with_any_interface(): void {
+        # Create a firewall rule to test with
+        $rule = new FirewallRule(
+            type: 'pass',
+            interface: ['any'],
+            ipprotocol: 'inet',
+            protocol: 'tcp',
+            source: 'any',
+            destination: 'any',
+            floating: true,
+        );
+        $rule->validate();
+    }
 }

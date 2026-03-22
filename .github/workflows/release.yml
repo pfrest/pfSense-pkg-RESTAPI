@@ -38,6 +38,8 @@ jobs:
             PFSENSE_VERSION: "25.07.1"
           - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
             PFSENSE_VERSION: "25.11"
+          - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
+            PFSENSE_VERSION: "25.11.1"
 
     steps:
       - uses: actions/checkout@v6
@@ -60,7 +62,7 @@ jobs:
           /usr/local/bin/VBoxManage controlvm ${{ matrix.FREEBSD_VERSION }} poweroff || true
           /usr/local/bin/VBoxManage snapshot ${{matrix.FREEBSD_VERSION}} restore initial
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
           path: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
@@ -76,7 +78,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-pkg-RESTAPI.pkg
           path: pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-pkg-RESTAPI.pkg
@@ -112,13 +114,13 @@ jobs:
           /usr/local/bin/VBoxManage snapshot pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-RELEASE restore initial
 
       - name: Upload OpenAPI schema
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: openapi.json
           path: openapi.json
 
       - name: Upload GraphQL schema
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: schema.graphql
           path: schema.graphql
@@ -151,13 +153,13 @@ jobs:
           mv ./site/* ./www/
 
       - name: Download OpenAPI schema
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: openapi.json
           path: openapi.json
 
       - name: Download GraphQL schema
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: schema.graphql
           path: schema.graphql
