@@ -31,9 +31,10 @@ class DHCPLog extends Model {
 
     /**
      * Obtains the DHCP log as an array. This method is the internal callable for this Model.
+     * @param int $limit Maximum entries to return (0 = all). Passed through from pagination.
      * @return array The DHCP log as an array of objects.
      */
-    protected function get_dhcp_log(): array {
-        return $this->read_log($this->log_file);
+    protected function get_dhcp_log(int $limit = 0): array {
+        return $this->read_log($this->log_file, $limit);
     }
 }
