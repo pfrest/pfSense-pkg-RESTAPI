@@ -8,6 +8,7 @@ use RESTAPI\Fields\BooleanField;
 use RESTAPI\Fields\IntegerField;
 use RESTAPI\Fields\StringField;
 use RESTAPI\Fields\UIDField;
+use RESTAPI\Responses\ConflictError;
 use RESTAPI\Responses\ForbiddenError;
 use RESTAPI\Responses\ValidationError;
 use RESTAPI\Validators\RegexValidator;
@@ -115,8 +116,8 @@ class CertificateAuthority extends Model {
      */
     public function _delete(): void {
         # Do not allow this CertificateAuthority to be deleted if it is in use
-        if (cert_in_use($this->refid->value)) {
-            throw new ForbiddenError(
+        if (ca_in_use($this->refid->value)) {
+            throw new ConflictError(
                 message: 'Certificate authority cannot be deleted because it is in use.',
                 response_id: 'CERTIFICATE_AUTHORITY_CANNOT_BE_DELETED_WHILE_IN_USE',
             );
