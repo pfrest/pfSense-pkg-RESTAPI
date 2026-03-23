@@ -305,6 +305,8 @@ class ACMECertificateDomain extends Model {
     public StringField $zone_username;
     public StringField $zone_key;
     public StringField $zilore_key;
+    public StringField $technitium_server;
+    public StringField $technitium_token;
     public StringField $anydnschallengealias;
     public BooleanField $anydnschallengedomain;
 
@@ -2523,6 +2525,21 @@ class ACMECertificateDomain extends Model {
             internal_name: 'dns_zilorezilore_key',
             conditions: ['method' => 'dns_zilore'],
             help_text: 'Zilore API Key',
+        );
+        $this->technitium_server = new StringField(
+            default: '',
+            allow_empty: true,
+            internal_name: 'dns_technitiumtechnitium_server',
+            conditions: ['method' => 'dns_technitium'],
+            help_text: 'Technitium DNS Server address',
+        );
+        $this->technitium_token = new StringField(
+            default: '',
+            allow_empty: true,
+            sensitive: true,
+            internal_name: 'dns_technitiumtechnitium_token',
+            conditions: ['method' => 'dns_technitium'],
+            help_text: 'Technitium DNS Server API Token',
         );
         $this->anydnschallengealias = new StringField(
             default: '',
