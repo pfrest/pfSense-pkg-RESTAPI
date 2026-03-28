@@ -922,7 +922,13 @@ class Model {
      * `config_path` and a `internal_callable` are assigned to this model
      * @return array The array of internal objects without any additional processing performed.
      */
-    public function get_internal_objects(bool $from_all_parents = false): array {
+    /**
+     * @param bool $from_all_parents Whether to obtain objects from all parent Models.
+     * @param int $limit Pagination hint for internal callables (0 = no limit). When non-zero, callables that accept
+     *                    a $limit parameter (e.g. log-backed Models) can use it to avoid loading entire datasets
+     *                    into memory. Callables that do not accept a $limit parameter are called without it.
+     */
+    public function get_internal_objects(bool $from_all_parents = false, int $limit = 0): array {
         global $mock_internal_objects;
 
         # Throw an error if both `config_path` and `internal_callable` are set.
@@ -947,18 +953,52 @@ class Model {
         # Obtain the internal objects by calling the `internal_callable` if specified
         elseif ($this->internal_callable) {
             $callable = $this->internal_callable;
-            $internal_objects = $this->$callable();
+
+            # Forward the pagination limit to callables that accept it. This allows log-backed
+            # Models to stop reading early instead of loading entire log files into memory.
+            # Callables that don't accept a $limit parameter continue to work unchanged.
+            # Reflection results are cached per class+callable to avoid repeated introspection.
+            if ($limit > 0 && $this->callable_accepts_limit($callable)) {
+                $internal_objects = $this->$callable(limit: $limit);
+            } else {
+                $internal_objects = $this->$callable();
+            }
         }
         # Otherwise, throw an error. Either a `config_path` or an `internal_callable` is required.
         else {
             throw new ServerError(
-                message: "Model requires a 'config_path' or 'internal_callable' value to be defined before 
+                message: "Model requires a 'config_path' or 'internal_callable' value to be defined before
                     obtaining internal objects.",
                 response_id: 'MODEL_WITH_NO_INTERNAL_METHOD',
             );
         }
 
         return $internal_objects;
+    }
+
+    /**
+     * Checks whether an internal callable method accepts a `limit` parameter. Results are cached
+     * per class+callable combination to avoid repeated reflection overhead on paginated requests.
+     * @param string $callable The method name to check.
+     * @return bool True if the method has a parameter named 'limit'.
+     */
+    private function callable_accepts_limit(string $callable): bool {
+        static $cache = [];
+        $key = static::class . '::' . $callable;
+
+        if (!isset($cache[$key])) {
+            $accepts = false;
+            $ref = new \ReflectionMethod($this, $callable);
+            foreach ($ref->getParameters() as $param) {
+                if ($param->getName() === 'limit') {
+                    $accepts = true;
+                    break;
+                }
+            }
+            $cache[$key] = $accepts;
+        }
+
+        return $cache[$key];
     }
 
     /**
@@ -1971,8 +2011,12 @@ class Model {
             return Model::get_model_cache()::fetch_modelset($model_name);
         }
 
-        # Obtain all of this Model's internally stored objects, including those from parent Models if applicable
-        $internal_objects = $model->get_internal_objects(from_all_parents: true);
+        # Obtain all of this Model's internally stored objects, including those from parent Models if applicable.
+        # Pass the maximum number of objects needed so that callables (e.g. log readers) can stop early.
+        # When $reverse is true, the caller wants the oldest entries, so we cannot pre-limit to the newest -
+        # the full dataset must be loaded to reverse correctly.
+        $max_needed = ($limit > 0 && !$reverse) ? ($limit + $offset) : 0;
+        $internal_objects = $model->get_internal_objects(from_all_parents: true, limit: $max_needed);
 
         # For non `many` Models, wrap the internal object in an array so we can loop
         $internal_objects = $model->many ? $internal_objects : [$internal_objects];

@@ -31,9 +31,10 @@ class RESTAPILog extends Model {
 
     /**
      * Obtains the REST API log as an array. This method is the internal callable for this Model.
+     * @param int $limit Maximum entries to return (0 = all). Passed through from pagination.
      * @return array The REST API log as an array of objects.
      */
-    protected function get_restapi_log(): array {
-        return $this->read_log($this->log_file);
+    protected function get_restapi_log(int $limit = 0): array {
+        return $this->read_log($this->log_file, $limit);
     }
 }

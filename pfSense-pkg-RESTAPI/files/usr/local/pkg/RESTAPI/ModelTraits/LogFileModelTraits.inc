@@ -81,63 +81,328 @@ trait LogFileModelTraits {
     }
 
     /**
-     * Gather all log filepaths for a given base log.
+     * Gather all log filepaths for a given base log, ordered newest-first. The current (unrotated) log file is
+     * always first, followed by rotated logs in ascending rotation number (0, 1, 2...).
+     * Only matches the base log itself and files with a rotation suffix (e.g. .0, .1.gz, .2.bz2).
      * @param string $base_log The base log file path.
-     * @return array An array of all log file paths for the given base log.
+     * @return array An array of all log file paths ordered newest-first.
      */
     private function gather_log_filepaths(string $base_log): array {
-        # Variables
         $log_filepaths = [];
 
-        # Gather all log file paths
-        foreach (glob($base_log . '*') as $log_filepath) {
-            $log_filepaths[] = $log_filepath;
+        # Collect the base log and files with a dot-prefixed suffix (e.g. filter.log.0, filter.log.1.gz).
+        # Using '.*' instead of '*' prevents matching unrelated files like filter.logrotate.
+        if (file_exists($base_log)) {
+            $log_filepaths[] = $base_log;
+        }
+        foreach (glob($base_log . '.*') as $log_filepath) {
+            # Skip any glob result that is the base log itself (shouldn't happen with '.*' but be safe)
+            if ($log_filepath !== $base_log) {
+                $log_filepaths[] = $log_filepath;
+            }
         }
 
-        # Reverse the array so the oldest logs are read first
-        return array_reverse($log_filepaths);
+        # Sort so the base log comes first (newest entries), then rotated by number ascending.
+        # This ensures the newest log data is always read first regardless of filesystem ordering.
+        usort($log_filepaths, function (string $a, string $b) use ($base_log): int {
+            # Base log always comes first (it has the newest entries)
+            if ($a === $base_log) {
+                return -1;
+            }
+            if ($b === $base_log) {
+                return 1;
+            }
+
+            # Extract rotation number from the suffix after the base log name.
+            # For paths like filter.log.0, filter.log.1.gz, filter.log.10.bz2, we extract the
+            # numeric portion immediately after the base name dot separator.
+            # Anchoring to the end with an optional compression extension prevents false matches
+            # on digits elsewhere in the path (e.g. daemon2.log would not match here since
+            # we're only looking at the suffix after the base_log prefix).
+            $suffix_a = substr($a, strlen($base_log));
+            $suffix_b = substr($b, strlen($base_log));
+            preg_match('/^\.(\d+)/', $suffix_a, $ma);
+            preg_match('/^\.(\d+)/', $suffix_b, $mb);
+            $na = isset($ma[1]) ? (int) $ma[1] : PHP_INT_MAX;
+            $nb = isset($mb[1]) ? (int) $mb[1] : PHP_INT_MAX;
+            return $na <=> $nb;
+        });
+
+        return $log_filepaths;
     }
 
     /**
-     * Reads all available logs for a given base log file path and returns the contents as an array of lines. Warning:
-     * This will include rotated logs, including compressed logs which may have a performance impact.
+     * Determines the compression type of a log file by normalizing its path (stripping numeric rotation suffixes).
+     * @param string $filepath The log file path.
+     * @return string The file extension indicating the log type (e.g. 'log', 'gz', 'bz2', 'xz').
+     */
+    private function get_log_type(string $filepath): string {
+        # For uncompressed rotated logs, remove numeric extension to detect the correct type
+        $normalized = preg_replace('/\.\d+$/', '', $filepath);
+        return pathinfo($normalized, PATHINFO_EXTENSION);
+    }
+
+    /**
+     * Reads the last $limit lines from a plain text file by seeking backwards from EOF.
+     * Memory usage is O(limit) instead of O(file_size).
+     * @param string $filepath The path to the log file.
+     * @param int $limit Maximum number of lines to return from the end of the file.
+     * @return array The last $limit non-empty lines from the file, in chronological order (oldest first).
+     */
+    private function read_tail_lines(string $filepath, int $limit): array {
+        if ($limit <= 0) {
+            return [];
+        }
+
+        $this->check_file_exists($filepath);
+
+        $fh = fopen($filepath, 'rb');
+        if ($fh === false) {
+            return [];
+        }
+
+        fseek($fh, 0, SEEK_END);
+        $pos = ftell($fh);
+        $buffer = '';
+        $lines = [];
+        $chunk_size = 8192;
+
+        while ($pos > 0 && count($lines) < $limit) {
+            $read = min($chunk_size, $pos);
+            $pos -= $read;
+            fseek($fh, $pos);
+            $buffer = fread($fh, $read) . $buffer;
+
+            # Split on newlines and collect lines from the end
+            $parts = explode("\n", $buffer);
+            # The first element is a partial line (unless we hit BOF) - keep it in buffer
+            $buffer = array_shift($parts);
+
+            # Collect non-empty lines from the end of the chunk
+            while (!empty($parts) && count($lines) < $limit) {
+                $line = array_pop($parts);
+                $line = rtrim($line, "\r");
+                if ($line !== '') {
+                    $lines[] = $line;
+                }
+            }
+        }
+
+        fclose($fh);
+
+        # Don't forget remaining buffer content at the start of the file
+        $buffer = rtrim($buffer, "\r");
+        if ($buffer !== '' && count($lines) < $limit) {
+            $lines[] = $buffer;
+        }
+
+        # $lines was collected newest-first; reverse to return in chronological order
+        return array_reverse($lines);
+    }
+
+    /**
+     * Streams a compressed file line-by-line using a file handle, keeping only the last $limit lines
+     * via a ring buffer. Memory usage is O(limit) instead of O(decompressed_file_size).
+     * @param resource $fh An already-opened readable file handle (from gzopen, bzopen, or popen).
+     * @param int $limit Maximum number of lines to keep.
+     * @return array The last $limit non-empty lines from the stream, in chronological order.
+     */
+    private function stream_tail_lines($fh, int $limit): array {
+        if ($limit <= 0) {
+            return [];
+        }
+
+        $ring = [];
+        $ring_pos = 0;
+        $ring_full = false;
+        $line_buffer = '';
+
+        # Read in chunks and split into lines manually for compatibility across
+        # gzopen, bzopen, and popen handles (gzgets works for gz but not others)
+        while (!feof($fh)) {
+            $chunk = fread($fh, 8192);
+            if ($chunk === false || $chunk === '') {
+                break;
+            }
+            $line_buffer .= $chunk;
+
+            # Process complete lines from the buffer
+            while (($newline_pos = strpos($line_buffer, "\n")) !== false) {
+                $line = rtrim(substr($line_buffer, 0, $newline_pos), "\r");
+                $line_buffer = substr($line_buffer, $newline_pos + 1);
+
+                if ($line === '') {
+                    continue;
+                }
+
+                # Ring buffer: overwrite oldest entry when full
+                if (!$ring_full && count($ring) < $limit) {
+                    $ring[] = $line;
+                    if (count($ring) === $limit) {
+                        $ring_full = true;
+                    }
+                } else {
+                    $ring[$ring_pos] = $line;
+                    $ring_pos = ($ring_pos + 1) % $limit;
+                }
+            }
+        }
+
+        # Handle any remaining content without a trailing newline
+        $line_buffer = rtrim($line_buffer, "\r");
+        if ($line_buffer !== '') {
+            if (!$ring_full && count($ring) < $limit) {
+                $ring[] = $line_buffer;
+            } else {
+                $ring[$ring_pos] = $line_buffer;
+                $ring_pos = ($ring_pos + 1) % $limit;
+            }
+        }
+
+        # Reorder ring buffer to chronological order
+        if ($ring_full || $ring_pos > 0 && count($ring) === $limit) {
+            $ring = array_merge(
+                array_slice($ring, $ring_pos),
+                array_slice($ring, 0, $ring_pos),
+            );
+        }
+
+        return $ring;
+    }
+
+    /**
+     * Reads a compressed log file and returns only the last $limit lines using streaming.
+     * Uses PHP stream wrappers (compress.zlib://, compress.bzip2://) and popen for xz,
+     * all of which return standard file handles compatible with fread()/feof().
+     * Memory usage is O(limit) instead of O(decompressed_file_size).
+     * @param string $filepath The path to the compressed log file.
+     * @param int $limit Maximum number of lines to return.
+     * @param string $type Compression type: 'gz', 'bz2', or 'xz'.
+     * @return array The last $limit non-empty lines from the file, in chronological order.
+     * @throws NotAcceptableError If the compression type is not supported.
+     */
+    private function read_compressed_tail_lines(string $filepath, int $limit, string $type): array {
+        if ($limit <= 0) {
+            return [];
+        }
+
+        $this->check_file_exists($filepath);
+
+        # Use PHP stream wrappers for gz/bz2 so we get standard file handles that work with
+        # fread()/feof(). This avoids needing separate gzread/bzread functions.
+        # For xz, use popen since PHP has no built-in xz stream wrapper.
+        $fh = match ($type) {
+            'gz' => fopen('compress.zlib://' . $filepath, 'rb'),
+            'bz2' => fopen('compress.bzip2://' . $filepath, 'rb'),
+            'xz' => popen('xz -dc ' . escapeshellarg($filepath), 'r'),
+            default => throw new NotAcceptableError(
+                message: "Unsupported compression type '$type' for bounded log reading.",
+                response_id: 'LOG_FILE_TRAITS_UNSUPPORTED_COMPRESSION_TYPE',
+            ),
+        };
+
+        if ($fh === false) {
+            return [];
+        }
+
+        $lines = $this->stream_tail_lines($fh, $limit);
+
+        # Close the handle with the appropriate function
+        match ($type) {
+            'xz' => pclose($fh),
+            default => fclose($fh),
+        };
+
+        return $lines;
+    }
+
+    /**
+     * Reads all available logs for a given base log file path and returns the contents as an array of lines.
+     * This will include rotated logs, including compressed logs.
+     *
+     * When $limit > 0, reads newest log files first and stops as soon as enough lines are collected, avoiding
+     * loading the entire log history into memory. For the common case of small limits (e.g. ?limit=50), this
+     * typically only reads the current log file and skips all compressed rotated copies entirely.
+     *
+     * When $limit is 0 (default), all log files are read for full backward compatibility.
+     *
      * @note zstd compressed logs are not supported.
      * @param string $base_log The base log file path.
+     * @param int $limit Maximum total lines to return. 0 means unlimited (read everything).
      * @return array An array of all log file contents for the given base log.
      */
-    public function read_log(string $base_log): array {
-        # Variables
-        $log_contents = [];
-
-        # Ensurethe base log file exists
+    public function read_log(string $base_log, int $limit = 0): array {
+        # Ensure the base log file exists
         $this->check_file_exists($base_log);
 
-        # Gather all log file paths
+        # Gather all log file paths (ordered newest-first for bounded reads)
         $log_filepaths = $this->gather_log_filepaths($base_log);
 
-        # Read each log file
-        foreach ($log_filepaths as $log_filepath) {
-            # For uncompressed rotated logs, remove numeric extension to use the correct method to read it below
-            $log_filepath_normalized = preg_replace('/\.\d+$/', '', $log_filepath);
+        # Unbounded read: preserve existing behavior exactly (read oldest-first, return all)
+        if ($limit <= 0) {
+            $log_contents = [];
 
-            # Determine the log file type and add the contents of the log file to the log contents array
-            $log_contents = match (pathinfo($log_filepath_normalized, PATHINFO_EXTENSION)) {
-                'bz2' => array_merge($log_contents, $this->read_bzip2_log($log_filepath)),
-                'gz' => array_merge($log_contents, $this->read_gzip_log($log_filepath)),
-                'xz' => array_merge($log_contents, $this->read_xz_log($log_filepath)),
-                'log' => array_merge($log_contents, $this->read_uncompressed_log($log_filepath)),
+            # Read oldest-first (reverse of our newest-first ordering)
+            foreach (array_reverse($log_filepaths) as $log_filepath) {
+                $type = $this->get_log_type($log_filepath);
+
+                # Determine the log file type and add the contents to the log contents array
+                $log_contents = match ($type) {
+                    'bz2' => array_merge($log_contents, $this->read_bzip2_log($log_filepath)),
+                    'gz' => array_merge($log_contents, $this->read_gzip_log($log_filepath)),
+                    'xz' => array_merge($log_contents, $this->read_xz_log($log_filepath)),
+                    'log' => array_merge($log_contents, $this->read_uncompressed_log($log_filepath)),
+                    default => throw new NotAcceptableError(
+                        message: "The log file at $log_filepath has an unsupported file extension.",
+                        response_id: 'LOG_FILE_TRAITS_UNSUPPORTED_LOG_FILE_EXTENSION',
+                    ),
+                };
+            }
+
+            # Clear out empty array elements and reindex the array
+            $log_contents = array_filter($log_contents);
+            $log_contents = array_values($log_contents);
+
+            # Map the log contents so each entry is an object with a 'text' property
+            return array_map(fn($line) => ['text' => $line], $log_contents);
+        }
+
+        # Bounded read: collect lines from newest files first, stop when we have enough.
+        # This is the key optimization - for small limits, we typically only read the current
+        # log file and skip all compressed rotated copies entirely.
+        $collected = [];
+
+        foreach ($log_filepaths as $log_filepath) {
+            $remaining = $limit - count($collected);
+            if ($remaining <= 0) {
+                break;
+            }
+
+            $type = $this->get_log_type($log_filepath);
+
+            # Use memory-efficient tail readers for bounded reads
+            $lines = match ($type) {
+                'log' => $this->read_tail_lines($log_filepath, $remaining),
+                'gz', 'bz2', 'xz' => $this->read_compressed_tail_lines($log_filepath, $remaining, $type),
                 default => throw new NotAcceptableError(
                     message: "The log file at $log_filepath has an unsupported file extension.",
                     response_id: 'LOG_FILE_TRAITS_UNSUPPORTED_LOG_FILE_EXTENSION',
                 ),
             };
+
+            if (!empty($lines)) {
+                # Prepend: lines from older (higher rotation number) files go before newer ones
+                $collected = array_merge($lines, $collected);
+            }
         }
 
-        # Clear out empty array elements and reindex the array
-        $log_contents = array_filter($log_contents);
-        $log_contents = array_values($log_contents);
+        # Take exactly $limit entries from the end (the newest ones)
+        if (count($collected) > $limit) {
+            $collected = array_slice($collected, -$limit);
+        }
 
-        # Map the log contents so each entry is an object with a 'text' property
-        return array_map(fn($line) => ['text' => $line], $log_contents);
+        # Filter empties, reindex, and wrap in ['text' => ...] format
+        $collected = array_values(array_filter($collected));
+        return array_map(fn($line) => ['text' => $line], $collected);
     }
 }
