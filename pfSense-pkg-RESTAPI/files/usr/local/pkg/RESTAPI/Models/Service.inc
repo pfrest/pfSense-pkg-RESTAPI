@@ -30,7 +30,7 @@ class Service extends Model {
             write_only: true,
             help_text: 'The action to perform against this service.',
         );
-        $this->name = new StringField(unique: true, read_only: true, help_text: 'The internal name of the service.');
+        $this->name = new StringField(unique: true, help_text: 'The internal name of the service.');
         $this->description = new StringField(read_only: true, help_text: 'The full descriptive name of the service.');
         $this->enabled = new BooleanField(
             read_only: true,
