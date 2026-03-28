@@ -118,6 +118,19 @@ class CertificateRevocationListRevokedCertificate extends Model {
     }
 
     /**
+     * Adds extra processing when loading internal objects for this model. This is primarily used to catch any value
+     * that is not using the expected reason codes and convert them to a -1 (unspecified) reason code.
+     */
+    public function from_internal_object(mixed $internal_object): void {
+        # If the reason code is not a number, convert it to -1 (unspecified)
+        if (!is_numeric($internal_object['reason'])) {
+            $internal_object['reason'] = -1;
+        }
+
+        parent::from_internal_object($internal_object);
+    }
+
+    /**
      * Applies the newly created CRL by reloading the OpenVPN and IPsec services.
      */
     public function apply(): void {
