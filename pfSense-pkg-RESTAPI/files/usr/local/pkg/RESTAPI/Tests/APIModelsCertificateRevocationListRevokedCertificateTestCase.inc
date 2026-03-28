@@ -134,22 +134,18 @@ class APIModelsCertificateRevocationListRevokedCertificateTestCase extends TestC
     /**
      * Ensures revoked certificates with non-numeric reasons are converted to -1 (unspecified) when reading #864
      */
-    public function test_non_numeric_reason_conversion(): void
-    {
+    public function test_non_numeric_reason_conversion(): void {
         # Mock a revoked certificate with a non-numeric reason
-        Model::set_config(
-            "crl/{$this->crl->id}/cert/0",
-            [
-                'certref' => $this->cert->refid->value,
-                'reason' => 'some-non-numeric-reason',
-                'revoke_time' => time(),
-            ],
-        );
+        Model::set_config("crl/{$this->crl->id}/cert/0", [
+            'certref' => $this->cert->refid->value,
+            'reason' => 'some-non-numeric-reason',
+            'revoke_time' => time(),
+        ]);
 
         # Read the CRL and ensure the reason was converted to -1
         $crl_revoked_cert = CertificateRevocationListRevokedCertificate::query(
             parent_id: $this->crl->id,
-            id: 0
+            id: 0,
         )->first();
         $this->assert_equals(-1, $crl_revoked_cert->reason->value);
     }
