@@ -40,7 +40,6 @@ class CertificateRevocationList extends Model {
         $this->descr = new StringField(
             required: true,
             unique: true,
-            editable: false,
             validators: [new RegexValidator(pattern: "/[\?\>\<\&\/\\\"\']/", invert: true)],
             help_text: 'The unique name/description for this CRL.',
         );
@@ -59,7 +58,6 @@ class CertificateRevocationList extends Model {
         );
         $this->lifetime = new IntegerField(
             default: 730,
-            editable: false,
             minimum: 1,
             maximum: 8381,
             conditions: ['method' => 'internal'],
@@ -67,7 +65,6 @@ class CertificateRevocationList extends Model {
         );
         $this->serial = new IntegerField(
             default: 0,
-            editable: false,
             conditions: ['method' => 'internal'],
             help_text: 'The serial number of the CRL.',
         );
