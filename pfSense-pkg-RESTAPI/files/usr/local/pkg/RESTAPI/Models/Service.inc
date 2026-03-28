@@ -58,8 +58,8 @@ class Service extends Model {
 
         # For each service, determine if it's really enabled and running
         foreach ($services as $key => $service) {
-            $services[$key]['enabled'] = is_service_enabled(name: $service['name']);
-            $services[$key]['status'] = get_service_status(name: $service);
+            $services[$key]['enabled'] = is_service_enabled($service['name']);
+            $services[$key]['status'] = get_service_status($service);
         }
 
         return $services;
