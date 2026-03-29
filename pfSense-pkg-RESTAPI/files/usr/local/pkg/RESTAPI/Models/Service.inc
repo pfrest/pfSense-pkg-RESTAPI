@@ -30,7 +30,7 @@ class Service extends Model {
             write_only: true,
             help_text: 'The action to perform against this service.',
         );
-        $this->name = new StringField(unique: true, read_only: true, help_text: 'The internal name of the service.');
+        $this->name = new StringField(required: true, unique: true, help_text: 'The internal name of the service.');
         $this->description = new StringField(read_only: true, help_text: 'The full descriptive name of the service.');
         $this->enabled = new BooleanField(
             read_only: true,
@@ -54,7 +54,15 @@ class Service extends Model {
      * @return array An array of available pfSense services and their current statuses.
      */
     public static function get_services(): array {
-        return get_services();
+        $services = get_services();
+
+        # For each service, determine if it's really enabled and running
+        foreach ($services as $key => $service) {
+            $services[$key]['enabled'] = is_service_enabled($service['name']);
+            $services[$key]['status'] = get_service_status($service);
+        }
+
+        return $services;
     }
 
     /**
