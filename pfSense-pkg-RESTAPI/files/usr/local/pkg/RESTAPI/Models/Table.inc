@@ -48,7 +48,7 @@ class Table extends Model {
                 '/sbin/pfctl -t ' . escapeshellarg($table_name) . ' -T show',
                 trim_whitespace: true,
             );
-            $tables[$table_name] = ['entries' => trim($table_entries_output->output)];
+            $tables[$table_name] = ['name' => $table_name, 'entries' => trim($table_entries_output->output)];
         }
 
         return $tables;
