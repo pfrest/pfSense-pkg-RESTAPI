@@ -144,12 +144,6 @@ class CertificateAuthority extends Model {
             $this->del_config("crl/$crl->id");
         }
 
-        # Delete an intermediate CAs signed by this CA
-        $ca_q = CertificateAuthority::query(reverse: true, caref: $this->refid->value, id__except: $this->id);
-        foreach ($ca_q->model_objects as $ca) {
-            $this->del_config("ca/$ca->id");
-        }
-
         parent::_delete();
     }
 
