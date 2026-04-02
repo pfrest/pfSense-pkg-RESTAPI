@@ -6,6 +6,7 @@ use RESTAPI\Core\Command;
 use RESTAPI\Core\Model;
 use RESTAPI\Core\TestCase;
 use RESTAPI\Models\CertificateAuthority;
+use RESTAPI\Models\CertificateAuthorityGenerate;
 
 class APIModelsCertificateAuthorityTestCase extends TestCase {
     const EXAMPLE_CRT = "-----BEGIN CERTIFICATE-----
@@ -148,5 +149,23 @@ R02Pul8ulWQ8Kl3Q3pou8As7W1mMzA2DxQ==
             },
         );
     }
-    # TODO: Need test to ensure crt must be CA capable
+
+    /**
+     * Ensures that only the targeted CA is deleted when a specific CA deletion is requested. Regression test for #873.
+     */
+    public function test_multi_ca_deletion(): void {
+        # Create 3 CAs for testing
+        $ca1 = new CertificateAuthorityGenerate(descr: 'ca1', keytype: "RSA", keylen: 2048);
+        $ca1->create();
+        $ca2 = new CertificateAuthorityGenerate(descr: 'ca2', keytype: "RSA", keylen: 2048);
+        $ca2->create();
+        $ca3 = new CertificateAuthorityGenerate(descr: 'ca3', keytype: "RSA", keylen: 2048);
+        $ca3->create();
+
+        # Delete CA 2 and ensure CA 1 and CA 3 still exist
+        CertificateAuthority::delete_many(id: $ca2->id);
+        $this->assert_is_true(CertificateAuthority::query(descr: $ca1->descr->value)->exists());
+        $this->assert_is_false(CertificateAuthority::query(descr: $ca2->descr->value)->exists());
+        $this->assert_is_true(CertificateAuthority::query(descr: $ca3->descr->value)->exists());
+    }
 }
