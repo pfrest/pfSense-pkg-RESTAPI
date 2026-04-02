@@ -27,7 +27,7 @@ jobs:
             FREEBSD_ID: freebsd16
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup FreeBSD build VM
         run: |
           /usr/local/bin/VBoxManage controlvm ${{ matrix.FREEBSD_VERSION }} poweroff || true
@@ -46,7 +46,7 @@ jobs:
           /usr/local/bin/VBoxManage controlvm ${{ matrix.FREEBSD_VERSION }} poweroff || true
           /usr/local/bin/VBoxManage snapshot ${{matrix.FREEBSD_VERSION}} restore initial
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: pfSense-pkg-RESTAPI-${{ env.BUILD_VERSION }}-${{ matrix.FREEBSD_ID }}.pkg
           path: pfSense-pkg-RESTAPI-${{ env.BUILD_VERSION }}-${{ matrix.FREEBSD_ID }}.pkg
@@ -62,8 +62,8 @@ jobs:
           - PFSENSE_VERSION: pfSense-2.8.1-RELEASE
             FREEBSD_ID: freebsd15
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v8
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pfSense-pkg-RESTAPI-${{ env.BUILD_VERSION }}-${{ matrix.FREEBSD_ID }}.pkg
           path: pfSense-pkg-RESTAPI-${{ env.BUILD_VERSION }}-${{ matrix.FREEBSD_ID }}.pkg
@@ -96,7 +96,7 @@ jobs:
           /usr/local/bin/VBoxManage controlvm ${{ matrix.PFSENSE_VERSION }} poweroff || true
           /usr/local/bin/VBoxManage snapshot ${{ matrix.PFSENSE_VERSION }} restore initial
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: openapi-${{ matrix.PFSENSE_VERSION }}.json
           path: openapi-${{ matrix.PFSENSE_VERSION }}.json
@@ -112,14 +112,14 @@ jobs:
           - PFSENSE_VERSION: pfSense-2.8.1-RELEASE
             FREEBSD_ID: freebsd15
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v8
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: openapi-${{ matrix.PFSENSE_VERSION }}.json
           path: openapi-${{ matrix.PFSENSE_VERSION }}.json
 
       - name: Install Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "20"
 
@@ -142,9 +142,9 @@ jobs:
             FREEBSD_ID: freebsd15
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pfSense-pkg-RESTAPI-${{ env.BUILD_VERSION }}-${{ matrix.FREEBSD_ID }}.pkg
           path: pfSense-pkg-RESTAPI-${{ env.BUILD_VERSION }}-${{ matrix.FREEBSD_ID }}.pkg

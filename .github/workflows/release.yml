@@ -44,7 +44,7 @@ jobs:
             PFSENSE_VERSION: "26.03"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup FreeBSD build VM
         run: |
@@ -64,13 +64,13 @@ jobs:
           /usr/local/bin/VBoxManage controlvm ${{ matrix.FREEBSD_VERSION }} poweroff || true
           /usr/local/bin/VBoxManage snapshot ${{matrix.FREEBSD_VERSION}} restore initial
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
           path: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
         with:
           files: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
 
@@ -78,9 +78,9 @@ jobs:
     runs-on: self-hosted
     needs: [release_pkg]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-pkg-RESTAPI.pkg
           path: pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-pkg-RESTAPI.pkg
@@ -116,13 +116,13 @@ jobs:
           /usr/local/bin/VBoxManage snapshot pfSense-${{ env.DEFAULT_PFSENSE_VERSION }}-RELEASE restore initial
 
       - name: Upload OpenAPI schema
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: openapi.json
           path: openapi.json
 
       - name: Upload GraphQL schema
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: schema.graphql
           path: schema.graphql
@@ -135,16 +135,16 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5.0.0
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - name: Make website directory
         run: mkdir ./www
 
       - name: Setup python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -155,13 +155,13 @@ jobs:
           mv ./site/* ./www/
 
       - name: Download OpenAPI schema
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: openapi.json
           path: openapi.json
 
       - name: Download GraphQL schema
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: schema.graphql
           path: schema.graphql
@@ -207,10 +207,10 @@ jobs:
           mv ./.phpdoc/build/* ./www/php-docs/
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4.0.0
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: "./www"
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4.0.5
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
