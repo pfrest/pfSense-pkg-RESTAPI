@@ -36,7 +36,7 @@ class BinaryContentHandler extends ContentHandler {
      */
     protected function _encode(mixed $content = null, ?Response $context = null): mixed {
         # We cannot encode error messages. If an error, rethrow it to be handled by the default Response handler
-        if (!$context instanceof Success) {
+        if (!($context instanceof Success)) {
             throw $context;
         }
 
