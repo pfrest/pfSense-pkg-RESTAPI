@@ -30,7 +30,7 @@ class ResourceLinkSet {
     ) {
         # Throw an error if any $resource_links value is not a ResourceLink or ResourceLinkSet object
         foreach ($this->resource_links as $resource_link) {
-            if (!$resource_link instanceof ResourceLink and !$resource_link instanceof ResourceLinkSet) {
+            if (!($resource_link instanceof ResourceLink) and !($resource_link instanceof ResourceLinkSet)) {
                 throw new ServerError(
                     message: 'ResourceLinkSets can only contain ResourceLink and ResourceLinkSet objects.',
                     response_id: 'RESOURCE_LINK_SET_CONTAINS_NON_RESOURCE_LINK',
