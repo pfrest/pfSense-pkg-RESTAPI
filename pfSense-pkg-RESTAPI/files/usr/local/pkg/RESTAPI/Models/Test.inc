@@ -22,6 +22,8 @@ class Test extends Model {
     public Field $test_string_unique;
     public Field $test_string_many;
     public Field $test_string_namespace;
+    public StringField $test_string_choices;
+    public StringField $test_string_choices_callable;
 
     public function __construct(mixed $id = null, mixed $parent_id = null, array $data = [], mixed ...$options) {
         # Mark this model as a `many` model indicating multiple Test model objects can be created. This is also
@@ -73,6 +75,18 @@ class Test extends Model {
             internal_namespace: 'test_namespace',
             help_text: 'Demonstrates a string field that is nested under the namespace ',
         );
+        $this->test_string_choices = new StringField(
+            default: '',
+            choices: ['a' => 'Choice A', 'b' => 'Choice B', 'c' => 'Choice C'],
+            allow_empty: true,
+            help_text: 'Demonstrates a string field with static choices defined.',
+        );
+        $this->test_string_choices_callable = new StringField(
+            default: '',
+            choices_callable: 'test_choices_callable',
+            allow_empty: true,
+            help_text: 'Demonstrates a string field with static choices defined.',
+        );
 
         # Parent base 'Model' object must be constructed very last to ensure the Model has all configured attributes.
         parent::__construct($id, $parent_id, $data, ...$options);
@@ -83,6 +97,17 @@ class Test extends Model {
      */
     public function test_internal_callable(): array {
         return [];
+    }
+
+    /**
+     * Defines a test choices callable for the test_string_choices_callable field
+     */
+    public function test_choices_callable(): array {
+        return [
+            'x' => 'Choice X',
+            'y' => 'Choice Y',
+            'z' => 'Choice Z',
+        ];
     }
 
     /**
