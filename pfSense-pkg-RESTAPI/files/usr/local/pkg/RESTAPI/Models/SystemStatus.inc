@@ -255,7 +255,7 @@ class SystemStatus extends Model {
         $cpu_usage = ($load_avg_last_min / $cpu_count) * 100;
 
         # If the usage estimate is above 100%, ensure it is capped at 100
-        return ($cpu_usage <= 100) ? $cpu_usage : 100;
+        return $cpu_usage <= 100 ? $cpu_usage : 100;
     }
 
     /**
