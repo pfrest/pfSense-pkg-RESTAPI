@@ -2015,7 +2015,7 @@ class Model {
         # Pass the maximum number of objects needed so that callables (e.g. log readers) can stop early.
         # When $reverse is true, the caller wants the oldest entries, so we cannot pre-limit to the newest -
         # the full dataset must be loaded to reverse correctly.
-        $max_needed = ($limit > 0 && !$reverse) ? ($limit + $offset) : 0;
+        $max_needed = $limit > 0 && !$reverse ? $limit + $offset : 0;
         $internal_objects = $model->get_internal_objects(from_all_parents: true, limit: $max_needed);
 
         # For non `many` Models, wrap the internal object in an array so we can loop

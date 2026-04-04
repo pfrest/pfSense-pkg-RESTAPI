@@ -260,11 +260,8 @@ trait LogFileModelTraits {
         }
 
         # Reorder ring buffer to chronological order
-        if ($ring_full || $ring_pos > 0 && count($ring) === $limit) {
-            $ring = array_merge(
-                array_slice($ring, $ring_pos),
-                array_slice($ring, 0, $ring_pos),
-            );
+        if ($ring_full || ($ring_pos > 0 && count($ring) === $limit)) {
+            $ring = array_merge(array_slice($ring, $ring_pos), array_slice($ring, 0, $ring_pos));
         }
 
         return $ring;

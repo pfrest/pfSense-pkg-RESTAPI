@@ -196,12 +196,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         $log = $model->read_log('/tmp/test_bounded.log', limit: 4);
 
         $this->assert_equals(
-            [
-                ['text' => 'Line 6'],
-                ['text' => 'Line 7'],
-                ['text' => 'Line 8'],
-                ['text' => 'Line 9'],
-            ],
+            [['text' => 'Line 6'], ['text' => 'Line 7'], ['text' => 'Line 8'], ['text' => 'Line 9']],
             $log,
         );
     }
@@ -220,13 +215,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Read with limit=2 should return only the 2 newest lines from the current log
         $log = $model->read_log('/tmp/test_current.log', limit: 2);
 
-        $this->assert_equals(
-            [
-                ['text' => 'Line 8'],
-                ['text' => 'Line 9'],
-            ],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 8'], ['text' => 'Line 9']], $log);
     }
 
     /**
@@ -345,12 +334,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Read with limit=1 should return only the newest line
         $log = $model->read_log('/tmp/test_single.log', limit: 1);
 
-        $this->assert_equals(
-            [
-                ['text' => 'Line 6'],
-            ],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 6']], $log);
     }
 
     /**
@@ -366,13 +350,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Bounded read should fall through to the rotated file
         $log = $model->read_log('/tmp/test_empty.log', limit: 2);
 
-        $this->assert_equals(
-            [
-                ['text' => 'Line 2'],
-                ['text' => 'Line 3'],
-            ],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 2'], ['text' => 'Line 3']], $log);
     }
 
     /**
@@ -416,12 +394,6 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Unbounded read should only return lines from the actual log file
         $log = $model->read_log('/tmp/test_prefix.log');
 
-        $this->assert_equals(
-            [
-                ['text' => 'Line 1'],
-                ['text' => 'Line 2'],
-            ],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 1'], ['text' => 'Line 2']], $log);
     }
 }
