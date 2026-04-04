@@ -14,12 +14,7 @@ run pfSense. It's recommended to follow Netgate's [minimum hardware requirements
 
 ### Supported pfSense versions
 
-- pfSense CE 2.8.0
 - pfSense CE 2.8.1
-- pfSense Plus 24.11
-- pfSense Plus 25.07
-- pfSense Plus 25.07.1
-- pfSense Plus 25.11
 - pfSense Plus 25.11.1
 - pfSense Plus 26.03
 
