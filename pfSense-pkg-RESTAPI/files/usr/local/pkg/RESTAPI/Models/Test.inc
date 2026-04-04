@@ -76,13 +76,13 @@ class Test extends Model {
             help_text: 'Demonstrates a string field that is nested under the namespace ',
         );
         $this->test_string_choices = new StringField(
-            default: '',
+            default: 'a',
             choices: ['a' => 'Choice A', 'b' => 'Choice B', 'c' => 'Choice C'],
             allow_empty: true,
             help_text: 'Demonstrates a string field with static choices defined.',
         );
         $this->test_string_choices_callable = new StringField(
-            default: '',
+            default: 'x',
             choices_callable: 'test_choices_callable',
             allow_empty: true,
             help_text: 'Demonstrates a string field with static choices defined.',
