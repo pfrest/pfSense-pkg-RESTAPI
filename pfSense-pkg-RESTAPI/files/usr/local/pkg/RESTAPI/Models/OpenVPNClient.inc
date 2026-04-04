@@ -81,6 +81,7 @@ class OpenVPNClient extends Model {
         $this->many = true;
         $this->config_path = 'openvpn/openvpn-client';
         $this->always_apply = true;
+        $this->verbose_name = 'OpenVPN Client';
 
         # Set model fields
         $this->vpnid = new IntegerField(

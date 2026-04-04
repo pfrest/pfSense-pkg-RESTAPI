@@ -52,6 +52,7 @@ class HAProxySettings extends Model {
         $this->many = false;
         $this->packages = ['pfSense-pkg-haproxy'];
         $this->package_includes = ['haproxy/haproxy.inc', 'haproxy/haproxy_utils.inc'];
+        $this->verbose_name = 'HAProxy Settings';
 
         # Set model fields
         $this->enable = new BooleanField(default: false, help_text: 'Enables or disable HAProxy on the system.');

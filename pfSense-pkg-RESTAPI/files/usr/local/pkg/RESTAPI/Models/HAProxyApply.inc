@@ -19,6 +19,7 @@ class HAProxyApply extends Model {
         $this->many = false;
         $this->packages = ['pfSense-pkg-haproxy'];
         $this->package_includes = ['haproxy/haproxy.inc', 'haproxy/haproxy_utils.inc'];
+        $this->verbose_name = 'HAProxy Apply';
 
         # Set model fields
         $this->applied = new BooleanField(

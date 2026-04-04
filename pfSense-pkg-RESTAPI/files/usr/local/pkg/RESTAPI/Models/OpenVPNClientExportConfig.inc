@@ -23,6 +23,7 @@ class OpenVPNClientExportConfig extends Model {
         $this->package_includes = ['openvpn-client-export.inc'];
         $this->always_apply = true;
         $this->many = true;
+        $this->verbose_name = 'OpenVPN Client Export Config';
 
         # Setup shared fields defined in OpenVPNClientExportTraits
         $this->__setup_fields();

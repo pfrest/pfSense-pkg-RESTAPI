@@ -23,6 +23,7 @@ class HAProxyDNSResolver extends Model {
         $this->packages = ['pfSense-pkg-haproxy'];
         $this->package_includes = ['haproxy/haproxy.inc', 'haproxy/haproxy_utils.inc'];
         $this->many = true;
+        $this->verbose_name = 'HAProxy DNS Resolver';
 
         # Set model fields
         $this->name = new StringField(

@@ -41,6 +41,7 @@ class ACMECertificate extends Model {
             'acme/acme_htmllist.inc',
             'acme/pkg_acme_tabs.inc',
         ];
+        $this->verbose_name = 'ACME Certificate';
 
         # Define model Fields
         $this->name = new StringField(

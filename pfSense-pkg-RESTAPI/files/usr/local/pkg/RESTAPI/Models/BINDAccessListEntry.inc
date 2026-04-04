@@ -23,6 +23,7 @@ class BINDAccessListEntry extends Model {
         $this->always_apply = true;
         $this->many = true;
         $this->many_minimum = 1;
+        $this->verbose_name = 'BIND Access List Entry';
 
         # Set model fields
         $this->value = new StringField(

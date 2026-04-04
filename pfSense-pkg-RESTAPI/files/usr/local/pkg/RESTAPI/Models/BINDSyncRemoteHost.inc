@@ -27,6 +27,7 @@ class BINDSyncRemoteHost extends Model {
         $this->package_includes = ['bind.inc'];
         $this->many = true;
         $this->always_apply = true;
+        $this->verbose_name = 'BIND Sync Remote Host';
 
         # Set model fields
         $this->syncdestinenable = new BooleanField(

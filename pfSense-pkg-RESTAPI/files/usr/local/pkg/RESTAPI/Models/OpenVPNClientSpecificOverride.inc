@@ -50,6 +50,7 @@ class OpenVPNClientSpecificOverride extends Model {
         $this->many = true;
         $this->config_path = 'openvpn/openvpn-csc';
         $this->always_apply = true;
+        $this->verbose_name = 'OpenVPN Client Specific Override';
 
         # Set model fields
         $this->common_name = new StringField(

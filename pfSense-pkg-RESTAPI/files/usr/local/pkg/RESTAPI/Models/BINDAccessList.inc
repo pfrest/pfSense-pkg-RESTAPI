@@ -22,6 +22,7 @@ class BINDAccessList extends Model {
         $this->package_includes = ['bind.inc'];
         $this->many = true;
         $this->always_apply = true;
+        $this->verbose_name = 'BIND Access List';
 
         # Set model fields
         $this->name = new StringField(required: true, unique: true, help_text: 'The name of the access list.');

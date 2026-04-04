@@ -27,6 +27,7 @@ class ACMEAccountKeyRegister extends Model {
             'acme/acme_htmllist.inc',
             'acme/pkg_acme_tabs.inc',
         ];
+        $this->verbose_name = 'ACME Account Key Registration';
 
         # Define model Fields
         $this->name = new ForeignModelField(

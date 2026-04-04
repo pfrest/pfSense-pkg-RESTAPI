@@ -55,6 +55,7 @@ class BINDZone extends Model {
         $this->package_includes = ['bind.inc'];
         $this->many = true;
         $this->always_apply = true;
+        $this->verbose_name = 'BIND Zone';
 
         # Set model fields
         $this->disabled = new BooleanField(default: false, indicates_true: 'on', help_text: 'Disable this BIND zone.');

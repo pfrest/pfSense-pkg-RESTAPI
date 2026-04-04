@@ -29,6 +29,7 @@ class FreeRADIUSInterface extends Model {
         $this->many = true;
         $this->always_apply = true;
         $this->unique_together_fields = ['addr', 'port', 'ip_version'];
+        $this->verbose_name = 'FreeRADIUS Interface';
 
         # Set model fields
         $this->addr = new StringField(

@@ -33,6 +33,7 @@ class FreeRADIUSUser extends Model {
         $this->config_path = 'installedpackages/freeradius/config';
         $this->many = true;
         $this->always_apply = true;
+        $this->verbose_name = 'FreeRADIUS User';
 
         # Set model fields
         $this->username = new StringField(

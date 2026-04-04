@@ -21,6 +21,7 @@ class WakeOnLANSend extends Model {
         # Set model attributes
         $this->many = false;
         $this->internal_callable = 'void_internal_callable';
+        $this->verbose_name = 'Wake-on-LAN Packet';
 
         # Set model fields
         $this->interface = new InterfaceField(

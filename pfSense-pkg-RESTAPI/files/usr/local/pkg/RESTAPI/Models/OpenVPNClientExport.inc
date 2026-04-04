@@ -48,6 +48,7 @@ class OpenVPNClientExport extends Model {
         $this->config_path = 'installedpackages/vpn_openvpn_export/serverconfig/item';
         $this->packages = ['pfSense-pkg-openvpn-client-export'];
         $this->package_includes = ['openvpn-client-export.inc'];
+        $this->verbose_name = 'OpenVPN Client Export';
         $this->auto_create_id = false; // Create is used to initiate the export process, not creating new objects
         $this->many = true;
 

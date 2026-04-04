@@ -43,6 +43,7 @@ class BINDSettings extends Model {
         $this->package_includes = ['bind.inc'];
         $this->many = false;
         $this->always_apply = true;
+        $this->verbose_name = 'BIND Settings';
 
         # Set model fields
         $this->enable_bind = new BooleanField(

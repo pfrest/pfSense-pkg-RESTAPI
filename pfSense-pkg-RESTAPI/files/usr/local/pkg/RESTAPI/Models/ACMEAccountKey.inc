@@ -29,6 +29,7 @@ class ACMEAccountKey extends Model {
         $this->always_apply = true;
         $this->many = true;
         $this->config_path = 'installedpackages/acme/accountkeys/item';
+        $this->verbose_name = 'ACME Account Key';
         $this->verbose_name_plural = 'ACME Account Keys';
         $this->packages = ['pfSense-pkg-acme'];
         $this->package_includes = [

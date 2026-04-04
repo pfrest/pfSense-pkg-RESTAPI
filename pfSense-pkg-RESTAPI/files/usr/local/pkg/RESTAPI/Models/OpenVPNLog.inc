@@ -23,6 +23,7 @@ class OpenVPNLog extends Model {
         # Set model attributes
         $this->internal_callable = 'get_openvpn_log';
         $this->many = true;
+        $this->verbose_name = 'OpenVPN Log';
 
         $this->text = new StringField(default: '', help_text: 'The raw text of the openvpn log entry.');
 

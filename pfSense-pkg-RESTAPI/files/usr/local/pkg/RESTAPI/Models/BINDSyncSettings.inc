@@ -23,6 +23,7 @@ class BINDSyncSettings extends Model {
         $this->package_includes = ['bind.inc'];
         $this->many = false;
         $this->always_apply = true;
+        $this->verbose_name = 'BIND Sync Settings';
 
         # Set model fields
         $this->synconchanges = new StringField(

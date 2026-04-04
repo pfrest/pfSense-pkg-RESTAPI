@@ -43,6 +43,7 @@ class HAProxyFrontend extends Model {
         $this->packages = ['pfSense-pkg-haproxy'];
         $this->package_includes = ['haproxy/haproxy.inc', 'haproxy/haproxy_utils.inc'];
         $this->many = true;
+        $this->verbose_name = 'HAProxy Frontend';
 
         # Set model fields
         $this->name = new StringField(

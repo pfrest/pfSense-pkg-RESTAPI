@@ -36,6 +36,7 @@ class FreeRADIUSClient extends Model {
         $this->config_path = 'installedpackages/freeradiusclients/config';
         $this->many = true;
         $this->always_apply = true;
+        $this->verbose_name = 'FreeRADIUS Client';
 
         # Set model fields
         $this->addr = new StringField(

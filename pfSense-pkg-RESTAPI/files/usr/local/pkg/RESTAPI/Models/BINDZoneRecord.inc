@@ -25,6 +25,7 @@ class BINDZoneRecord extends Model {
         $this->package_includes = ['bind.inc'];
         $this->many = true;
         $this->always_apply = true;
+        $this->verbose_name = 'BIND Zone Record';
 
         # Set model fields
         $this->name = new StringField(

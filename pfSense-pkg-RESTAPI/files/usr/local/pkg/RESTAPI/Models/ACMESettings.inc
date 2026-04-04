@@ -24,6 +24,7 @@ class ACMESettings extends Model {
             'acme/acme_htmllist.inc',
             'acme/pkg_acme_tabs.inc',
         ];
+        $this->verbose_name = 'ACME Settings';
 
         # Define model Fields
         $this->enable = new BooleanField(

@@ -18,6 +18,7 @@ class WireGuardApply extends Model {
         # Set model attributes
         $this->internal_callable = 'get_applied_status';
         $this->always_apply = true;
+        $this->verbose_name = 'WireGuard Apply';
 
         # Set model Fields
         $this->applied = new BooleanField(

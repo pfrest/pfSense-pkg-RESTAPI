@@ -26,6 +26,7 @@ class ACMECertificateIssue extends Model {
             'acme/acme_htmllist.inc',
             'acme/pkg_acme_tabs.inc',
         ];
+        $this->verbose_name = 'ACME Certificate Issuance';
 
         # Define model Fields
         $this->certificate = new ForeignModelField(
