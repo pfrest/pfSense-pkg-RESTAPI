@@ -927,8 +927,11 @@ class Model {
      * @param int $limit Pagination hint for internal callables (0 = no limit). When non-zero, callables that accept
      *                    a $limit parameter (e.g. log-backed Models) can use it to avoid loading entire datasets
      *                    into memory. Callables that do not accept a $limit parameter are called without it.
+     * @param int $offset Pagination hint for internal callables (0 = no offset). When non-zero, callables that accept
+     *                    an $offset parameter can use it to skip entries. Callables that do not accept an $offset
+     *                    parameter are called without it.
      */
-    public function get_internal_objects(bool $from_all_parents = false, int $limit = 0): array {
+    public function get_internal_objects(bool $from_all_parents = false, int $limit = 0, int $offset = 0): array {
         global $mock_internal_objects;
 
         # Throw an error if both `config_path` and `internal_callable` are set.
@@ -954,11 +957,16 @@ class Model {
         elseif ($this->internal_callable) {
             $callable = $this->internal_callable;
 
-            # Forward the pagination limit to callables that accept it. This allows log-backed
+            # Forward the pagination limit and offset to callables that accept them. This allows log-backed
             # Models to stop reading early instead of loading entire log files into memory.
-            # Callables that don't accept a $limit parameter continue to work unchanged.
+            # Callables that don't accept these parameters continue to work unchanged.
             # Reflection results are cached per class+callable to avoid repeated introspection.
-            if ($limit > 0 && $this->callable_accepts_limit($callable)) {
+            $accepts_limit = ($limit > 0 || $offset > 0) && $this->callable_accepts_param($callable, 'limit');
+            $accepts_offset = ($limit > 0 || $offset > 0) && $this->callable_accepts_param($callable, 'offset');
+
+            if ($accepts_limit && $accepts_offset) {
+                $internal_objects = $this->$callable(limit: $limit, offset: $offset);
+            } elseif ($accepts_limit) {
                 $internal_objects = $this->$callable(limit: $limit);
             } else {
                 $internal_objects = $this->$callable();
@@ -977,20 +985,21 @@ class Model {
     }
 
     /**
-     * Checks whether an internal callable method accepts a `limit` parameter. Results are cached
-     * per class+callable combination to avoid repeated reflection overhead on paginated requests.
+     * Checks whether an internal callable method accepts a specific parameter. Results are cached
+     * per class+callable+parameter combination to avoid repeated reflection overhead on paginated requests.
      * @param string $callable The method name to check.
-     * @return bool True if the method has a parameter named 'limit'.
+     * @param string $param_name The parameter name to check for.
+     * @return bool True if the method has a parameter with the given name.
      */
-    private function callable_accepts_limit(string $callable): bool {
+    protected function callable_accepts_param(string $callable, string $param_name): bool {
         static $cache = [];
-        $key = static::class . '::' . $callable;
+        $key = static::class . '::' . $callable . '::' . $param_name;
 
         if (!isset($cache[$key])) {
             $accepts = false;
             $ref = new \ReflectionMethod($this, $callable);
             foreach ($ref->getParameters() as $param) {
-                if ($param->getName() === 'limit') {
+                if ($param->getName() === $param_name) {
                     $accepts = true;
                     break;
                 }
@@ -2012,18 +2021,63 @@ class Model {
         }
 
         # Obtain all of this Model's internally stored objects, including those from parent Models if applicable.
-        # Pass the maximum number of objects needed so that callables (e.g. log readers) can stop early.
+        # Pass the pagination parameters so that callables (e.g. log readers) can stop early.
         # When $reverse is true, the caller wants the oldest entries, so we cannot pre-limit to the newest -
         # the full dataset must be loaded to reverse correctly.
-        $max_needed = $limit > 0 && !$reverse ? $limit + $offset : 0;
-        $internal_objects = $model->get_internal_objects(from_all_parents: true, limit: $max_needed);
+        #
+        # For callables that support both limit and offset natively, pass both to allow efficient pagination
+        # directly at the data source level. For callables that only support limit, we pass limit+offset as
+        # the limit and then apply the offset via array_slice afterward.
+        $pagination_limit = $limit > 0 && !$reverse ? $limit : 0;
+        $pagination_offset = $offset > 0 && !$reverse ? $offset : 0;
+        $callable_handled_pagination = false;
+
+        # Check if the callable supports native offset handling
+        if ($model->internal_callable && $pagination_offset > 0) {
+            $callable = $model->internal_callable;
+            $callable_handles_offset = $model->callable_accepts_param($callable, 'offset');
+            $callable_handles_limit = $model->callable_accepts_param($callable, 'limit');
+
+            if ($callable_handles_offset && $callable_handles_limit) {
+                # Callable handles both - pagination will be done at source level
+                $internal_objects = $model->get_internal_objects(
+                    from_all_parents: true,
+                    limit: $pagination_limit,
+                    offset: $pagination_offset
+                );
+                $callable_handled_pagination = true;
+            } elseif ($callable_handles_limit) {
+                # Callable only handles limit - pass limit+offset and paginate afterward
+                $internal_objects = $model->get_internal_objects(
+                    from_all_parents: true,
+                    limit: $pagination_limit + $pagination_offset,
+                    offset: 0
+                );
+            } else {
+                # Callable handles neither - read all and paginate afterward
+                $internal_objects = $model->get_internal_objects(from_all_parents: true, limit: 0, offset: 0);
+            }
+        } else {
+            # No offset or not using internal_callable - use the standard path
+            $internal_objects = $model->get_internal_objects(from_all_parents: true, limit: $pagination_limit, offset: $pagination_offset);
+            # If there's no internal_callable or offset is 0, check if we can skip pagination
+            if ($model->internal_callable && $pagination_limit > 0) {
+                $callable = $model->internal_callable;
+                if ($model->callable_accepts_param($callable, 'limit') && $model->callable_accepts_param($callable, 'offset')) {
+                    $callable_handled_pagination = true;
+                }
+            }
+        }
 
         # For non `many` Models, wrap the internal object in an array so we can loop
         $internal_objects = $model->many ? $internal_objects : [$internal_objects];
 
         # Reverse the order we read the objects and/or paginate if requested
+        # Skip pagination if the callable already handled it natively
         $internal_objects = $reverse ? array_reverse($internal_objects, preserve_keys: true) : $internal_objects;
-        $internal_objects = self::paginate($internal_objects, $limit, $offset, preserve_keys: true);
+        if (!$callable_handled_pagination) {
+            $internal_objects = self::paginate($internal_objects, $limit, $offset, preserve_keys: true);
+        }
 
         # Loop through each internal object and create a Model object for it
         foreach ($internal_objects as $internal_id => $internal_object) {

@@ -32,9 +32,10 @@ class AuthLog extends Model {
     /**
      * Obtains the auth log as an array. This method is the internal callable for this Model.
      * @param int $limit Maximum entries to return (0 = all). Passed through from pagination.
+     * @param int $offset Number of newest entries to skip before collecting. Passed through from pagination.
      * @return array The auth log as an array of objects.
      */
-    protected function get_auth_log(int $limit = 0): array {
-        return $this->read_log($this->log_file, $limit);
+    protected function get_auth_log(int $limit = 0, int $offset = 0): array {
+        return $this->read_log($this->log_file, $limit, $offset);
     }
 }

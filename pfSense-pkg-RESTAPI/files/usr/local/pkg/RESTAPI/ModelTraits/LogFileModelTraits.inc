@@ -321,14 +321,18 @@ trait LogFileModelTraits {
      * loading the entire log history into memory. For the common case of small limits (e.g. ?limit=50), this
      * typically only reads the current log file and skips all compressed rotated copies entirely.
      *
+     * When $offset > 0 and $limit > 0, skips the first $offset newest entries before collecting $limit entries.
+     * This enables efficient pagination through log files without loading the entire dataset.
+     *
      * When $limit is 0 (default), all log files are read for full backward compatibility.
      *
      * @note zstd compressed logs are not supported.
      * @param string $base_log The base log file path.
      * @param int $limit Maximum total lines to return. 0 means unlimited (read everything).
+     * @param int $offset Number of newest entries to skip before collecting. Only used when $limit > 0.
      * @return array An array of all log file contents for the given base log.
      */
-    public function read_log(string $base_log, int $limit = 0): array {
+    public function read_log(string $base_log, int $limit = 0, int $offset = 0): array {
         # Ensure the base log file exists
         $this->check_file_exists($base_log);
 
@@ -364,13 +368,15 @@ trait LogFileModelTraits {
             return array_map(fn($line) => ['text' => $line], $log_contents);
         }
 
-        # Bounded read: collect lines from newest files first, stop when we have enough.
-        # This is the key optimization - for small limits, we typically only read the current
-        # log file and skip all compressed rotated copies entirely.
+        # Bounded read with offset: collect lines from newest files first, skip $offset entries,
+        # then collect $limit entries. This is the key optimization - for small limits with offset,
+        # we typically only read the current log file and skip all compressed rotated copies entirely.
         $collected = [];
+        $skipped = 0;
+        $total_needed = $limit + $offset;
 
         foreach ($log_filepaths as $log_filepath) {
-            $remaining = $limit - count($collected);
+            $remaining = $total_needed - count($collected) - $skipped;
             if ($remaining <= 0) {
                 break;
             }
@@ -393,7 +399,28 @@ trait LogFileModelTraits {
             }
         }
 
-        # Take exactly $limit entries from the end (the newest ones)
+        # Apply offset: skip the first $offset entries from the newest (end of array)
+        # Since $collected is in chronological order (oldest first), we need to:
+        # 1. Take the newest entries (from the end)
+        # 2. Skip the first $offset of those
+        # 3. Return up to $limit entries
+        if (count($collected) > $total_needed) {
+            # We have more than we need, slice to get exactly what we want
+            $collected = array_slice($collected, -$total_needed);
+        }
+
+        # Now apply offset by taking entries after skipping the newest $offset entries
+        # The newest entries are at the end, so we slice from position 0 to (count - offset)
+        # then take the last $limit of those
+        if ($offset > 0 && count($collected) > $offset) {
+            # Remove the newest $offset entries (from the end)
+            $collected = array_slice($collected, 0, -$offset);
+        } elseif ($offset > 0) {
+            # Offset is larger than what we have, return empty
+            $collected = [];
+        }
+
+        # Take exactly $limit entries from the end (the newest remaining ones)
         if (count($collected) > $limit) {
             $collected = array_slice($collected, -$limit);
         }

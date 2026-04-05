@@ -396,4 +396,133 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
 
         $this->assert_equals([['text' => 'Line 1'], ['text' => 'Line 2']], $log);
     }
+
+    /**
+     * Checks that read_log() with offset skips the specified number of newest entries.
+     */
+    public function test_read_log_with_offset(): void {
+        $model = new SystemLog();
+
+        # Create mock log files with 9 total lines
+        file_put_contents('/tmp/test_offset.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_offset.log.0', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_offset.log.1', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with limit=3 and offset=2 should skip the 2 newest and return the next 3
+        # Lines in chronological order: 1,2,3,4,5,6,7,8,9
+        # Newest 2 are 8,9 - skip those
+        # Next 3 are 5,6,7
+        $log = $model->read_log('/tmp/test_offset.log', limit: 3, offset: 2);
+
+        $this->assert_equals(
+            [['text' => 'Line 5'], ['text' => 'Line 6'], ['text' => 'Line 7']],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with offset=0 behaves the same as no offset.
+     */
+    public function test_read_log_with_zero_offset(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_zero_offset.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_zero_offset.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with offset=0 should return the same as without offset
+        $log = $model->read_log('/tmp/test_zero_offset.log', limit: 3, offset: 0);
+
+        $this->assert_equals(
+            [['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with offset larger than total entries returns empty array.
+     */
+    public function test_read_log_offset_exceeds_total(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_offset_exceed.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_offset_exceed.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with offset=100 (larger than 6 total lines) should return empty
+        $log = $model->read_log('/tmp/test_offset_exceed.log', limit: 3, offset: 100);
+
+        $this->assert_equals([], $log);
+    }
+
+    /**
+     * Checks that read_log() pagination works across multiple rotated files.
+     */
+    public function test_read_log_offset_spans_files(): void {
+        $model = new SystemLog();
+
+        # Create mock log files with 9 total lines, 3 per file
+        file_put_contents('/tmp/test_offset_span.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_offset_span.log.0', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_offset_span.log.1', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with limit=2 and offset=5 should skip 5 newest (5,6,7,8,9) and return 2 (3,4)
+        $log = $model->read_log('/tmp/test_offset_span.log', limit: 2, offset: 5);
+
+        $this->assert_equals([['text' => 'Line 2'], ['text' => 'Line 3']], $log);
+    }
+
+    /**
+     * Checks that read_log() with offset works correctly with compressed files.
+     */
+    public function test_read_log_offset_with_compressed(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_offset_gz.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_offset_gz.log.0.gz', gzencode("Line 4\nLine 5\nLine 6\n"));
+        file_put_contents('/tmp/test_offset_gz.log.1.gz', gzencode("Line 1\nLine 2\nLine 3\n"));
+
+        # Read with limit=3 and offset=3 should skip 3 newest (7,8,9) and return next 3 (4,5,6)
+        $log = $model->read_log('/tmp/test_offset_gz.log', limit: 3, offset: 3);
+
+        $this->assert_equals(
+            [['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with offset handles the edge case where limit+offset equals total entries.
+     */
+    public function test_read_log_offset_exact_boundary(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_offset_exact.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_offset_exact.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Total is 6, limit=3, offset=3 should return exactly the 3 oldest (1,2,3)
+        $log = $model->read_log('/tmp/test_offset_exact.log', limit: 3, offset: 3);
+
+        $this->assert_equals(
+            [['text' => 'Line 1'], ['text' => 'Line 2'], ['text' => 'Line 3']],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with offset handles single line pagination.
+     */
+    public function test_read_log_offset_single_line(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_offset_single.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_offset_single.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Read line by line using offset for pagination
+        $page1 = $model->read_log('/tmp/test_offset_single.log', limit: 1, offset: 0);
+        $page2 = $model->read_log('/tmp/test_offset_single.log', limit: 1, offset: 1);
+        $page3 = $model->read_log('/tmp/test_offset_single.log', limit: 1, offset: 5);
+
+        $this->assert_equals([['text' => 'Line 6']], $page1);
+        $this->assert_equals([['text' => 'Line 5']], $page2);
+        $this->assert_equals([['text' => 'Line 1']], $page3);
+    }
 }
