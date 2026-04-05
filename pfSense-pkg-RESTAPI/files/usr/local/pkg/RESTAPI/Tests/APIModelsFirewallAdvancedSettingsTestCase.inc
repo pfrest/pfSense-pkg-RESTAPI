@@ -4,6 +4,7 @@ namespace RESTAPI\Tests;
 
 use RESTAPI\Core\Command;
 use RESTAPI\Core\TestCase;
+use RESTAPI\Core\TestCaseRetry;
 use RESTAPI\Models\FirewallAdvancedSettings;
 use RESTAPI\Models\FirewallAlias;
 
@@ -11,6 +12,7 @@ class APIModelsFirewallAdvancedSettingsTestCase extends TestCase {
     /**
      * Checks that the aliasesresolveinterval field correctly configures the filterdns service.
      */
+    #[TestCaseRetry(retries: 3, delay: 5)]
     public function test_aliasesresolveinterval(): void {
         # We need an FQDN alias first to enable the filterdns service
         $alias = new FirewallAlias(name: 'test', type: 'host', address: ['example.com'], async: true);
