@@ -317,30 +317,30 @@ trait LogFileModelTraits {
      * Reads all available logs for a given base log file path and returns the contents as an array of lines.
      * This will include rotated logs, including compressed logs.
      *
-     * When $limit > 0, reads newest log files first and stops as soon as enough lines are collected, avoiding
-     * loading the entire log history into memory. For the common case of small limits (e.g. ?limit=50), this
-     * typically only reads the current log file and skips all compressed rotated copies entirely.
+     * When $limit > 0 and $reverse is false, reads newest log files first and stops as soon as enough lines
+     * are collected, avoiding loading the entire log history into memory.
      *
-     * When $offset > 0 and $limit > 0, skips the first $offset newest entries before collecting $limit entries.
-     * This enables efficient pagination through log files without loading the entire dataset.
+     * When $reverse is true, reads from the oldest entries first (beginning of oldest log files) and
+     * paginates from there. This is useful for reading logs in chronological order.
      *
      * When $limit is 0 (default), all log files are read for full backward compatibility.
      *
      * @note zstd compressed logs are not supported.
      * @param string $base_log The base log file path.
      * @param int $limit Maximum total lines to return. 0 means unlimited (read everything).
-     * @param int $offset Number of newest entries to skip before collecting. Only used when $limit > 0.
+     * @param int $offset Number of entries to skip before collecting.
+     * @param bool $reverse When true, read from oldest entries first; when false, read from newest first.
      * @return array An array of all log file contents for the given base log.
      */
-    public function read_log(string $base_log, int $limit = 0, int $offset = 0): array {
+    public function read_log(string $base_log, int $limit = 0, int $offset = 0, bool $reverse = false): array {
         # Ensure the base log file exists
         $this->check_file_exists($base_log);
 
-        # Gather all log file paths (ordered newest-first for bounded reads)
+        # Gather all log file paths (ordered newest-first)
         $log_filepaths = $this->gather_log_filepaths($base_log);
 
-        # Unbounded read: preserve existing behavior exactly (read oldest-first, return all)
-        if ($limit <= 0) {
+        # Unbounded read: read all entries
+        if ($limit <= 0 && $offset <= 0) {
             $log_contents = [];
 
             # Read oldest-first (reverse of our newest-first ordering)
@@ -364,19 +364,37 @@ trait LogFileModelTraits {
             $log_contents = array_filter($log_contents);
             $log_contents = array_values($log_contents);
 
+            # Reverse if requested (show newest first)
+            if ($reverse) {
+                $log_contents = array_reverse($log_contents);
+            }
+
             # Map the log contents so each entry is an object with a 'text' property
             return array_map(fn($line) => ['text' => $line], $log_contents);
         }
 
-        # Bounded read with offset: collect lines from newest files first, skip $offset entries,
-        # then collect $limit entries. This is the key optimization - for small limits with offset,
-        # we typically only read the current log file and skip all compressed rotated copies entirely.
+        # Handle reverse pagination (reading from oldest entries first)
+        if ($reverse) {
+            return $this->read_log_reverse($log_filepaths, $limit, $offset);
+        }
+
+        # Normal pagination: read from newest entries first
+        return $this->read_log_forward($log_filepaths, $limit, $offset);
+    }
+
+    /**
+     * Reads log entries starting from the newest, with pagination support.
+     * @param array $log_filepaths Log file paths ordered newest-first.
+     * @param int $limit Maximum entries to return.
+     * @param int $offset Number of newest entries to skip.
+     * @return array Log entries with 'text' property.
+     */
+    private function read_log_forward(array $log_filepaths, int $limit, int $offset): array {
         $collected = [];
-        $skipped = 0;
         $total_needed = $limit + $offset;
 
         foreach ($log_filepaths as $log_filepath) {
-            $remaining = $total_needed - count($collected) - $skipped;
+            $remaining = $total_needed - count($collected);
             if ($remaining <= 0) {
                 break;
             }
@@ -399,24 +417,16 @@ trait LogFileModelTraits {
             }
         }
 
-        # Apply offset: skip the first $offset entries from the newest (end of array)
-        # Since $collected is in chronological order (oldest first), we need to:
-        # 1. Take the newest entries (from the end)
-        # 2. Skip the first $offset of those
-        # 3. Return up to $limit entries
+        # Apply offset: skip the newest $offset entries (from the end)
+        # $collected is in chronological order (oldest first), newest at end
         if (count($collected) > $total_needed) {
-            # We have more than we need, slice to get exactly what we want
             $collected = array_slice($collected, -$total_needed);
         }
 
-        # Now apply offset by taking entries after skipping the newest $offset entries
-        # The newest entries are at the end, so we slice from position 0 to (count - offset)
-        # then take the last $limit of those
         if ($offset > 0 && count($collected) > $offset) {
             # Remove the newest $offset entries (from the end)
             $collected = array_slice($collected, 0, -$offset);
         } elseif ($offset > 0) {
-            # Offset is larger than what we have, return empty
             $collected = [];
         }
 
@@ -427,6 +437,67 @@ trait LogFileModelTraits {
 
         # Filter empties, reindex, and wrap in ['text' => ...] format
         $collected = array_values(array_filter($collected));
+        return array_map(fn($line) => ['text' => $line], $collected);
+    }
+
+    /**
+     * Reads log entries starting from the oldest, with pagination support.
+     * Returns entries in reverse chronological order (newest first within the page).
+     * @param array $log_filepaths Log file paths ordered newest-first.
+     * @param int $limit Maximum entries to return.
+     * @param int $offset Number of oldest entries to skip.
+     * @return array Log entries with 'text' property, in reverse chronological order.
+     */
+    private function read_log_reverse(array $log_filepaths, int $limit, int $offset): array {
+        $collected = [];
+        $total_needed = $limit + $offset;
+        $skipped = 0;
+
+        # Read oldest-first (reverse of newest-first ordering)
+        foreach (array_reverse($log_filepaths) as $log_filepath) {
+            if (count($collected) >= $total_needed) {
+                break;
+            }
+
+            $type = $this->get_log_type($log_filepath);
+
+            # Read the entire file (we need to read from the beginning for oldest-first)
+            $lines = match ($type) {
+                'bz2' => $this->read_bzip2_log($log_filepath),
+                'gz' => $this->read_gzip_log($log_filepath),
+                'xz' => $this->read_xz_log($log_filepath),
+                'log' => $this->read_uncompressed_log($log_filepath),
+                default => throw new NotAcceptableError(
+                    message: "The log file at $log_filepath has an unsupported file extension.",
+                    response_id: 'LOG_FILE_TRAITS_UNSUPPORTED_LOG_FILE_EXTENSION',
+                ),
+            };
+
+            # Filter empty lines
+            $lines = array_filter($lines, fn($line) => $line !== '');
+
+            foreach ($lines as $line) {
+                # Skip the first $offset entries
+                if ($skipped < $offset) {
+                    $skipped++;
+                    continue;
+                }
+
+                # Collect until we have $limit entries
+                if (count($collected) < $limit) {
+                    $collected[] = $line;
+                }
+
+                if (count($collected) >= $limit) {
+                    break 2;
+                }
+            }
+        }
+
+        # Reverse the collected entries so newest (within the page) comes first
+        $collected = array_reverse($collected);
+
+        # Wrap in ['text' => ...] format
         return array_map(fn($line) => ['text' => $line], $collected);
     }
 }

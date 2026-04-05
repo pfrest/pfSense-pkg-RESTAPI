@@ -461,7 +461,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Read with limit=2 and offset=5 should skip 5 newest (5,6,7,8,9) and return 2 (3,4)
         $log = $model->read_log('/tmp/test_offset_span.log', limit: 2, offset: 5);
 
-        $this->assert_equals([['text' => 'Line 2'], ['text' => 'Line 3']], $log);
+        $this->assert_equals([['text' => 'Line 3'], ['text' => 'Line 4']], $log);
     }
 
     /**
@@ -512,5 +512,196 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         $this->assert_equals([['text' => 'Line 6']], $page1);
         $this->assert_equals([['text' => 'Line 5']], $page2);
         $this->assert_equals([['text' => 'Line 1']], $page3);
+    }
+
+    /**
+     * Checks that read_log() with reverse=true returns entries in reverse order (oldest entries first, displayed newest-first).
+     */
+    public function test_read_log_reverse_basic(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_reverse.log.0', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse.log.1', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with reverse=true, limit=3 should return the 3 OLDEST entries, displayed in reverse order
+        # Oldest 3 are 1,2,3 - reversed for display: 3,2,1
+        $log = $model->read_log('/tmp/test_reverse.log', limit: 3, offset: 0, reverse: true);
+
+        $this->assert_equals([['text' => 'Line 3'], ['text' => 'Line 2'], ['text' => 'Line 1']], $log);
+    }
+
+    /**
+     * Checks that read_log() with reverse=true and offset skips oldest entries.
+     */
+    public function test_read_log_reverse_with_offset(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_offset.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_reverse_offset.log.0', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse_offset.log.1', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with reverse=true, limit=3, offset=2 should skip the 2 OLDEST (1,2) and return next 3 (3,4,5)
+        # Displayed in reverse order: 5,4,3
+        $log = $model->read_log('/tmp/test_reverse_offset.log', limit: 3, offset: 2, reverse: true);
+
+        $this->assert_equals([['text' => 'Line 5'], ['text' => 'Line 4'], ['text' => 'Line 3']], $log);
+    }
+
+    /**
+     * Checks that read_log() with reverse=true paginates correctly across files.
+     */
+    public function test_read_log_reverse_spans_files(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_span.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_reverse_span.log.0', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse_span.log.1', "Line 1\nLine 2\nLine 3\n");
+
+        # Read with reverse=true, limit=4, offset=1 should skip oldest 1 (Line 1) and return next 4 (2,3,4,5)
+        # Displayed in reverse order: 5,4,3,2
+        $log = $model->read_log('/tmp/test_reverse_span.log', limit: 4, offset: 1, reverse: true);
+
+        $this->assert_equals(
+            [['text' => 'Line 5'], ['text' => 'Line 4'], ['text' => 'Line 3'], ['text' => 'Line 2']],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with reverse=true works with compressed files.
+     */
+    public function test_read_log_reverse_with_compressed(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_gz.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_reverse_gz.log.0.gz', gzencode("Line 4\nLine 5\nLine 6\n"));
+        file_put_contents('/tmp/test_reverse_gz.log.1.gz', gzencode("Line 1\nLine 2\nLine 3\n"));
+
+        # Read with reverse=true, limit=3 should return the 3 OLDEST entries from compressed files
+        # Oldest 3 are 1,2,3 - reversed for display: 3,2,1
+        $log = $model->read_log('/tmp/test_reverse_gz.log', limit: 3, offset: 0, reverse: true);
+
+        $this->assert_equals([['text' => 'Line 3'], ['text' => 'Line 2'], ['text' => 'Line 1']], $log);
+    }
+
+    /**
+     * Checks that read_log() with reverse=true and offset exceeding total returns empty.
+     */
+    public function test_read_log_reverse_offset_exceeds_total(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_exceed.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse_exceed.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Offset exceeds total entries (6), should return empty
+        $log = $model->read_log('/tmp/test_reverse_exceed.log', limit: 3, offset: 100, reverse: true);
+
+        $this->assert_equals([], $log);
+    }
+
+    /**
+     * Checks that read_log() with reverse=true returns all entries when limit exceeds total.
+     */
+    public function test_read_log_reverse_limit_exceeds_total(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_limit.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse_limit.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Limit exceeds total (6 entries), should return all in reverse order
+        $log = $model->read_log('/tmp/test_reverse_limit.log', limit: 100, offset: 0, reverse: true);
+
+        $this->assert_equals(
+            [
+                ['text' => 'Line 6'],
+                ['text' => 'Line 5'],
+                ['text' => 'Line 4'],
+                ['text' => 'Line 3'],
+                ['text' => 'Line 2'],
+                ['text' => 'Line 1'],
+            ],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with reverse=true and no limit/offset reverses all entries.
+     */
+    public function test_read_log_reverse_unbounded(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_unbound.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse_unbound.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Unbounded with reverse=true should return all entries in reverse order (newest first)
+        $log = $model->read_log('/tmp/test_reverse_unbound.log', limit: 0, offset: 0, reverse: true);
+
+        $this->assert_equals(
+            [
+                ['text' => 'Line 6'],
+                ['text' => 'Line 5'],
+                ['text' => 'Line 4'],
+                ['text' => 'Line 3'],
+                ['text' => 'Line 2'],
+                ['text' => 'Line 1'],
+            ],
+            $log,
+        );
+    }
+
+    /**
+     * Checks that read_log() with reverse=true single line pagination works correctly.
+     */
+    public function test_read_log_reverse_single_line(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_reverse_single.log', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_reverse_single.log.0', "Line 1\nLine 2\nLine 3\n");
+
+        # Read line by line from the oldest end using offset for pagination
+        $page1 = $model->read_log('/tmp/test_reverse_single.log', limit: 1, offset: 0, reverse: true);
+        $page2 = $model->read_log('/tmp/test_reverse_single.log', limit: 1, offset: 1, reverse: true);
+        $page3 = $model->read_log('/tmp/test_reverse_single.log', limit: 1, offset: 5, reverse: true);
+
+        $this->assert_equals([['text' => 'Line 1']], $page1);
+        $this->assert_equals([['text' => 'Line 2']], $page2);
+        $this->assert_equals([['text' => 'Line 6']], $page3);
+    }
+
+    /**
+     * Checks that read_log() correctly handles the boundary between reverse and normal pagination.
+     * This verifies that the two modes are complementary - paginating through the entire log.
+     */
+    public function test_read_log_pagination_consistency(): void {
+        $model = new SystemLog();
+
+        file_put_contents('/tmp/test_consistency.log', "Line 7\nLine 8\nLine 9\n");
+        file_put_contents('/tmp/test_consistency.log.0', "Line 4\nLine 5\nLine 6\n");
+        file_put_contents('/tmp/test_consistency.log.1', "Line 1\nLine 2\nLine 3\n");
+
+        # Normal mode (reverse=false): paginate from newest
+        # Page 1: limit=3, offset=0 -> 7,8,9 (newest 3)
+        # Page 2: limit=3, offset=3 -> 4,5,6
+        # Page 3: limit=3, offset=6 -> 1,2,3 (oldest 3)
+        $normal_page1 = $model->read_log('/tmp/test_consistency.log', limit: 3, offset: 0, reverse: false);
+        $normal_page2 = $model->read_log('/tmp/test_consistency.log', limit: 3, offset: 3, reverse: false);
+        $normal_page3 = $model->read_log('/tmp/test_consistency.log', limit: 3, offset: 6, reverse: false);
+
+        $this->assert_equals([['text' => 'Line 7'], ['text' => 'Line 8'], ['text' => 'Line 9']], $normal_page1);
+        $this->assert_equals([['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']], $normal_page2);
+        $this->assert_equals([['text' => 'Line 1'], ['text' => 'Line 2'], ['text' => 'Line 3']], $normal_page3);
+
+        # Reverse mode (reverse=true): paginate from oldest
+        # Page 1: limit=3, offset=0 -> 1,2,3 (oldest 3, reversed: 3,2,1)
+        # Page 2: limit=3, offset=3 -> 4,5,6 (reversed: 6,5,4)
+        # Page 3: limit=3, offset=6 -> 7,8,9 (reversed: 9,8,7)
+        $reverse_page1 = $model->read_log('/tmp/test_consistency.log', limit: 3, offset: 0, reverse: true);
+        $reverse_page2 = $model->read_log('/tmp/test_consistency.log', limit: 3, offset: 3, reverse: true);
+        $reverse_page3 = $model->read_log('/tmp/test_consistency.log', limit: 3, offset: 6, reverse: true);
+
+        $this->assert_equals([['text' => 'Line 3'], ['text' => 'Line 2'], ['text' => 'Line 1']], $reverse_page1);
+        $this->assert_equals([['text' => 'Line 6'], ['text' => 'Line 5'], ['text' => 'Line 4']], $reverse_page2);
+        $this->assert_equals([['text' => 'Line 9'], ['text' => 'Line 8'], ['text' => 'Line 7']], $reverse_page3);
     }
 }
