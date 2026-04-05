@@ -194,6 +194,9 @@ class APICoreModelTestCase extends RESTAPI\Core\TestCase {
             $test_model->test_string_namespace->internal_namespace => [
                 $test_model->test_string_namespace->internal_name => $test_model->test_string_namespace->value,
             ],
+            $test_model->test_string_choices->internal_name => $test_model->test_string_choices->value,
+            $test_model->test_string_choices_callable->internal_name =>
+                $test_model->test_string_choices_callable->value,
         ]);
     }
 
@@ -209,6 +212,8 @@ class APICoreModelTestCase extends RESTAPI\Core\TestCase {
             'test_string_unique',
             'test_string_many',
             'test_string_namespace',
+            'test_string_choices',
+            'test_string_choices_callable',
         ]);
     }
 
