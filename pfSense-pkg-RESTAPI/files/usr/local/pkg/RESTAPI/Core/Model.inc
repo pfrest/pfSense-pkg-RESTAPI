@@ -2043,7 +2043,7 @@ class Model {
                 $internal_objects = $model->get_internal_objects(
                     from_all_parents: true,
                     limit: $pagination_limit,
-                    offset: $pagination_offset
+                    offset: $pagination_offset,
                 );
                 $callable_handled_pagination = true;
             } elseif ($callable_handles_limit) {
@@ -2051,7 +2051,7 @@ class Model {
                 $internal_objects = $model->get_internal_objects(
                     from_all_parents: true,
                     limit: $pagination_limit + $pagination_offset,
-                    offset: 0
+                    offset: 0,
                 );
             } else {
                 # Callable handles neither - read all and paginate afterward
@@ -2059,11 +2059,18 @@ class Model {
             }
         } else {
             # No offset or not using internal_callable - use the standard path
-            $internal_objects = $model->get_internal_objects(from_all_parents: true, limit: $pagination_limit, offset: $pagination_offset);
+            $internal_objects = $model->get_internal_objects(
+                from_all_parents: true,
+                limit: $pagination_limit,
+                offset: $pagination_offset,
+            );
             # If there's no internal_callable or offset is 0, check if we can skip pagination
             if ($model->internal_callable && $pagination_limit > 0) {
                 $callable = $model->internal_callable;
-                if ($model->callable_accepts_param($callable, 'limit') && $model->callable_accepts_param($callable, 'offset')) {
+                if (
+                    $model->callable_accepts_param($callable, 'limit') &&
+                    $model->callable_accepts_param($callable, 'offset')
+                ) {
                     $callable_handled_pagination = true;
                 }
             }

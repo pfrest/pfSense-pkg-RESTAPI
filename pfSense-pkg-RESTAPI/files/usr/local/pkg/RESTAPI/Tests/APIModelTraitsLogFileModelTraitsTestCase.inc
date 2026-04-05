@@ -414,10 +414,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Next 3 are 5,6,7
         $log = $model->read_log('/tmp/test_offset.log', limit: 3, offset: 2);
 
-        $this->assert_equals(
-            [['text' => 'Line 5'], ['text' => 'Line 6'], ['text' => 'Line 7']],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 5'], ['text' => 'Line 6'], ['text' => 'Line 7']], $log);
     }
 
     /**
@@ -432,10 +429,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Read with offset=0 should return the same as without offset
         $log = $model->read_log('/tmp/test_zero_offset.log', limit: 3, offset: 0);
 
-        $this->assert_equals(
-            [['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']], $log);
     }
 
     /**
@@ -483,10 +477,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Read with limit=3 and offset=3 should skip 3 newest (7,8,9) and return next 3 (4,5,6)
         $log = $model->read_log('/tmp/test_offset_gz.log', limit: 3, offset: 3);
 
-        $this->assert_equals(
-            [['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 4'], ['text' => 'Line 5'], ['text' => 'Line 6']], $log);
     }
 
     /**
@@ -501,10 +492,7 @@ class APIModelTraitsLogFileModelTraitsTestCase extends TestCase {
         # Total is 6, limit=3, offset=3 should return exactly the 3 oldest (1,2,3)
         $log = $model->read_log('/tmp/test_offset_exact.log', limit: 3, offset: 3);
 
-        $this->assert_equals(
-            [['text' => 'Line 1'], ['text' => 'Line 2'], ['text' => 'Line 3']],
-            $log,
-        );
+        $this->assert_equals([['text' => 'Line 1'], ['text' => 'Line 2'], ['text' => 'Line 3']], $log);
     }
 
     /**
