@@ -2022,7 +2022,8 @@ class Model {
         $callable_handled_pagination = false;
         if ($model->internal_callable && $requests_pagination) {
             $callable = $model->internal_callable;
-            $callable_handles_all = $model->callable_accepts_param($callable, 'limit') &&
+            $callable_handles_all =
+                $model->callable_accepts_param($callable, 'limit') &&
                 $model->callable_accepts_param($callable, 'offset') &&
                 $model->callable_accepts_param($callable, 'reverse');
 
