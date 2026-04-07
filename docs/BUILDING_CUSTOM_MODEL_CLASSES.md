@@ -1057,6 +1057,13 @@ class MyCustomModel extends Model {
 }
 ```
 
+!!! Tip
+    In some cases, it may be desirable to have your internal callable handle pagination to ensure the large data sets
+    are handled more efficiently. You can delegate pagination control to your internal callable by defining the 
+    `limit`, `offset` and `reverse` parameters in your internal callable. All three parameters must be present.
+    When these parameters are defined, is the responsibility of the internal callable to handle pagination and return 
+    the correct subset of data based on the parameters' values.
+
 ### Defining CRUD Methods
 
 When creating a non-configuration based Model, the default `create()`, `update()`, and `delete()` methods will throw an error. To enable these methods, you must define the `_create()`, `_update()` and `_delete()` yourself. Below is an
