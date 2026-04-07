@@ -35,6 +35,7 @@ class RESTAPIAccessListEntry extends Model {
         $this->type = new StringField(
             default: 'allow',
             choices: ['allow', 'deny'],
+            verbose_name: 'Type',
             help_text: 'The type of access this entry provides. "allow" entries permit access to the REST API ' .
                 'from the specified networks. "deny" entries block access to the REST API from the specified networks.',
         );
@@ -42,12 +43,14 @@ class RESTAPIAccessListEntry extends Model {
             default: 1,
             minimum: 0,
             maximum: 100,
+            verbose_name: 'Weight',
             help_text: 'The weight of this entry. Entries with lower weights are evaluated first. If multiple ' .
                 'entries match a request, the entry with the lowest weight will be applied.',
         );
         $this->network = new StringField(
             required: true,
             validators: [new SubnetValidator()],
+            verbose_name: 'Network',
             help_text: 'The network (in CIDR notation) that this entry applies to. Clients interacting with the ' .
                 'REST API from this network will be affected by this entry.',
         );
@@ -59,6 +62,7 @@ class RESTAPIAccessListEntry extends Model {
             allow_empty: true,
             many: true,
             many_minimum: 0,
+            verbose_name: 'Users',
             help_text: 'The users that this entry applies to. Only users in this list will be affected by this ' .
                 'entry. Leave empty if this entry should apply to all users.',
         );

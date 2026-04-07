@@ -22,6 +22,7 @@ class DHCPServerApply extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Applied',
             help_text: 'Displays `true` if all DHCP server changes are applied and there are no pending changes left.' .
                 'Displays `false` when there are pending DHCP server changes that have not been applied.',
         );

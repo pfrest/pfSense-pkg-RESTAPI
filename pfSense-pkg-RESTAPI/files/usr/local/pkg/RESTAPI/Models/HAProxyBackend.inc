@@ -90,30 +90,35 @@ class HAProxyBackend extends Model {
             required: true,
             unique: true,
             validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
+            verbose_name: 'Name',
             help_text: 'The unique name for this backend.',
         );
         $this->servers = new NestedModelField(
             model_class: 'HAProxyBackendServer',
             default: [],
             allow_empty: true,
+            verbose_name: 'Servers',
             help_text: 'The pool of servers this backend will use.',
         );
         $this->balance = new StringField(
             default: '',
             choices: ['', 'roundrobin', 'static-rr', 'leastconn', 'source', 'uri'],
             allow_empty: true,
+            verbose_name: 'Balance',
             help_text: 'The load balancing option to use for servers assigned to this backend.',
         );
         $this->balance_urilen = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['balance' => 'uri'],
+            verbose_name: 'Balance URI Length',
             help_text: 'The number of URI characters the algorithm should consider when hashing.',
         );
         $this->balance_uridepth = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['balance' => 'uri'],
+            verbose_name: 'Balance URI Depth',
             help_text: 'The maximum directory depth to be used to compute the hash. One level is counted for each ' .
                 'slash in the request.',
         );
@@ -122,44 +127,52 @@ class HAProxyBackend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['balance' => 'uri'],
+            verbose_name: 'Balance URI Whole',
             help_text: 'Enables or disables allowing the use of whole URIs, including URL parameters.',
         );
         $this->acls = new NestedModelField(
             model_class: 'HAProxyBackendACL',
             default: [],
             allow_empty: true,
+            verbose_name: 'ACLs',
             help_text: 'The ACLs to apply to this backend.',
         );
         $this->actions = new NestedModelField(
             model_class: 'HAProxyBackendAction',
             default: [],
             allow_empty: true,
+            verbose_name: 'Actions',
             help_text: 'The actions to apply to this backend.',
         );
         $this->connection_timeout = new IntegerField(
             default: 30000,
             allow_null: true,
+            verbose_name: 'Connection Timeout',
             help_text: 'The amount of time (in milliseconds) to wait before giving up on connections.',
         );
         $this->server_timeout = new IntegerField(
             default: 30000,
             allow_null: true,
+            verbose_name: 'Server Timeout',
             help_text: 'The amount of time (in milliseconds) to wait for data transferred to or from the server.',
         );
         $this->retries = new IntegerField(
             default: null,
             allow_null: true,
+            verbose_name: 'Retries',
             help_text: 'The number of retry attempts to allow after a connection failure to the server.',
         );
         $this->check_type = new StringField(
             default: 'none',
             choices: ['none', 'Basic', 'HTTP', 'LDAP', 'MySQL', 'PostgreSQL', 'Redis', 'SMTP', 'ESMTP', 'SSL'],
+            verbose_name: 'Check Type',
             help_text: 'The health check method to use when checking the health of backend servers.',
         );
         $this->checkinter = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['!check_type' => 'none'],
+            verbose_name: 'Check Interval',
             help_text: 'The interval (in milliseconds) in which health checks will be performed.',
         );
         $this->log_health_checks = new BooleanField(
@@ -167,30 +180,35 @@ class HAProxyBackend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['!check_type' => 'none'],
+            verbose_name: 'Log Health Checks',
             help_text: 'Enables or disables logging changes to the health check status',
         );
         $this->httpcheck_method = new StringField(
             default: 'OPTIONS',
             choices: ['OPTIONS', 'HEAD', 'GET', 'POST', 'PUT', 'DELETE', 'TRACE'],
             conditions: ['check_type' => 'HTTP'],
+            verbose_name: 'HTTP Check Method',
             help_text: 'The HTTP method to use for HTTP health checks.',
         );
         $this->monitor_uri = new StringField(
             default: '/',
             allow_empty: true,
             conditions: ['check_type' => 'HTTP'],
+            verbose_name: 'Monitor URI',
             help_text: 'The URL to use for HTTP health checks.',
         );
         $this->monitor_httpversion = new StringField(
             default: 'HTTP/1.0',
             allow_empty: true,
             conditions: ['check_type' => 'HTTP'],
+            verbose_name: 'Monitor HTTP Version',
             help_text: 'The HTTP version to use for HTTP health checks.',
         );
         $this->monitor_username = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['check_type' => ['MySQL', 'PostgreSQL']],
+            verbose_name: 'Monitor Username',
             help_text: 'The username to use for MySQL or PostgreSQL health checks.',
         );
         $this->monitor_domain = new StringField(
@@ -198,12 +216,14 @@ class HAProxyBackend extends Model {
             allow_empty: true,
             conditions: ['check_type' => ['SMTP', 'ESMTP']],
             validators: [new HostnameValidator(allow_hostname: true, allow_domain: true, allow_fqdn: true)],
+            verbose_name: 'Monitor Domain',
             help_text: 'The domain to use for SMTP or ESMTP health checks.',
         );
         $this->agent_checks = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Agent Checks',
             help_text: 'Enables or disables using a TCP connection to read an ASCII string of the form.',
         );
         $this->agent_port = new PortField(
@@ -211,22 +231,26 @@ class HAProxyBackend extends Model {
             allow_alias: false,
             allow_range: false,
             conditions: ['agent_checks' => true],
+            verbose_name: 'Agent Port',
         );
         $this->agent_inter = new IntegerField(
             default: 2000,
             allow_null: true,
             conditions: ['agent_checks' => true],
+            verbose_name: 'Agent Inter',
             help_text: 'The interval (in milliseconds) between agent checks.',
         );
         $this->persist_cookie_enabled = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Persist Cookie Enabled',
             help_text: 'Enables or disables cookie based persistence.',
         );
         $this->persist_cookie_name = new StringField(
             required: true,
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'Persist Cookie Name',
             help_text: 'The string name to track in Set-Cookie and Cookie HTTP headers.',
         );
         $this->persist_cookie_mode = new StringField(
@@ -243,6 +267,7 @@ class HAProxyBackend extends Model {
                 'passive-session-prefix',
             ],
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'Persist Cookie Mode',
             help_text: 'The mode HAProxy uses to insert/prefix/replace or examine cookie and set-cookie headers.',
         );
         $this->persist_cookie_cachable = new BooleanField(
@@ -250,6 +275,7 @@ class HAProxyBackend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'Persist Cookie Cachable',
             help_text: 'Enables or disables allowing shared caches to cache the server response.',
         );
         $this->persist_cookie_postonly = new BooleanField(
@@ -257,6 +283,7 @@ class HAProxyBackend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'Persist Cookie Post Only',
             help_text: 'Enables or disables only inserting cookies on POST requests.',
         );
         $this->persist_cookie_httponly = new BooleanField(
@@ -264,6 +291,7 @@ class HAProxyBackend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'Persist Cookie HTTP Only',
             help_text: 'Enables or disables preventing the use of cookies with non-HTTP components.',
         );
         $this->persist_cookie_secure = new BooleanField(
@@ -271,18 +299,21 @@ class HAProxyBackend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'Persist Cookie Secure',
             help_text: 'Enables or disables prevention of cookie usage over non-secure channels.',
         );
         $this->haproxy_cookie_maxidle = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'HAProxy Cookie Max Idle',
             help_text: 'The max-idle time to allow. This option only applies to insert mode cookies.',
         );
         $this->haproxy_cookie_maxlife = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'HAProxy Cookie Max Life',
             help_text: 'The max-life time to allow. This option only applies to insert mode cookies.',
         );
         $this->haproxy_cookie_domains = new StringField(
@@ -292,12 +323,14 @@ class HAProxyBackend extends Model {
             delimiter: ' ',
             conditions: ['persist_cookie_enabled' => true],
             validators: [new HostnameValidator(allow_hostname: true, allow_domain: true, allow_fqdn: true)],
+            verbose_name: 'HAProxy Cookie Domains',
             help_text: 'The domains to set the cookies for.',
         );
         $this->haproxy_cookie_dynamic_cookie_key = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['persist_cookie_enabled' => true],
+            verbose_name: 'HAProxy Dynamic Cookie Key',
             help_text: 'The dynamic cookie secret key. This is will be used to generate dynamic cookies ' .
                 'for this backend.',
         );
@@ -311,6 +344,7 @@ class HAProxyBackend extends Model {
                 'stick_cookie_value',
                 'stick_rdp_cookie',
             ],
+            verbose_name: 'Persist Sticky Type',
             help_text: 'The sticky table mode to use for this backend. These options are used to make sure subsequent ' .
                 'requests from a single client go to the same backend.',
         );
@@ -318,6 +352,7 @@ class HAProxyBackend extends Model {
             default: '',
             allow_empty: true,
             conditions: ['!persist_sticky_type' => 'none'],
+            verbose_name: 'Persist Stick Expire',
             help_text: 'The maximum duration of an entry in the stick-table since it was last created, ' .
                 'refreshed or matched.',
         );
@@ -325,24 +360,28 @@ class HAProxyBackend extends Model {
             default: '',
             allow_empty: true,
             conditions: ['!persist_sticky_type' => 'none'],
+            verbose_name: 'Persist Stick Table Size',
             help_text: 'The maximum number of entries allowed in the table. This value directly impacts memory usage.',
         );
         $this->persist_stick_cookiename = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['persist_sticky_type' => ['stick_cookie_value', 'stick_rdp_cookie']],
+            verbose_name: 'Persist Stick Cookie Name',
             help_text: 'The cookie name to use for stick table.',
         );
         $this->persist_stick_length = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['persist_sticky_type' => ['stick_cookie_value', 'stick_rdp_cookie']],
+            verbose_name: 'Persist Stick Length',
             help_text: 'The maximum number of characters allowed in a string type stick table',
         );
         $this->email_level = new StringField(
             default: '',
             choices: ['', 'dontlog', 'emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug'],
             allow_empty: true,
+            verbose_name: 'Email Level',
             help_text: 'The maximum log level to send emails for. Leave empty to disable sending email alerts. If ' .
                 'left empty, the value set in the global settings will be used.',
         );
@@ -350,6 +389,7 @@ class HAProxyBackend extends Model {
             default: '',
             allow_empty: true,
             validators: [new EmailAddressValidator()],
+            verbose_name: 'Email To',
             help_text: 'The email address to send emails to. If left empty, the value set in the ' .
                 'global settings will be used.',
         );
@@ -357,12 +397,14 @@ class HAProxyBackend extends Model {
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Stats Enabled',
             help_text: 'Enables or disables the HAProxy statistics page for this backend.',
         );
         $this->stats_uri = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats URI',
             help_text: 'The statistics URL for this backend.',
         );
         $this->stats_scope = new StringField(
@@ -371,18 +413,21 @@ class HAProxyBackend extends Model {
             many: true,
             delimiter: ',',
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Scope',
             help_text: 'The frontends and backends stats to be shown, leave empty to show all.',
         );
         $this->stats_realm = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Realm',
             help_text: 'The realm that is shown when authentication is requested by HAProxy.',
         );
         $this->stats_username = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Username',
             help_text: 'The stats page username',
         );
         $this->stats_password = new StringField(
@@ -390,12 +435,14 @@ class HAProxyBackend extends Model {
             allow_empty: true,
             sensitive: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Password',
             help_text: 'The stats page password.',
         );
         $this->stats_admin = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Admin',
             help_text: 'The admin to make use of the options disable/enable/softstop/softstart/killsessions ' .
                 'from the stats page.',
         );
@@ -403,6 +450,7 @@ class HAProxyBackend extends Model {
             default: '',
             allow_empty: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Node',
             help_text: 'The short name displayed in stats and helps differentiate which server in the ' .
                 'cluster is actually serving clients.',
         );
@@ -410,17 +458,20 @@ class HAProxyBackend extends Model {
             default: '',
             allow_empty: true,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Desc',
             help_text: 'The verbose description for this node.',
         );
         $this->stats_refresh = new IntegerField(
             default: 10,
             conditions: ['stats_enabled' => true],
+            verbose_name: 'Stats Refresh',
             help_text: 'The interval (in seconds) in which the stats page is refreshed.',
         );
         $this->errorfiles = new NestedModelField(
             model_class: 'HAProxyBackendErrorFile',
             default: [],
             allow_empty: true,
+            verbose_name: 'Error Files',
             help_text: 'The HAProxy error file mappings to use for this backend.',
         );
         $this->strict_transport_security = new IntegerField(
@@ -428,34 +479,40 @@ class HAProxyBackend extends Model {
             allow_null: true,
             minimum: 1,
             maximum: 1000000000,
+            verbose_name: 'Strict Transport Security',
             help_text: 'The HSTS validity period for this backend. Leave empty to disable HSTS.',
         );
         $this->cookie_attribute_secure = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Cookie Secure Attribute',
             help_text: 'Enables or disables assigning the secure attributes on cookies for this backend.',
         );
         $this->advanced = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Advanced',
             help_text: 'The per server pass thru to apply to each server line.',
         );
         $this->advanced_backend = new Base64Field(
             default: '',
             allow_empty: true,
+            verbose_name: 'Advanced Backend Config',
             help_text: 'The backend pass thru to apply to the backend section.',
         );
         $this->transparent_clientip = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Transparent Client IP',
             help_text: 'Enables or disables using the client-IP to connect to backend servers.',
         );
         $this->transparent_interface = new InterfaceField(
             default: null,
             allow_null: true,
             conditions: ['transparent_clientip' => true],
+            verbose_name: 'Transparent Interface',
             help_text: 'The interface that will connect to the backend server.',
         );
 

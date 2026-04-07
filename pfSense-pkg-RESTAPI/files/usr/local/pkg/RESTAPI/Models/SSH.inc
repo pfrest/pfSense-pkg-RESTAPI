@@ -25,23 +25,27 @@ class SSH extends Model {
         $this->enable = new BooleanField(
             default: false,
             indicates_true: 'enabled',
+            verbose_name: 'Enable',
             help_text: 'Enable the SSH server on this system.',
         );
         $this->sshdagentforwarding = new BooleanField(
             default: false,
             indicates_true: 'enabled',
+            verbose_name: 'SSH Agent Forwarding',
             help_text: 'Enable support for ssh-agent forwarding.',
         );
         $this->port = new PortField(
             default: '22',
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Port',
             help_text: 'The TCP port the SSH server will listen on.',
         );
         $this->sshdkeyonly = new StringField(
             default: null,
             choices: ['enabled', 'both'],
             allow_null: true,
+            verbose_name: 'SSH Key Only Auth',
             help_text: 'The SSH authentication mode to use. Use `enabled` to require public key authentication, use ' .
                 'both to require both a public key AND a password, or use `null` to allow a password OR a public key.',
         );

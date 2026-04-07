@@ -32,18 +32,21 @@ class DNSResolverHostOverrideAlias extends Model {
             allow_empty: true,
             maximum_length: 255,
             validators: [new HostnameValidator()],
+            verbose_name: 'Host',
             help_text: 'The hostname portion of the host override alias.',
         );
         $this->domain = new StringField(
             required: true,
             maximum_length: 255,
             validators: [new HostnameValidator()],
+            verbose_name: 'Domain',
             help_text: 'The hostname portion of the host override alias.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
             internal_name: 'description',
+            verbose_name: 'Description',
             help_text: 'A detailed description for this host override alias.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

@@ -24,12 +24,14 @@ class CARP extends Model {
             required: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Enable',
             help_text: 'Enables or disables CARP on this system.',
         );
         $this->maintenance_mode = new BooleanField(
             required: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Maintenance Mode',
             help_text: 'Enables or disables CARP maintenance mode on this system.',
         );
 

@@ -25,16 +25,19 @@ class SystemVersion extends Model {
         # Set model Fields
         $this->version = new StringField(
             read_only: true,
+            verbose_name: 'Version',
             help_text: 'The official pfSense version release name. (e.g. X.X.X-RELEASE)',
         );
         $this->base = new StringField(
             read_only: true,
+            verbose_name: 'Base',
             help_text: 'The base pfSense version. For pfSense CE, this will be the major and minor version but not ' .
                 'the patch. For pfSense Plus, this will be the version year and month but not the patch.',
         );
-        $this->patch = new StringField(read_only: true, help_text: "The pfSense build's patch version.");
+        $this->patch = new StringField(read_only: true, verbose_name: 'Patch', help_text: "The pfSense build's patch version.");
         $this->buildtime = new StringField(
             read_only: true,
+            verbose_name: 'Build Time',
             help_text: 'The datetime string of when the pfSense version was initially built.',
         );
 

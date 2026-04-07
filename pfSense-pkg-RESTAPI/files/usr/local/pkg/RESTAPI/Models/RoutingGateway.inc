@@ -56,30 +56,36 @@ class RoutingGateway extends Model {
             maximum_length: 31,
             referenced_by: ['StaticRoute' => 'gateway', 'FirewallRule' => 'gateway'],
             validators: [new FilterNameValidator()],
+            verbose_name: 'Name',
             help_text: 'Sets a name for the gateway.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'Sets a descriptions for the gateway.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disable this gateway.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this gateway.');
         $this->ipprotocol = new StringField(
             required: true,
             choices: ['inet', 'inet6'],
+            verbose_name: 'IP Protocol',
             help_text: 'Sets the Internet Protocol version this gateway uses.',
         );
         $this->interface = new InterfaceField(
             required: true,
+            verbose_name: 'Interface',
             help_text: 'Sets the interface this gateway will apply to.',
         );
         $this->gateway = new StringField(
             required: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_keywords: ['dynamic'])],
+            verbose_name: 'Gateway',
             help_text: 'Sets the IP address of the remote gateway.',
         );
         $this->monitor_disable = new BooleanField(
             default: false,
+            verbose_name: 'Monitor Disable',
             help_text: 'Disable gateway monitoring for this gateway.',
         );
         $this->monitor = new StringField(
@@ -87,23 +93,27 @@ class RoutingGateway extends Model {
             allow_null: true,
             conditions: ['monitor_disable' => false],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'Monitor',
             help_text: "Sets a different IP address to use when monitoring this gateway. This is typically only
                 necessary if the gateway IP does not accept ICMP probes.",
         );
         $this->action_disable = new BooleanField(
             default: false,
+            verbose_name: 'Action Disable',
             help_text: "Disable actions from taking place when gateway events occur. The gateway will always be
                 considered up.",
         );
-        $this->force_down = new BooleanField(default: false, help_text: 'Always consider this gateway to be up.');
+        $this->force_down = new BooleanField(default: false, verbose_name: 'Force Down', help_text: 'Always consider this gateway to be up.');
         $this->dpinger_dont_add_static_route = new BooleanField(
             default: false,
+            verbose_name: 'Dpinger No Static Route',
             help_text: "Prevents gateway monitoring from adding a static route for this gateway's monitor IP.",
         );
         $this->gw_down_kill_states = new StringField(
             default: '',
             choices: ['', 'none', 'down'],
             allow_empty: true,
+            verbose_name: 'GW Down Kill States',
             help_text: 'Controls the state killing behavior when this specific gateway goes down. Killing states for ' .
                 'specific down gateways only affects states created by policy routing rules and reply-to. Has no ' .
                 'effect if gateway monitoring or its action are disabled or if the gateway is forced down. May not ' .
@@ -111,60 +121,71 @@ class RoutingGateway extends Model {
         );
         $this->nonlocalgateway = new BooleanField(
             default: true,
+            verbose_name: 'Non-Local Gateway',
             help_text: "Allows or disallows gateway IPs that are not a part of the parent interface's subnet(s).",
         );
         $this->weight = new IntegerField(
             default: 1,
             minimum: 1,
             maximum: 30,
+            verbose_name: 'Weight',
             help_text: 'Sets the weight for this gateway when used in a Gateway Group.',
         );
         $this->data_payload = new IntegerField(
             default: 1,
             minimum: 1,
+            verbose_name: 'Data Payload',
             help_text: 'Sets the data payload to send in ICMP packets to gateway monitor IP.',
         );
         $this->latencylow = new IntegerField(
             default: 200,
             minimum: 1,
+            verbose_name: 'Low Latency Threshold',
             help_text: 'Sets the threshold to consider latency as low.',
         );
         $this->latencyhigh = new IntegerField(
             default: 500,
             minimum: 2,
+            verbose_name: 'High Latency Threshold',
             help_text: 'Sets the threshold to consider latency as high. This value must be greater than `latencylow`.',
         );
         $this->losslow = new IntegerField(
             default: 10,
             minimum: 1,
             maximum: 99,
+            verbose_name: 'Low Loss Threshold',
             help_text: 'Sets the threshold to consider packet loss as low.',
         );
         $this->losshigh = new IntegerField(
             default: 20,
             minimum: 2,
             maximum: 100,
+            verbose_name: 'High Loss Threshold',
             help_text: 'Sets the threshold to consider packet loss as high. This value must be greater than `losslow`.',
         );
         $this->interval = new IntegerField(
             default: 500,
             minimum: 1,
             maximum: 3600000,
+            verbose_name: 'Interval',
             help_text: 'Sets how often ICMP probes will be sent in milliseconds.',
         );
         $this->loss_interval = new IntegerField(
             default: 2000,
             minimum: 1,
+            verbose_name: 'Loss Interval',
             help_text: 'Sets the time interval in milliseconds before packets are treated as lost.',
         );
         $this->time_period = new IntegerField(
             default: 60000,
             minimum: 1,
+            verbose_name: 'Time Period',
             help_text: 'Sets the time period in milliseconds over which results are averaged.',
         );
         $this->alert_interval = new IntegerField(
             default: 1000,
             minimum: 1,
+            verbose_name: 'Alert Interval',
             help_text: 'Sets the time interval in milliseconds between checking for an alert conditions.',
         );
 

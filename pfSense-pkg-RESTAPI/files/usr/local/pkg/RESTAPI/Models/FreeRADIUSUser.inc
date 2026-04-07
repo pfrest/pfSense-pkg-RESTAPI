@@ -40,6 +40,7 @@ class FreeRADIUSUser extends Model {
             required: true,
             unique: true,
             internal_name: 'varusersusername',
+            verbose_name: 'Username',
             help_text: 'The username for this user.',
         );
         $this->password = new StringField(
@@ -49,6 +50,7 @@ class FreeRADIUSUser extends Model {
             sensitive: true,
             internal_name: 'varuserspassword',
             conditions: ['motp_enable' => false],
+            verbose_name: 'Password',
             help_text: 'The password for this username.',
         );
         $this->password_encryption = new StringField(
@@ -57,6 +59,7 @@ class FreeRADIUSUser extends Model {
             choices: ['Cleartext-Password', 'MD5-Password', 'MD5-Password-hashed', 'NT-Password-hashed'],
             internal_name: 'varuserspasswordencryption',
             conditions: ['motp_enable' => false],
+            verbose_name: 'Password Encryption',
             help_text: 'The encryption method for the password.',
         );
         $this->motp_enable = new BooleanField(
@@ -65,6 +68,7 @@ class FreeRADIUSUser extends Model {
             indicates_true: 'on',
             indicates_false: '',
             internal_name: 'varusersmotpenable',
+            verbose_name: 'MOTP Enable',
             help_text: 'Enable or disable the use of Mobile One-Time Password (MOTP) for this user.',
         );
         $this->motp_authmethod = new StringField(
@@ -73,6 +77,7 @@ class FreeRADIUSUser extends Model {
             choices: ['motp', 'googleauth'],
             internal_name: 'varusersauthmethod',
             conditions: ['motp_enable' => true],
+            verbose_name: 'MOTP Auth Method',
             help_text: 'The authentication method for the Mobile One-Time Password (MOTP).',
         );
         $this->motp_secret = new StringField(
@@ -81,6 +86,7 @@ class FreeRADIUSUser extends Model {
             sensitive: true,
             internal_name: 'varusersmotpinitsecret',
             conditions: ['motp_enable' => true],
+            verbose_name: 'MOTP Secret',
             help_text: 'The secret for the Mobile One-Time Password (MOTP).',
         );
         $this->motp_pin = new StringField(
@@ -91,6 +97,7 @@ class FreeRADIUSUser extends Model {
             maximum_length: 4,
             internal_name: 'varusersmotppin',
             conditions: ['motp_enable' => true],
+            verbose_name: 'MOTP PIN',
             help_text: 'The PIN for the Mobile One-Time Password (MOTP). It must be exactly 4 digits.',
         );
         $this->motp_offset = new IntegerField(
@@ -99,6 +106,7 @@ class FreeRADIUSUser extends Model {
             allow_null: false,
             internal_name: 'varusersmotpoffset',
             conditions: ['motp_enable' => true],
+            verbose_name: 'MOTP Offset',
             help_text: 'The timezone offset for this user.',
         );
         $this->description = new StringField(
@@ -111,6 +119,7 @@ class FreeRADIUSUser extends Model {
                     error_msg: 'Value contains invalid characters.',
                 ),
             ],
+            verbose_name: 'Description',
             help_text: 'A description for this user.',
         );
         $this->framed_ip_address = new StringField(
@@ -119,6 +128,7 @@ class FreeRADIUSUser extends Model {
             internal_name: 'varusersframedipaddress',
             allow_empty: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Framed IP Address',
             help_text: 'Framed-IP-Address MUST be supported by NAS. ' .
                 'If the OpenVPN server uses a subnet style Topology the RADIUS server MUST ' .
                 'also send back an appropriate Framed-IP-Netmask value matching the VPN Tunnel Network.',
@@ -129,6 +139,7 @@ class FreeRADIUSUser extends Model {
             internal_name: 'varusersframedipnetmask',
             allow_empty: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Framed IP Netmask',
             help_text: 'Framed-IP-Netmask MUST be supported by NAS',
         );
 

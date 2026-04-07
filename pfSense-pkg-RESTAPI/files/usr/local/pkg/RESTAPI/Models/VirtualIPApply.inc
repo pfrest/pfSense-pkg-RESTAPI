@@ -24,6 +24,7 @@ class VirtualIPApply extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Applied',
             help_text: 'Displays `true` when all virtual IP changes are applied and there are no pending changes left.' .
                 'Displays `false` when there are pending virtual IP changes that have not been applied.',
         );

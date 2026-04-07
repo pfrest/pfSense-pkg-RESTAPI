@@ -25,6 +25,7 @@ class Ping extends Model {
         $this->host = new StringField(
             required: true,
             write_only: true,
+            verbose_name: 'Host',
             help_text: 'The IP address or hostname to ping.',
         );
         $this->count = new IntegerField(
@@ -32,22 +33,26 @@ class Ping extends Model {
             minimum: 1,
             maximum: 10,
             write_only: true,
+            verbose_name: 'Count',
             help_text: 'The number of ping requests to send.',
         );
         $this->source_address = new StringField(
             default: '',
             allow_empty: true,
             write_only: true,
+            verbose_name: 'Source Address',
             help_text: 'The source IP address to use for ping requests.',
         );
         $this->output = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Output',
             help_text: 'The output from the ping command.',
         );
         $this->result_code = new IntegerField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Result Code',
             help_text: 'The result code from the ping command. 0 indicates success.',
         );
 

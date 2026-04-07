@@ -34,11 +34,13 @@ class ACMEAccountKeyRegister extends Model {
             model_name: 'ACMEAccountKey',
             model_field: 'name',
             required: true,
+            verbose_name: 'Name',
             help_text: 'The name of the ACME account key to register.',
         );
         $this->status = new StringField(
             default: 'unknown',
             read_only: true,
+            verbose_name: 'Status',
             help_text: "The registration status of the ACME account key. This will show 'pending' if the registration " .
                 "process is still running, 'registered' if the registration was successful, 'failed' if the registration " .
                 "failed, and 'unknown' if the registration status is not known. Note: This status can only be " .

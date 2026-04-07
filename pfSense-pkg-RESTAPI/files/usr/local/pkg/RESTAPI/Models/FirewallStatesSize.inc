@@ -24,14 +24,17 @@ class FirewallStatesSize extends Model {
         $this->maximumstates = new IntegerField(
             default: pfsense_default_state_size(),
             minimum: 10,
+            verbose_name: 'Maximum States',
             help_text: 'The maximum number of firewall state entries allowed by this firewall.',
         );
         $this->defaultmaximumstates = new IntegerField(
             read_only: true,
+            verbose_name: 'Default Max States',
             help_text: 'The default number of firewall state entries allowed by this firewall.',
         );
         $this->currentstates = new IntegerField(
             read_only: true,
+            verbose_name: 'Current States',
             help_text: 'The number of firewall state entries currently registered in the states table.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

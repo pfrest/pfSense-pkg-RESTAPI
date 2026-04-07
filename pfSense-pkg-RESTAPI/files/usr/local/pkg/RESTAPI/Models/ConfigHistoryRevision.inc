@@ -23,14 +23,16 @@ class ConfigHistoryRevision extends Model {
         $this->many = true;
 
         # Set model fields
-        $this->time = new UnixTimeField(required: true, help_text: 'The time the configuration change was made.');
-        $this->description = new StringField(default: '', help_text: 'The description of the configuration change.');
+        $this->time = new UnixTimeField(required: true, verbose_name: 'Time', help_text: 'The time the configuration change was made.');
+        $this->description = new StringField(default: '', verbose_name: 'Description', help_text: 'The description of the configuration change.');
         $this->version = new StringField(
             default: '',
+            verbose_name: 'Version',
             help_text: 'The configuration version associated with this change.',
         );
         $this->filesize = new IntegerField(
             default: 0,
+            verbose_name: 'File Size',
             help_text: 'The file size (in bytes) of the configuration file associated with this change.',
         );
 

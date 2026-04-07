@@ -24,7 +24,7 @@ class FirewallLog extends Model {
         $this->internal_callable = 'get_firewall_log';
         $this->many = true;
 
-        $this->text = new StringField(default: '', help_text: 'The raw text of the firewall log entry.');
+        $this->text = new StringField(default: '', verbose_name: 'Text', help_text: 'The raw text of the firewall log entry.');
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

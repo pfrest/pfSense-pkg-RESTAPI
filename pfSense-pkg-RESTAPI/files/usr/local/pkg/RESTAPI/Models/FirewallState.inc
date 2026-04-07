@@ -38,23 +38,27 @@ class FirewallState extends Model {
             default: null,
             allow_null: true,
             internal_name: 'if',
+            verbose_name: 'Interface',
             help_text: 'The interface that initially received the traffic which registered the state.',
         );
         $this->protocol = new StringField(
             default: null,
             allow_null: true,
             internal_name: 'proto',
+            verbose_name: 'Protocol',
             help_text: 'The protocol listed in the state.',
         );
         $this->direction = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Direction',
             help_text: 'The direction of traffic listed in the state.',
         );
         $this->source = new StringField(
             default: null,
             allow_null: true,
             internal_name: 'src',
+            verbose_name: 'Source',
             help_text: 'The source address listed in the state. Note: Depending on the `protocol`, this value may ' .
                 'contain the source port as well.',
         );
@@ -62,59 +66,69 @@ class FirewallState extends Model {
             default: null,
             allow_null: true,
             internal_name: 'dst',
+            verbose_name: 'Destination',
             help_text: 'The destination address listed in the state. Note: Depending on the `protocol`, this value may ' .
                 'contain the destination port as well.',
         );
         $this->state = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'State',
             help_text: 'The current status of the firewall state.',
         );
         $this->age = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Age',
             help_text: 'The age of the firewall state in HH:MM:SS format.',
         );
         $this->expires_in = new StringField(
             default: null,
             allow_null: true,
             internal_name: 'expires in',
+            verbose_name: 'Expires In',
             help_text: 'The amount of time remaining until the state expires in HH:MM:SS format.',
         );
         $this->packets_total = new IntegerField(
             default: null,
             allow_null: true,
             internal_name: 'packets total',
+            verbose_name: 'Packets Total',
             help_text: 'The total number of packets observed by the state.',
         );
         $this->packets_in = new IntegerField(
             default: null,
             allow_null: true,
             internal_name: 'packets in',
+            verbose_name: 'Packets In',
             help_text: 'The total number of inbound packets observed by the state.',
         );
         $this->packets_out = new IntegerField(
             default: null,
             allow_null: true,
             internal_name: 'packets out',
+            verbose_name: 'Packets Out',
             help_text: 'The total number of outbound packets observed by the state.',
         );
         $this->bytes_total = new IntegerField(
             default: null,
             allow_null: true,
             internal_name: 'bytes total',
+            verbose_name: 'Bytes Total',
             help_text: 'The total number of traffic (in bytes) observed by the state.',
         );
         $this->bytes_in = new IntegerField(
             default: null,
             allow_null: true,
             internal_name: 'bytes in',
+            verbose_name: 'Bytes In',
             help_text: 'The total number of inbound traffic (in bytes) observed by the state.',
         );
         $this->bytes_out = new IntegerField(
             default: null,
             allow_null: true,
             internal_name: 'bytes out',
+            verbose_name: 'Bytes Out',
             help_text: 'The total number of outbound traffic (in bytes) observed by the state.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

@@ -33,6 +33,7 @@ class FirewallScheduleTimeRange extends Model {
             allow_null: true,
             many: true,
             many_maximum: 7,
+            verbose_name: 'Position',
             help_text: 'The day of the week this schedule should be active for. Use `1` for every Monday, `2` for ' .
                 'every Tuesday, `3` for every Wednesday, `4` for every Thursday, `5` for every Friday, `6` for every ' .
                 'Saturday, or `7` for every Sunday. If this field has a value specified, the `month` and `day` fields ' .
@@ -44,6 +45,7 @@ class FirewallScheduleTimeRange extends Model {
             many: true,
             many_minimum: 1,
             conditions: ['position' => null],
+            verbose_name: 'Month',
             help_text: 'The month for each specified `day` value. Each value specified must correspond with a `day` ' .
                 'field value and must match the order exactly. For example, a `month` value of `[3, 6]` and a `day` ' .
                 'value of `[2, 17]` would evaluate to March 2nd and June 17th respectively.',
@@ -55,6 +57,7 @@ class FirewallScheduleTimeRange extends Model {
             minimum: 1,
             maximum: 31,
             conditions: ['position' => null],
+            verbose_name: 'Day',
             help_text: 'The day for each specified `month` value. Each value specified must correspond with a `month` ' .
                 'field value and must match the order exactly. For example, a `month` value of `[3, 6]` and a `day` ' .
                 'value of `[2, 17]` would evaluate to March 2nd and June 17th respectively.',
@@ -62,11 +65,13 @@ class FirewallScheduleTimeRange extends Model {
         $this->hour = new StringField(
             required: true,
             maximum_length: 11,
+            verbose_name: 'Hour',
             help_text: 'The start time and end time for this time range in 24-hour format (i.e. HH:MM-HH:MM).',
         );
         $this->rangedescr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Range Description',
             help_text: "A description detailing this firewall schedule time range's purpose.",
         );
 

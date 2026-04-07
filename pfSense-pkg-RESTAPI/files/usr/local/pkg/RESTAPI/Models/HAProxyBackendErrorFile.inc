@@ -29,12 +29,14 @@ class HAProxyBackendErrorFile extends Model {
             unique: true,
             minimum: 100,
             maximum: 511,
+            verbose_name: 'Error Code',
             help_text: 'The HTTP status code that will trigger this error file to be used.',
         );
         $this->errorfile = new ForeignModelField(
             model_name: 'HAProxyFile',
             model_field: 'name',
             required: true,
+            verbose_name: 'Error File',
             help_text: 'The HAProxy error file object that should be used for the assigned HTTP status code.',
         );
 

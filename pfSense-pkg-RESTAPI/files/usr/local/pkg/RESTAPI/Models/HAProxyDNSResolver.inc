@@ -30,17 +30,20 @@ class HAProxyDNSResolver extends Model {
             required: true,
             unique: true,
             allow_empty: true,
+            verbose_name: 'Name',
             help_text: 'The descriptive name for this DNS server.',
         );
         $this->server = new StringField(
             required: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Server',
             help_text: 'The IP or hostname of the DNS server.',
         );
         $this->port = new PortField(
             default: '53',
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Port',
             help_text: 'The port used by this DNS server.',
         );
 

@@ -22,11 +22,12 @@ class DNSForwarderHostOverrideAlias extends Model {
         $this->many = true;
 
         # Set model fields
-        $this->host = new StringField(required: true, help_text: 'The hostname of this override alias.');
-        $this->domain = new StringField(required: true, help_text: 'The domain of this override alias.');
+        $this->host = new StringField(required: true, verbose_name: 'Host', help_text: 'The hostname of this override alias.');
+        $this->domain = new StringField(required: true, verbose_name: 'Domain', help_text: 'The domain of this override alias.');
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'The description of this override alias.',
         );
 

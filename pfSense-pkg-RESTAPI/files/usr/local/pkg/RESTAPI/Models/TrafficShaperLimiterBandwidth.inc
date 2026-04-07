@@ -27,11 +27,13 @@ class TrafficShaperLimiterBandwidth extends Model {
         $this->bw = new IntegerField(
             required: true,
             minimum: 1,
+            verbose_name: 'Bandwidth',
             help_text: 'The amount of bandwidth this profile allows.',
         );
         $this->bwscale = new StringField(
             required: true,
             choices: ['b', 'Kb', 'Mb'],
+            verbose_name: 'Bandwidth Scale',
             help_text: 'The scale factor of the `bw` fields value.',
         );
         $this->bwsched = new ForeignModelField(
@@ -39,6 +41,7 @@ class TrafficShaperLimiterBandwidth extends Model {
             model_field: 'name',
             allowed_keywords: ['none'],
             default: 'none',
+            verbose_name: 'Bandwidth Schedule',
             help_text: 'The schedule to assign this bandwidth profile. When this firewall schedule is active, ' .
                 'this bandwidth profile will be used.',
         );

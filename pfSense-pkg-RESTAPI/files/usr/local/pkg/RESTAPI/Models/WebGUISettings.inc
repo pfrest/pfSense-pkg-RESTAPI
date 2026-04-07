@@ -27,12 +27,14 @@ class WebGUISettings extends Model {
         $this->protocol = new StringField(
             default: 'https',
             choices: ['http', 'https'],
+            verbose_name: 'Protocol',
             help_text: 'The protocol to use for the web GUI.',
         );
         $this->port = new PortField(
             default: '443',
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Port',
             help_text: 'The port on which the web GUI listens.',
         );
         $this->sslcertref = new ForeignModelField(
@@ -40,6 +42,7 @@ class WebGUISettings extends Model {
             model_field: 'refid',
             required: true,
             internal_name: 'ssl-certref',
+            verbose_name: 'SSL Certificate',
             help_text: 'The SSL/TLS certificate to use for the web GUI.',
         );
 

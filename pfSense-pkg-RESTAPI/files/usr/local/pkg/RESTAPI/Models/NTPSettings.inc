@@ -45,6 +45,7 @@ class NTPSettings extends Model {
             default: true,
             indicates_true: 'enabled',
             indicates_false: 'disabled',
+            verbose_name: 'Enable',
             help_text: 'Enables or disabled the NTP server.',
         );
         $this->interface = new InterfaceField(
@@ -52,18 +53,21 @@ class NTPSettings extends Model {
             allow_localhost_interface: true,
             allow_empty: true,
             many: true,
+            verbose_name: 'Interface',
             help_text: 'The interfaces the NTP server will listen on.',
         );
         $this->ntpmaxpeers = new IntegerField(
             default: 5,
             minimum: 4,
             maximum: 25,
+            verbose_name: 'NTP Max Peers',
             help_text: 'The maximum number of candidate peers in the NTP pool.',
         );
         $this->orphan = new IntegerField(
             default: 12,
             minimum: 1,
             maximum: 15,
+            verbose_name: 'Orphan',
             help_text: 'The orphan mode stratum to set. Orphan mode allows the system clock to be used when no other ' .
                 'clocks are available. The number here specifies the stratum reported during orphan mode and should ' .
                 'normally be set to a number high enough to ensure that any other servers available to clients are ' .
@@ -73,6 +77,7 @@ class NTPSettings extends Model {
             default: '',
             choices: ['', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', 'omit'],
             allow_empty: true,
+            verbose_name: 'NTP Min Poll',
             help_text: 'The minimum poll interval for NTP messages. Use empty string to assume system default, and ' .
                 '`omit` to not set this value.',
         );
@@ -80,52 +85,62 @@ class NTPSettings extends Model {
             default: '',
             choices: ['', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', 'omit'],
             allow_empty: true,
+            verbose_name: 'NTP Max Poll',
             help_text: 'The maximum poll interval for NTP messages. Use empty string to assume system default, and ' .
                 '`omit` to not set this value. This value must be greater than the `ntpminpoll`.',
         );
         $this->dnsresolv = new StringField(
             default: 'auto',
             choices: ['auto', 'inet', 'inet6'],
+            verbose_name: 'DNS Resolve',
             help_text: 'The IP protocol peers are forced to use for DNS resolution.',
         );
         $this->logpeer = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Log Peer',
             help_text: 'Enable or disable logging peer messages.',
         );
         $this->logsys = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Logsys',
             help_text: 'Enable or disable logging system messages.',
         );
         $this->clockstats = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Clock Stats',
             help_text: 'Enable or disable logging reference clock statistics.',
         );
         $this->loopstats = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Loop Stats',
             help_text: 'Enable or disable logging clock discipline statistics.',
         );
         $this->peerstats = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Peer Stats',
             help_text: 'Enable or disable logging peer statistics.',
         );
         $this->statsgraph = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Statistics Graph',
             help_text: 'Enable or disable RRD graphs for NTP statistics.',
         );
         $this->leapsec = new Base64Field(
             default: '',
             allow_empty: true,
+            verbose_name: 'Leap Second',
             help_text: 'The Leap second configuration as text.',
         );
         $this->serverauth = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Server Auth',
             help_text: 'Enable or disable NTPv3 server authentication. (RFC 1305)',
         );
         $this->serverauthkey = new Base64Field(
@@ -133,11 +148,13 @@ class NTPSettings extends Model {
             sensitive: true,
             conditions: ['serverauth' => true],
             validators: [new LengthValidator(minimum: 1, maximum: 64)],
+            verbose_name: 'Server Auth Key',
             help_text: 'The NTP server authentication key.',
         );
         $this->serverauthalgo = new StringField(
             default: 'md5',
             choices: ['md5', 'sha1', 'sha256'],
+            verbose_name: 'Server Auth Algorithm',
             help_text: 'The digest algorithm for the server authentication key.',
         );
 

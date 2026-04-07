@@ -31,16 +31,18 @@ class FirewallSchedule extends Model {
         $this->sort_order = SORT_ASC;
 
         # Set model fields
-        $this->schedlabel = new UIDField(help_text: 'A unique ID for this schedule used internally by the system.');
+        $this->schedlabel = new UIDField(verbose_name: 'Schedule Label', help_text: 'A unique ID for this schedule used internally by the system.');
         $this->name = new StringField(
             required: true,
             unique: true,
             validators: [new FilterNameValidator()],
+            verbose_name: 'Name',
             help_text: 'The unique name to assign this schedule.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description of this schedules purpose.',
         );
         $this->active = new BooleanField(
@@ -49,11 +51,13 @@ class FirewallSchedule extends Model {
             representation_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Active',
             help_text: 'Displays whether the schedule is currently active or not.',
         );
         $this->timerange = new NestedModelField(
             model_class: 'FirewallScheduleTimeRange',
             required: true,
+            verbose_name: 'Time Ranges',
             help_text: 'The date/times this firewall schedule will be active.',
         );
 

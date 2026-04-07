@@ -41,6 +41,7 @@ class WireGuardPeer extends Model {
             default: false,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Enabled',
             help_text: 'Enables or disables this WireGuard peer.',
         );
         $this->tun = new ForeignModelField(
@@ -48,38 +49,44 @@ class WireGuardPeer extends Model {
             model_field: 'name',
             allowed_keywords: ['unassigned'],
             default: 'unassigned',
+            verbose_name: 'Tun',
             help_text: 'The WireGuard tunnel for this peer.',
         );
         $this->endpoint = new StringField(
             default: null,
             allow_null: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Endpoint',
             help_text: 'The IP address or hostname of the remote peer. Set to `null` to make this a dynamic endpoint.',
         );
         $this->port = new PortField(
             default: '51820',
             conditions: ['!endpoint' => null],
+            verbose_name: 'Port',
             help_text: 'The port used by the remote peer.',
         );
-        $this->descr = new StringField(default: '', allow_empty: true, help_text: 'The description for this peer.');
+        $this->descr = new StringField(default: '', allow_empty: true, verbose_name: 'Description', help_text: 'The description for this peer.');
         $this->persistentkeepalive = new IntegerField(
             default: null,
             allow_null: true,
             maximum: 65535,
+            verbose_name: 'Persistent Keepalive',
             help_text: 'The interval (in seconds) for Keep Alive packets sent to this peer. Set to `null` to disable.',
         );
-        $this->publickey = new StringField(required: true, unique: true, help_text: 'The public key for this peer.');
+        $this->publickey = new StringField(required: true, unique: true, verbose_name: 'Public Key', help_text: 'The public key for this peer.');
         $this->presharedkey = new StringField(
             default: '',
             allow_empty: true,
             allow_null: true,
             write_only: true,
+            verbose_name: 'Pre-Shared Key',
             help_text: 'The pre-shared key for this tunnel.',
         );
         $this->allowedips = new NestedModelField(
             model_class: 'WireGuardPeerAllowedIP',
             default: [],
             allow_empty: true,
+            verbose_name: 'Allowed IPs',
             help_text: 'The allowed IP/subnets for this WireGuard peer.',
         );
 

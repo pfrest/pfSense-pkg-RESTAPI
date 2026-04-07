@@ -30,17 +30,20 @@ class DNSResolverAccessListNetwork extends Model {
             allow_empty: true,
             internal_name: 'acl_network',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'Network',
             help_text: 'The network address of this access list entry.',
         );
         $this->mask = new IntegerField(
             required: true,
             minimum: 0,
             maximum: 128,
+            verbose_name: 'Mask',
             help_text: "The subnet mask of this access list entry's network.",
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this access list entry.',
         );
 

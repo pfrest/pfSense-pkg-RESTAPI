@@ -38,11 +38,13 @@ class RESTAPIKey extends Model {
             default: '',
             allow_empty: true, # We will force this field to be populated in validate_username()
             read_only: true,
+            verbose_name: 'Username',
             help_text: 'The username this API key is issued to.',
         );
         $this->length_bytes = new IntegerField(
             default: 24,
             choices: [16, 24, 32, 64],
+            verbose_name: 'Length Bytes',
             help_text: 'The length of the API key (in bytes). Greater key lengths provide greater security, but ' .
                 'also increase the number of characters used in the key string.',
         );
@@ -64,11 +66,13 @@ class RESTAPIKey extends Model {
         $this->key = new StringField(
             allow_null: true,
             representation_only: true, # Don't store the actual API key internally
+            verbose_name: 'Key',
             help_text: 'The real API key. This value is not stored internally and cannot be recovered if lost.',
         );
         $this->hash = new StringField(
             allow_null: true,
             sensitive: true, # Don't allow the hash to be read via API
+            verbose_name: 'Hash',
             help_text: 'The hash of the generated API key',
         );
 

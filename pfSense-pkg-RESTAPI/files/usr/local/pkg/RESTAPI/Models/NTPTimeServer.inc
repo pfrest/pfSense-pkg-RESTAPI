@@ -29,11 +29,13 @@ class NTPTimeServer extends Model {
         $this->timeserver = new StringField(
             required: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Time Server',
             help_text: 'The IP or hostname of the remote NTP time server, pool or peer.',
         );
         $this->type = new StringField(
             default: 'server',
             choices: ['server', 'pool', 'peer'],
+            verbose_name: 'Type',
             help_text: 'The type of this timeserver. Use `server` is `timeserver` is a standalone NTP server, use ' .
                 '`pool` if `timeserver` represents an NTP pool, or `peer` if `timeserver` is an NTP peer. Note: If ' .
                 'the `timeserver` value ends with the `' .
@@ -45,6 +47,7 @@ class NTPTimeServer extends Model {
             default: false,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Prefer',
             help_text: 'Enable NTP favoring the use of this server more than all others.',
         );
         $this->noselect = new BooleanField(
@@ -52,6 +55,7 @@ class NTPTimeServer extends Model {
             indicates_true: true,
             indicates_false: false,
             conditions: ['!type' => 'pool'],
+            verbose_name: 'No Select',
             help_text: 'Prevent NTP from using this timeserver, but continue collecting stats.',
         );
 

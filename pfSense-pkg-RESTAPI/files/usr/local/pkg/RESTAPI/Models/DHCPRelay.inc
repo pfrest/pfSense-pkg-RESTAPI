@@ -27,14 +27,16 @@ class DHCPRelay extends Model {
         $this->always_apply = true;
 
         # Set model fields
-        $this->enable = new BooleanField(default: false, help_text: 'Enables or disables the DHCP relay.');
+        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enables or disables the DHCP relay.');
         $this->interface = new InterfaceField(
             default: [],
             many: true,
+            verbose_name: 'Interface',
             help_text: 'The downstream interfaces to listen on for DHCP requests.',
         );
         $this->agentoption = new BooleanField(
             default: false,
+            verbose_name: 'Agent Option',
             help_text: 'Enables or disables appending the circuit ID (interface number) and the agent ID to the ' .
                 'DHCP request.',
         );
@@ -43,6 +45,7 @@ class DHCPRelay extends Model {
             model_field: 'uniqid',
             allowed_keywords: ['none'],
             default: 'none',
+            verbose_name: 'CARP Status VIP',
             help_text: 'DHCP Relay will be stopped when the chosen VIP is in BACKUP status, and started ' .
                 'in MASTER status.',
         );
@@ -51,6 +54,7 @@ class DHCPRelay extends Model {
             many: true,
             many_minimum: 1,
             validators: [new IPAddressValidator(allow_ipv6: false)],
+            verbose_name: 'Server',
             help_text: 'The IPv4 addresses of the DHCP server to relay requests to.',
         );
 

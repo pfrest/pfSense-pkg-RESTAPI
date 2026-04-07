@@ -58,6 +58,7 @@ class RESTAPISettings extends Model {
             default: true,
             indicates_true: 'enabled',
             indicates_false: 'disabled',
+            verbose_name: 'Enabled',
             help_text: "Enables or disables the API. If set to `false`, the API will no longer respond to API requests 
             and can only be re-enabled via webConfigurator.",
         );
@@ -65,6 +66,7 @@ class RESTAPISettings extends Model {
             default: false,
             indicates_true: 'enabled',
             indicates_false: 'disabled',
+            verbose_name: 'Read Only',
             help_text: "Enables or disables read-only API access. If enabled, the API will only respond to GET requests
             and can only be disabled via webConfigurator.",
         );
@@ -72,6 +74,7 @@ class RESTAPISettings extends Model {
             default: true,
             indicates_true: 'enabled',
             indicates_false: 'disabled',
+            verbose_name: 'Keep Backup',
             help_text: "Enables or disables keeping a persistent backup of the API configuration that can be used
             to restore the API configuration after package and systems updates.",
         );
@@ -79,6 +82,7 @@ class RESTAPISettings extends Model {
             default: true,
             indicates_true: 'enabled',
             indicates_false: 'disabled',
+            verbose_name: 'Login Protection',
             help_text: "Enables or disables Login Protection for API authentication. When enabled, Login Protection will
             monitor API attempts and temporarily block clients who fail API authentication too many times within a
             period of time. When disabled, Login Protection will not monitor API authentication but will continue to 
@@ -142,6 +146,7 @@ class RESTAPISettings extends Model {
             choices_callable: 'get_override_sensitive_fields_choices',
             many: true,
             conditions: ['expose_sensitive_fields' => false],
+            verbose_name: 'Override Sensitive Fields',
             help_text: 'Specifies a list of fields (formatted as ModelName:FieldName) that should have their sensitive ' .
                 'attribute overridden. Fields selected here will not be considered sensitive and will be included in ' .
                 'API responses regardless of the `expose_sensitive_fields` setting.',
@@ -152,11 +157,13 @@ class RESTAPISettings extends Model {
             allow_empty: true,
             many: true,
             delimiter: ',',
+            verbose_name: 'Allowed Interfaces',
             help_text: 'Sets the interfaces allowed to accept incoming API calls.',
         );
         $this->represent_interfaces_as = new StringField(
             default: 'descr',
             choices: ['descr' => 'Description', 'id' => 'Internal ID', 'if' => 'Real interface'],
+            verbose_name: 'Represent Interfaces As',
             help_text: "Specifies how the API should represent interface names. Use `descr` to represent 
             interface objects by their description name, use `id` to represent interface objects by their
             internal pfSense ID (e.g. wan, lan, opt1), or use `if` to represent interface objects by their

@@ -48,6 +48,7 @@ class DHCPServerAddressPool extends Model {
             internal_name: 'from',
             internal_namespace: 'range',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Range From',
             help_text: 'The starting IP address for this address pool. This address must be less than or equal ' .
                 'to the `range_to` field.',
         );
@@ -57,6 +58,7 @@ class DHCPServerAddressPool extends Model {
             internal_name: 'to',
             internal_namespace: 'range',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Range To',
             help_text: 'The ending IP address for the this address pool. This address must be greater than or equal ' .
                 'to the `range_to` field.',
         );
@@ -64,6 +66,7 @@ class DHCPServerAddressPool extends Model {
             default: '',
             allow_empty: true,
             maximum_length: 255,
+            verbose_name: 'Domain',
             help_text: 'The domain to be assigned via DHCP.',
         );
         $this->mac_allow = new StringField(
@@ -72,6 +75,7 @@ class DHCPServerAddressPool extends Model {
             many: true,
             maximum_length: 17,
             validators: [new MACAddressValidator()],
+            verbose_name: 'MAC Allow',
             help_text: 'MAC addresses this DHCP server is allowed to provide leases for.',
         );
         $this->mac_deny = new StringField(
@@ -80,6 +84,7 @@ class DHCPServerAddressPool extends Model {
             many: true,
             maximum_length: 17,
             validators: [new MACAddressValidator()],
+            verbose_name: 'MAC Deny',
             help_text: 'MAC addresses this DHCP server is not allowed to provide leases for.',
         );
         $this->domainsearchlist = new StringField(
@@ -89,12 +94,14 @@ class DHCPServerAddressPool extends Model {
             maximum_length: 255,
             delimiter: ';',
             validators: [new IPAddressValidator(allow_ipv4: false, allow_ipv6: false, allow_fqdn: true)],
+            verbose_name: 'Domain Search List',
             help_text: 'The domain search list to provide via DHCP.',
         );
         $this->defaultleasetime = new IntegerField(
             default: 7200,
             allow_null: true,
             minimum: 60,
+            verbose_name: 'Default Lease Time',
             help_text: 'The default DHCP lease validity period (in seconds). This is used for clients that do not ask ' .
                 'for a specific expiration time.',
         );
@@ -102,6 +109,7 @@ class DHCPServerAddressPool extends Model {
             default: 86400,
             allow_null: true,
             minimum: 60,
+            verbose_name: 'Max Lease Time',
             help_text: 'The maximum DHCP lease validity period (in seconds) a client can request.',
         );
         $this->gateway = new StringField(
@@ -109,6 +117,7 @@ class DHCPServerAddressPool extends Model {
             allow_empty: true,
             maximum_length: 15,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_keywords: ['none'])],
+            verbose_name: 'Gateway',
             help_text: 'The gateway IPv4 address to provide via DHCP. This is only necessary if you are not using ' .
                 "the interface's IP as the gateway. Specify `none` for no gateway assignment.",
         );
@@ -120,6 +129,7 @@ class DHCPServerAddressPool extends Model {
             maximum_length: 15,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'DNS Servers',
             help_text: 'The DNS servers to provide via DHCP. Leave empty to default to system nameservers.',
         );
         $this->winsserver = new StringField(
@@ -130,6 +140,7 @@ class DHCPServerAddressPool extends Model {
             maximum_length: 15,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'WINS Servers',
             help_text: 'The WINS servers to provide via DHCP.',
         );
         $this->ntpserver = new StringField(
@@ -140,14 +151,17 @@ class DHCPServerAddressPool extends Model {
             maximum_length: 256,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_fqdn: true)],
+            verbose_name: 'NTP Servers',
             help_text: 'The NTP servers to provide via DHCP.',
         );
         $this->ignorebootp = new BooleanField(
             default: false,
+            verbose_name: 'Ignore BOOTP',
             help_text: 'Force this DHCP server to ignore BOOTP queries.',
         );
         $this->ignoreclientuids = new BooleanField(
             default: false,
+            verbose_name: 'Ignore Client UIDs',
             help_text: 'Prevent recording a unique identifier (UID) in client lease data if present in the client ' .
                 'DHCP request. This option may be useful when a client can dual boot using different client ' .
                 'identifiers but the same hardware (MAC) address. Note that the resulting server behavior violates ' .
@@ -158,6 +172,7 @@ class DHCPServerAddressPool extends Model {
             choices: ['enabled', 'class'],
             allow_empty: true,
             allow_null: true,
+            verbose_name: 'Deny Unknown Clients',
             help_text: 'Define how to handle unknown clients requesting DHCP leases. When set to `null`, any DHCP ' .
                 'client will get an IP address within this scope/range on this interface. If set to `enabled`, ' .
                 'any DHCP client with a MAC address listed in a static mapping on any scope(s)/interface(s) will ' .

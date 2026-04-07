@@ -24,23 +24,27 @@ class AvailableInterface extends Model {
             default: '',
             allow_empty: true,
             allow_null: true,
+            verbose_name: 'Interface Name',
             help_text: 'The name of the interface.',
         );
         $this->mac = new StringField(
             default: '',
             allow_empty: true,
             allow_null: true,
+            verbose_name: 'MAC',
             help_text: 'The MAC address of the interface.',
         );
         $this->dmesg = new StringField(
             default: '',
             allow_empty: true,
             allow_null: true,
+            verbose_name: 'Dmesg',
             help_text: 'The description of the interface.',
         );
         $this->in_use_by = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'In Use By',
             help_text: 'The pfSense interface ID that is using this interface.',
         );
 

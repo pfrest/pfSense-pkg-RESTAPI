@@ -84,35 +84,42 @@ class HAProxyFrontendAction extends Model {
                 'tcp-response_content_reject',
                 'tcp-response_content_lua',
             ],
+            verbose_name: 'Action',
             help_text: 'The action to take when an ACL match is found.',
         );
         $this->acl = new StringField(
             required: true,
+            verbose_name: 'ACL',
             help_text: 'The name of the frontend ACL this action is associated with.',
         );
         $this->backend = new StringField(
             required: true,
             conditions: ['action' => 'use_backend'],
+            verbose_name: 'Backend',
             help_text: 'The backend to use when an ACL match is found.',
         );
         $this->customaction = new StringField(
             required: true,
             conditions: ['action' => 'custom'],
+            verbose_name: 'Custom Action',
             help_text: 'The custom action to take when an ACL match is found.',
         );
         $this->deny_status = new StringField(
             required: true,
             conditions: ['action' => ['http-request_deny', 'http-request_tarpit']],
+            verbose_name: 'Deny Status',
             help_text: 'The deny status to use when an ACL match is found.',
         );
         $this->realm = new StringField(
             required: true,
             conditions: ['action' => 'http-request_auth'],
+            verbose_name: 'Realm',
             help_text: 'The authentication realm to use when an ACL match is found.',
         );
         $this->rule = new StringField(
             required: true,
             conditions: ['action' => 'http-request_redirect'],
+            verbose_name: 'Rule',
             help_text: 'The redirect rule to use when an ACL match is found.',
         );
         $this->lua_function = new StringField(
@@ -127,6 +134,7 @@ class HAProxyFrontendAction extends Model {
                     'tcp-response_content_lua',
                 ],
             ],
+            verbose_name: 'Lua Function',
             help_text: 'The Lua function to use when an ACL match is found.',
         );
         $this->name = new StringField(
@@ -150,6 +158,7 @@ class HAProxyFrontendAction extends Model {
                     'http-after-response_replace-value',
                 ],
             ],
+            verbose_name: 'Name',
             help_text: 'The name to use when an ACL match is found.',
         );
         $this->fmt = new StringField(
@@ -168,6 +177,7 @@ class HAProxyFrontendAction extends Model {
                     'http-after-response_set-header',
                 ],
             ],
+            verbose_name: 'Format',
             help_text: 'The fmt value to use when an ACL match is found.',
         );
         $this->find = new StringField(
@@ -183,6 +193,7 @@ class HAProxyFrontendAction extends Model {
                     'http-after-response_replace-value',
                 ],
             ],
+            verbose_name: 'Find',
             help_text: 'The value to find when an ACL match is found.',
         );
         $this->replace = new StringField(
@@ -198,21 +209,25 @@ class HAProxyFrontendAction extends Model {
                     'http-after-response_replace-value',
                 ],
             ],
+            verbose_name: 'Replace',
             help_text: 'The value to replace with when an ACL match is found.',
         );
         $this->path = new StringField(
             required: true,
             conditions: ['action' => 'http-request_replace-path'],
+            verbose_name: 'Path',
             help_text: 'The path to use when an ACL match is found.',
         );
         $this->status = new StringField(
             required: true,
             conditions: ['action' => ['http-response_set-status', 'http-after-response_set-status']],
+            verbose_name: 'Status',
             help_text: 'The status to use when an ACL match is found.',
         );
         $this->reason = new StringField(
             required: true,
             conditions: ['action' => ['http-response_set-status', 'http-after-response_set-status']],
+            verbose_name: 'Reason',
             help_text: 'The status reason to use when an ACL match is found.',
         );
 

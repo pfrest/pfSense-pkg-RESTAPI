@@ -31,17 +31,20 @@ class WireGuardPeerAllowedIP extends Model {
         $this->address = new StringField(
             required: true,
             validators: [new IPAddressValidator()],
+            verbose_name: 'Address',
             help_text: 'The IPv4 or IPv6 address for this peer IP.',
         );
         $this->mask = new IntegerField(
             required: true,
             minimum: 0,
             maximum: 128,
+            verbose_name: 'Mask',
             help_text: 'The subnet mask for this peer IP.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this allowed peer IP.',
         );
 

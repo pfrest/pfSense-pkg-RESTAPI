@@ -20,6 +20,7 @@ class SystemHalt extends Model {
         $this->dry_run = new BooleanField(
             default: false,
             write_only: true,
+            verbose_name: 'Dry Run',
             help_text: "Run through the call but don't actually initiate a shutdown.",
         );
 

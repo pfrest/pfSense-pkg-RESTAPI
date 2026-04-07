@@ -62,13 +62,14 @@ class DHCPServer extends Model {
         $this->interface = new InterfaceField(
             required: true,
             representation_only: true,
+            verbose_name: 'Interface',
             help_text: 'The interface to configure the DHCP server for. This field is only necessary when you want' .
                 'to change the interface (ID) of an existing DHCP server, or you are replacing all DHCP server objects ' .
                 'with a new configuration. Note that specifying an interface in this field will update the ID of the ' .
                 'DHCP server to match the interface specified here. Leaving this field empty will retain the ' .
                 'existing interface.',
         );
-        $this->enable = new BooleanField(default: false, help_text: 'Enable the DHCP server for this interface.');
+        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enable the DHCP server for this interface.');
         $this->range_from = new StringField(
             default: '',
             allow_empty: true,
@@ -76,6 +77,7 @@ class DHCPServer extends Model {
             internal_name: 'from',
             internal_namespace: 'range',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Range From',
             help_text: 'The starting IP address for the primary DHCP pool. This address must be less than or equal ' .
                 'to the `range_to` field.',
         );
@@ -86,6 +88,7 @@ class DHCPServer extends Model {
             internal_name: 'to',
             internal_namespace: 'range',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Range To',
             help_text: 'The ending IP address for the primary DHCP pool. This address must be greater than or equal ' .
                 'to the `range_to` field.',
         );
@@ -93,6 +96,7 @@ class DHCPServer extends Model {
             default: '',
             allow_empty: true,
             maximum_length: 255,
+            verbose_name: 'Domain',
             help_text: 'The domain to be assigned via DHCP.',
         );
         $this->failover_peerip = new StringField(
@@ -100,6 +104,7 @@ class DHCPServer extends Model {
             allow_empty: true,
             maximum_length: 255,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Failover Peer IP',
             help_text: 'The interface IP address of the other firewall (failover peer) in this subnet. Leave ' .
                 'empty to disable failover peering.',
         );
@@ -109,6 +114,7 @@ class DHCPServer extends Model {
             many: true,
             maximum_length: 17,
             validators: [new MACAddressValidator()],
+            verbose_name: 'MAC Allow',
             help_text: 'MAC addresses this DHCP server is allowed to provide leases for.',
         );
         $this->mac_deny = new StringField(
@@ -117,6 +123,7 @@ class DHCPServer extends Model {
             many: true,
             maximum_length: 17,
             validators: [new MACAddressValidator()],
+            verbose_name: 'MAC Deny',
             help_text: 'MAC addresses this DHCP server is not allowed to provide leases for.',
         );
         $this->domainsearchlist = new StringField(
@@ -126,12 +133,14 @@ class DHCPServer extends Model {
             maximum_length: 255,
             delimiter: ';',
             validators: [new IPAddressValidator(allow_ipv4: false, allow_ipv6: false, allow_fqdn: true)],
+            verbose_name: 'Domain Search List',
             help_text: 'The domain search list to provide via DHCP.',
         );
         $this->defaultleasetime = new IntegerField(
             default: 7200,
             allow_null: true,
             minimum: 60,
+            verbose_name: 'Default Lease Time',
             help_text: 'The default DHCP lease validity period (in seconds). This is used for clients that do not ask ' .
                 'for a specific expiration time.',
         );
@@ -139,6 +148,7 @@ class DHCPServer extends Model {
             default: 86400,
             allow_null: true,
             minimum: 60,
+            verbose_name: 'Max Lease Time',
             help_text: 'The maximum DHCP lease validity period (in seconds) a client can request.',
         );
         $this->gateway = new StringField(
@@ -146,6 +156,7 @@ class DHCPServer extends Model {
             allow_empty: true,
             maximum_length: 15,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_keywords: ['none'])],
+            verbose_name: 'Gateway',
             help_text: 'The gateway IPv4 address to provide via DHCP. This is only necessary if you are not using ' .
                 "the interface's IP as the gateway. Specify `none` for no gateway assignment.",
         );
@@ -157,6 +168,7 @@ class DHCPServer extends Model {
             maximum_length: 15,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'DNS Servers',
             help_text: 'The DNS servers to provide via DHCP. Leave empty to default to system nameservers.',
         );
         $this->winsserver = new StringField(
@@ -167,6 +179,7 @@ class DHCPServer extends Model {
             maximum_length: 15,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'WINS Servers',
             help_text: 'The WINS servers to provide via DHCP.',
         );
         $this->ntpserver = new StringField(
@@ -177,18 +190,22 @@ class DHCPServer extends Model {
             maximum_length: 256,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_fqdn: true)],
+            verbose_name: 'NTP Servers',
             help_text: 'The NTP servers to provide via DHCP.',
         );
         $this->staticarp = new BooleanField(
             default: false,
+            verbose_name: 'Static ARP',
             help_text: 'Assign static ARP entries for DHCP leases provided by this server.',
         );
         $this->ignorebootp = new BooleanField(
             default: false,
+            verbose_name: 'Ignore BOOTP',
             help_text: 'Force this DHCP server to ignore BOOTP queries.',
         );
         $this->ignoreclientuids = new BooleanField(
             default: false,
+            verbose_name: 'Ignore Client UIDs',
             help_text: 'Prevent recording a unique identifier (UID) in client lease data if present in the client ' .
                 'DHCP request. This option may be useful when a client can dual boot using different client ' .
                 'identifiers but the same hardware (MAC) address. Note that the resulting server behavior violates ' .
@@ -196,23 +213,27 @@ class DHCPServer extends Model {
         );
         $this->nonak = new BooleanField(
             default: false,
+            verbose_name: 'No NAK',
             help_text: 'Ignore denied clients rather than reject. This option is not compatible with failover and ' .
                 'cannot be enabled when a Failover Peer IP address is configured.',
         );
         $this->disablepingcheck = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Disable Ping Check',
             help_text: 'Prevent the DHCP server from sending a ping to the address being assigned, where if no ' .
                 'response has been heard, it assigns the address.',
         );
         $this->dhcpleaseinlocaltime = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'DHCP Lease in Local Time',
             help_text: 'Display the DHCP lease times in local time instead of UTC.',
         );
         $this->statsgraph = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Statistics Graph',
             help_text: 'Enable adding DHCP lease statistics to the pfSense Monitoring graphs.',
         );
         $this->denyunknown = new StringField(
@@ -220,6 +241,7 @@ class DHCPServer extends Model {
             choices: ['enabled', 'class'],
             allow_empty: true,
             allow_null: true,
+            verbose_name: 'Deny Unknown Clients',
             help_text: 'Define how to handle unknown clients requesting DHCP leases. When set to `null`, any DHCP ' .
                 'client will get an IP address within this scope/range on this interface. If set to `enabled`, ' .
                 'any DHCP client with a MAC address listed in a static mapping on any scope(s)/interface(s) will ' .
@@ -230,18 +252,21 @@ class DHCPServer extends Model {
             model_class: 'DHCPServerAddressPool',
             default: [],
             allow_empty: true,
+            verbose_name: 'Pool',
             help_text: 'Additional address pools applied to this DHCP server.',
         );
         $this->numberoptions = new NestedModelField(
             model_class: 'DHCPServerCustomOption',
             default: [],
             allow_empty: true,
+            verbose_name: 'Custom DHCP Options',
             help_text: 'The custom DHCP options to apply to this DHCP server.',
         );
         $this->staticmap = new NestedModelField(
             model_class: 'DHCPServerStaticMapping',
             default: [],
             allow_empty: true,
+            verbose_name: 'Static Mappings',
             help_text: 'Static mappings applied to this DHCP server.',
         );
 

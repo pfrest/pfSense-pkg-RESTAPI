@@ -40,52 +40,61 @@ class CertificateRevocationListRevokedCertificate extends Model {
             editable: false,
             internal_name: 'refid',
             conditions: ['serial' => null],
+            verbose_name: 'Certificate Reference',
             help_text: 'The reference ID of the certificate to be revoked',
         );
         $this->serial = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Serial',
             help_text: 'The serial number of the certificate to be revoked.',
         );
         $this->reason = new IntegerField(
             default: 0,
             choices: [-1, 0, 1, 2, 3, 4, 5, 6, 9],
             minimum: -1,
+            verbose_name: 'Reason',
             help_text: 'The CRL reason for revocation code.',
         );
         $this->revoke_time = new UnixTimeField(
             required: true,
             auto_add_now: true,
+            verbose_name: 'Revoke Time',
             help_text: 'The unix timestamp of when the certificate was revoked.',
         );
         $this->descr = new StringField(
             default: null,
             allow_null: true,
             write_only: true,
+            verbose_name: 'Description',
             help_text: 'The unique name/description for this CRL.',
         );
         $this->caref = new StringField(
             default: null,
             allow_null: true,
             write_only: true,
+            verbose_name: 'CA Reference',
             help_text: 'The unique ID of the CA that signed the revoked certificate.',
         );
         $this->type = new StringField(
             default: null,
             allow_null: true,
             write_only: true,
+            verbose_name: 'Type',
             help_text: 'The type of the certificate to be revoked.',
         );
         $this->crt = new Base64Field(
             default: null,
             allow_null: true,
             write_only: true,
+            verbose_name: 'Certificate Data',
             help_text: 'The X509 certificate string.',
         );
         $this->prv = new Base64Field(
             default: null,
             allow_null: true,
             write_only: true,
+            verbose_name: 'Private Key',
             help_text: 'The X509 private key string.',
         );
 

@@ -33,6 +33,7 @@ class InterfaceGroup extends Model {
             editable: false,
             maximum_length: 15,
             validators: [new FilterNameValidator()],
+            verbose_name: 'Interface Name',
             help_text: 'The name of this interface group.',
         );
         $this->members = new InterfaceField(
@@ -40,11 +41,13 @@ class InterfaceGroup extends Model {
             allow_empty: true,
             many: true,
             delimiter: ' ',
+            verbose_name: 'Members',
             help_text: 'The member interfaces to assign to this interface group.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'The description for this interface group.',
         );
 

@@ -32,43 +32,51 @@ class RoutingGatewayStatus extends Model {
             unique: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Name',
             help_text: 'The name of the gateway this status corresponds to.',
         );
         $this->srcip = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Source IP',
             help_text: 'The current source IP being used to send monitoring probes to this gateway.',
         );
         $this->monitorip = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Monitor IP',
             help_text: 'The current IP being monitored for this gateway.',
         );
         $this->delay = new FloatField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Delay',
             help_text: 'The current latency (in milliseconds) for this gateway.',
         );
         $this->stddev = new FloatField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Stddev',
             help_text: 'The standard deviation in latency (in milliseconds) for this gateway.',
         );
         $this->loss = new FloatField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Loss',
             help_text: 'The current amount of packet loss (in percentage) for this gateway. This uses a whole ' .
                 'percentage (0.0-100.0).',
         );
         $this->status = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Status',
             help_text: 'The current status of this gateway. Typically, this will indicate if the gateway is ' .
                 'consider online or offline.',
         );
         $this->substatus = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Sub-Status',
             help_text: 'The current sub-status of this gateway. Typically, this provide details into problems this ' .
                 'gateway is seeing such as latency or packet loss.',
         );

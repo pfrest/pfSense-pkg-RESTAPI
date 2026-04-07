@@ -31,24 +31,28 @@ class BINDZoneRecord extends Model {
         $this->name = new StringField(
             required: true,
             internal_name: 'hostname',
+            verbose_name: 'Name',
             help_text: 'The domain name for this record.',
         );
         $this->type = new StringField(
             required: true,
             choices: ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'LOC', 'PTR', 'SRV', 'TXT', 'SPF'],
             internal_name: 'hosttype',
+            verbose_name: 'Type',
             help_text: 'The type of record.',
         );
         $this->rdata = new StringField(
             required: true,
             allow_empty: true,
             internal_name: 'hostdst',
+            verbose_name: 'Rdata',
             help_text: 'The data for this record. This can be an IP address, domain name, or other data depending on the record type.',
         );
         $this->priority = new IntegerField(
             required: true,
             internal_name: 'hostvalue',
             conditions: ['type' => ['MX', 'SRV']],
+            verbose_name: 'Priority',
             help_text: 'The priority for this record.',
         );
 

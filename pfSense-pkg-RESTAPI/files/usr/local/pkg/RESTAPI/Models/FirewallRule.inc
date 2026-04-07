@@ -67,6 +67,7 @@ class FirewallRule extends Model {
         $this->type = new StringField(
             required: true,
             choices: ['pass', 'block', 'reject'],
+            verbose_name: 'Type',
             help_text: 'The action to take against traffic that matches this rule.',
         );
         $this->interface = new InterfaceField(
@@ -76,11 +77,13 @@ class FirewallRule extends Model {
             allow_openvpn_interface: true,
             allow_custom: ['any'],
             many: true,
+            verbose_name: 'Interface',
             help_text: 'The interface where packets must originate to match this rule.',
         );
         $this->ipprotocol = new StringField(
             required: true,
             choices: ['inet', 'inet6', 'inet46'],
+            verbose_name: 'IP Protocol',
             help_text: 'The IP version(s) this rule applies to.',
         );
         $this->protocol = new StringField(
@@ -101,6 +104,7 @@ class FirewallRule extends Model {
                 'pfsync',
             ],
             allow_null: true,
+            verbose_name: 'Protocol',
             help_text: 'The IP/transport protocol this rule should match.',
         );
         $this->icmptype = new StringField(
@@ -135,10 +139,11 @@ class FirewallRule extends Model {
             ],
             many: true,
             conditions: ['protocol' => 'icmp'],
+            verbose_name: 'ICMP Types',
             help_text: 'Th ICMP subtypes this rule applies to. This field is only applicable when ' .
                 '`ipprotocol` is `inet` and `protocol` is `icmp`.',
         );
-        $this->source = new FilterAddressField(required: true, help_text: 'The source address this rule applies to.');
+        $this->source = new FilterAddressField(required: true, verbose_name: 'Source', help_text: 'The source address this rule applies to.');
         $this->source_port = new PortField(
             default: null,
             allow_alias: true,
@@ -147,10 +152,12 @@ class FirewallRule extends Model {
             internal_name: 'port',
             internal_namespace: 'source',
             conditions: ['protocol' => ['tcp', 'udp', 'tcp/udp']],
+            verbose_name: 'Source Port',
             help_text: 'The source port this rule applies to. Set to `null` to allow any source port.',
         );
         $this->destination = new FilterAddressField(
             required: true,
+            verbose_name: 'Destination',
             help_text: 'The destination address this rule applies to.',
         );
         $this->destination_port = new PortField(
@@ -161,31 +168,37 @@ class FirewallRule extends Model {
             internal_name: 'port',
             internal_namespace: 'destination',
             conditions: ['protocol' => ['tcp', 'udp', 'tcp/udp']],
+            verbose_name: 'Destination Port',
             help_text: 'The destination port this rule applies to. Set to `null` to allow any destination port.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description detailing the purpose or justification of this firewall rule.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Enable or disable this firewall rule.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Enable or disable this firewall rule.');
         $this->log = new BooleanField(
             default: false,
+            verbose_name: 'Log',
             help_text: 'Enable or disable logging of traffic that matches this rule.',
         );
         $this->tag = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Tag',
             help_text: 'A packet matching this rule can be marked and this mark used to match on other NAT/filter rules. It is called ',
         );
         $this->statetype = new StringField(
             default: 'keep state',
             choices: ['keep state', 'sloppy state', 'synproxy state', 'none'],
+            verbose_name: 'State Type',
             help_text: 'The state mechanism to use for this firewall rule.',
         );
         $this->tcp_flags_any = new BooleanField(
             default: false,
             internal_name: 'tcpflags_any',
+            verbose_name: 'TCP Flags Any',
             help_text: 'Allow any TCP flags.',
         );
         $this->tcp_flags_out_of = new StringField(
@@ -195,6 +208,7 @@ class FirewallRule extends Model {
             many: true,
             internal_name: 'tcpflags2',
             conditions: ['tcp_flags_any' => false],
+            verbose_name: 'TCP Flags Out Of',
             help_text: 'The TCP flags that can be set for this rule to match.',
         );
         $this->tcp_flags_set = new StringField(
@@ -204,6 +218,7 @@ class FirewallRule extends Model {
             many: true,
             internal_name: 'tcpflags1',
             conditions: ['tcp_flags_any' => false],
+            verbose_name: 'TCP Flags Set',
             help_text: 'The TCP flags that must be set for this rule to match.',
         );
         $this->gateway = new ForeignModelField(
@@ -211,6 +226,7 @@ class FirewallRule extends Model {
             model_field: 'name',
             default: null,
             allow_null: true,
+            verbose_name: 'Gateway',
             help_text: 'The gateway traffic matching this rule will be routed to. Set to `null` to use default.',
         );
         $this->sched = new ForeignModelField(
@@ -218,16 +234,19 @@ class FirewallRule extends Model {
             model_field: 'name',
             default: null,
             allow_null: true,
+            verbose_name: 'Schedule',
             help_text: 'The name of an existing firewall schedule to assign to this firewall rule.',
         );
         $this->dnpipe = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Limiter Pipe (In)',
             help_text: 'The name of the traffic shaper limiter pipe or queue to use for incoming traffic.',
         );
         $this->pdnpipe = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Limiter Pipe (Out)',
             help_text: 'The name of the traffic shaper limiter pipe or queue to use for outgoing traffic.',
         );
         $this->defaultqueue = new ForeignModelField(
@@ -235,6 +254,7 @@ class FirewallRule extends Model {
             model_field: 'name',
             default: null,
             allow_null: true,
+            verbose_name: 'Default Queue',
             help_text: 'The name of the traffic shaper queue to assume as the default queue for traffic matching ' .
                 'this rule.',
         );
@@ -243,6 +263,7 @@ class FirewallRule extends Model {
             model_field: 'name',
             default: null,
             allow_null: true,
+            verbose_name: 'ACK Queue',
             help_text: 'The name of the traffic shaper queue to assume as the ACK queue for ACK traffic matching ' .
                 'this rule.',
         );
@@ -250,12 +271,14 @@ class FirewallRule extends Model {
             default: false,
             editable: false,
             indicates_true: 'yes',
+            verbose_name: 'Floating',
             help_text: 'Mark this rule as a floating firewall rule.',
         );
         $this->quick = new BooleanField(
             default: false,
             indicates_true: 'yes',
             conditions: ['floating' => true],
+            verbose_name: 'Quick',
             help_text: 'Apply this action to traffic that matches this rule immediately. This field only applies ' .
                 'to floating firewall rules.',
         );
@@ -263,6 +286,7 @@ class FirewallRule extends Model {
             default: 'any',
             choices: ['any', 'in', 'out'],
             conditions: ['floating' => true],
+            verbose_name: 'Direction',
             help_text: 'The direction of traffic this firewall rule applies to. This field only applies to ' .
                 'floating firewall rules.',
         );
@@ -270,6 +294,7 @@ class FirewallRule extends Model {
             editable: false,
             read_only: true,
             auto_add_now: true,
+            verbose_name: 'Tracker',
             help_text: 'The internal tracking ID for this firewall rule.',
         );
         $this->associated_rule_id = new StringField(
@@ -279,6 +304,7 @@ class FirewallRule extends Model {
             editable: false,
             read_only: true,
             internal_name: 'associated-rule-id',
+            verbose_name: 'Associated Rule ID',
             help_text: 'The internal rule ID for the NAT rule associated with this rule.',
         );
         $this->created_time = new UnixTimeField(
@@ -287,6 +313,7 @@ class FirewallRule extends Model {
             auto_add_now: true,
             internal_name: 'time',
             internal_namespace: 'created',
+            verbose_name: 'Created Time',
             help_text: 'The unix timestamp of when this firewall rule was original created.',
         );
         $this->created_by = new StringField(
@@ -295,6 +322,7 @@ class FirewallRule extends Model {
             read_only: true,
             internal_name: 'username',
             internal_namespace: 'created',
+            verbose_name: 'Created By',
             help_text: 'The username and IP of the user who originally created this firewall rule.',
         );
         $this->updated_time = new UnixTimeField(
@@ -303,6 +331,7 @@ class FirewallRule extends Model {
             auto_update_now: true,
             internal_name: 'time',
             internal_namespace: 'updated',
+            verbose_name: 'Updated Time',
             help_text: 'The unix timestamp of when this firewall rule was original created.',
         );
         $this->updated_by = new StringField(
@@ -310,6 +339,7 @@ class FirewallRule extends Model {
             read_only: true,
             internal_name: 'username',
             internal_namespace: 'updated',
+            verbose_name: 'Updated By',
             help_text: 'The username and IP of the user who last updated this firewall rule.',
         );
 

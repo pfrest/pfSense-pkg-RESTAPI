@@ -33,12 +33,14 @@ class ACMECertificateRenew extends Model {
             model_name: 'ACMECertificate',
             model_field: 'name',
             required: true,
+            verbose_name: 'Certificate',
             help_text: 'The name of the ACME certificate to be renewed.',
         );
         $this->result_log = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Result Log',
             help_text: 'The output result of the acme.sh renew command. Note: This log is only populated when the ' .
                 'renew process is initiated via REST API, not when it is initiated via the pfSense webConfigurator ' .
                 'or auto-renewals.',
@@ -47,6 +49,7 @@ class ACMECertificateRenew extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Last Updated',
             help_text: 'The unix timestamp of when the ACME certificate renew status last changed. Note: This ' .
                 'timestamp is only updated when the renew process is initiated via REST API, not when it is ' .
                 'initiated via the pfSense webConfigurator or auto-renewals.',
@@ -54,6 +57,7 @@ class ACMECertificateRenew extends Model {
         $this->status = new StringField(
             default: 'pending',
             read_only: true,
+            verbose_name: 'Status',
             help_text: "The status of the ACME certificate renew process. This will show 'pending' if the renew " .
                 "process is still running or 'completed' if the renew process has finished. This status only " .
                 'indicates whether the renew process has completed, not whether it was successful. You will need' .

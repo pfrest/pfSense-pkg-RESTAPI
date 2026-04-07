@@ -25,12 +25,14 @@ class SystemDNS extends Model {
         # Set model Fields
         $this->dnsallowoverride = new BooleanField(
             default: false,
+            verbose_name: 'DNS Allow Override',
             help_text: 'Allow DNS servers to be overwritten by DHCP on WAN interfaces.',
         );
         $this->dnslocalhost = new StringField(
             default: null,
             choices: ['local', 'remote'],
             allow_null: true,
+            verbose_name: 'DNS Localhost',
             help_text: 'Use local DNS server (DNS Resover or DNS Forwarder) as the primary DNS, or use only remote ' .
                 'DNS servers specified in `dnsserver`. Set to `null` to use local DNS server as the primary and ' .
                 'remote DNS servers as backup.',
@@ -41,6 +43,7 @@ class SystemDNS extends Model {
             many: true,
             delimiter: null,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'DNS Servers',
             help_text: 'The remote DNS server IPv4 or IPv6 addresses.',
         );
 

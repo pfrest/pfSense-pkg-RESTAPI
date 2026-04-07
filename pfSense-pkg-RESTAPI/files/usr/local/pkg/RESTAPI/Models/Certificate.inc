@@ -37,9 +37,11 @@ class Certificate extends Model {
         $this->descr = new StringField(
             required: true,
             validators: [new RegexValidator(pattern: "/[\?\>\<\&\/\\\"\']/", invert: true)],
+            verbose_name: 'Description',
             help_text: 'The descriptive name for this certificate.',
         );
         $this->refid = new UIDField(
+            verbose_name: 'Reference ID',
             help_text: 'The unique ID assigned to this certificate for internal system use. This value is generated ' .
                 'by this system and cannot be changed.',
         );
@@ -47,12 +49,14 @@ class Certificate extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'CA Reference',
             help_text: 'The unique ID of the existing pfSense Certificate Authority that signed this certificate.' .
                 'This value is assigned by this system and cannot be changed.',
         );
         $this->type = new StringField(
             default: 'server',
             choices: ['server', 'user'],
+            verbose_name: 'Type',
             help_text: 'The certificate type. Use `server` when this certificate is to be used by one or more ' .
                 'services on this system. Use `user` when this certificate is intended to be assigned to a user for ' .
                 'authentication purposes.',
@@ -61,29 +65,34 @@ class Certificate extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'CSR Data',
             help_text: 'The X509 certificate signing request string if this certificate is pending an external signature.',
         );
         $this->crt = new Base64Field(
             required: true,
             validators: [new X509Validator(allow_crt: true)],
+            verbose_name: 'Certificate Data',
             help_text: 'The X509 certificate string.',
         );
         $this->prv = new Base64Field(
             required: true,
             sensitive: true,
             validators: [new X509Validator(allow_prv: true, allow_rsa: true, allow_ecprv: true)],
+            verbose_name: 'Private Key',
             help_text: 'The X509 private key string.',
         );
         $this->valid_from = new DateTimeField(
             allow_null: true,
             read_only: true,
             representation_only: true,
+            verbose_name: 'Valid From',
             help_text: 'The start date from which this certificate is valid.',
         );
         $this->valid_until = new DateTimeField(
             allow_null: true,
             read_only: true,
             representation_only: true,
+            verbose_name: 'Valid Until',
             help_text: 'The date until which this certificate is valid.',
         );
         $this->valid_days_left = new IntegerField(
@@ -92,6 +101,7 @@ class Certificate extends Model {
             representation_only: true,
             minimum: 1,
             maximum: 12000,
+            verbose_name: 'Valid Days Left',
             help_text: 'The number of days remaining until this certificate expires.',
         );
 

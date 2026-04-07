@@ -35,23 +35,27 @@ class OneToOneNATMapping extends Model {
         # Set model fields
         $this->interface = new InterfaceField(
             required: true,
+            verbose_name: 'Interface',
             help_text: 'The interface this 1:1 NAT mapping applies to.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disables this 1:1 NAT mapping.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this 1:1 NAT mapping.');
         $this->nobinat = new BooleanField(
             default: false,
+            verbose_name: 'No Binat',
             help_text: 'Exclude traffic matching this mapping from a later, more general, mapping.',
         );
         $this->natreflection = new StringField(
             default: null,
             choices: ['enable', 'disable'],
             allow_null: true,
+            verbose_name: 'NAT Reflection',
             help_text: 'Enables or disables NAT reflection for traffic matching this mapping. Set to `null` to use ' .
                 'the system default.',
         );
         $this->ipprotocol = new StringField(
             default: 'inet',
             choices: ['inet', 'inet6'],
+            verbose_name: 'IP Protocol',
             help_text: 'The IP version this mapping applies to.',
         );
         $this->external = new SpecialNetworkField(
@@ -65,6 +69,7 @@ class OneToOneNATMapping extends Model {
             allow_self: false,
             allow_l2tp: false,
             allow_pppoe: false,
+            verbose_name: 'External',
             help_text: 'The external IP address or interface for the 1:1 mapping.',
         );
         $this->source = new FilterAddressField(
@@ -80,6 +85,7 @@ class OneToOneNATMapping extends Model {
             allow_self: false,
             allow_l2tp: true,
             allow_pppoe: true,
+            verbose_name: 'Source',
             help_text: 'The source IP address or subnet that traffic must match to apply this mapping.',
         );
         $this->destination = new FilterAddressField(
@@ -95,11 +101,13 @@ class OneToOneNATMapping extends Model {
             allow_self: false,
             allow_l2tp: true,
             allow_pppoe: true,
+            verbose_name: 'Destination',
             help_text: 'The destination IP address or subnet that traffic must match to apply this mapping.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this 1:1 NAT mapping',
         );
 

@@ -30,11 +30,13 @@ class ACMESettings extends Model {
         $this->enable = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Enable',
             help_text: 'Enables or disables the ACME renewal job.',
         );
         $this->writecerts = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Write Certificates',
             help_text: 'Enables or disables the writing of certificates to /conf/acme/ in various formats for use by ' .
                 'other scripts or daemons which do not integrate with the pfSense certificate manager.',
         );

@@ -20,6 +20,7 @@ class OutboundNATMode extends Model {
         $this->mode = new StringField(
             required: true,
             choices: ['automatic', 'hybrid', 'advanced', 'disabled'],
+            verbose_name: 'Mode',
             help_text: 'The outbound NAT mode to assign this system. Set to `automatic` to have this system ' .
                 'automatically generate NAT rules this firewall, `hybrid` to automatically generate NAT rules AND ' .
                 'allow manual outbound NAT mappings to be assigned, `manual` to prevent the system from automatically ' .

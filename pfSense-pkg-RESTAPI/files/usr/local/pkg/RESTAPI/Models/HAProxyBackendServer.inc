@@ -40,16 +40,19 @@ class HAProxyBackendServer extends Model {
             unique: true,
             minimum_length: 2,
             validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
+            verbose_name: 'Name',
             help_text: 'The unique name for this backend server.',
         );
         $this->status = new StringField(
             default: 'active',
             choices: ['active', 'backup', 'disabled', 'inactive'],
+            verbose_name: 'Status',
             help_text: 'The eligibility status for this backend server.',
         );
         $this->address = new StringField(
             required: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Address',
             help_text: 'The hostname or IP address of this backend server. Hostname values are only resolved at ' .
                 'service startup.',
         );
@@ -57,34 +60,40 @@ class HAProxyBackendServer extends Model {
             required: true,
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Port',
             help_text: 'The port to forward to for this backend server.',
         );
         $this->weight = new IntegerField(
             default: 1,
             minimum: 0,
             maximum: 256,
+            verbose_name: 'Weight',
             help_text: 'The weight of this backend server when load balancing.',
         );
         $this->ssl = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'SSL',
             help_text: 'Enables or disables using SSL/TLS when forwarding to this backend server.',
         );
         $this->sslserververify = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'SSL Server Verify',
             help_text: 'Enables or disables verifying the SSL/TLS certificate when forwarding to this backend server.',
         );
         $this->serverid = new IntegerField(
             default: rand(100, 1000), # TODO: Ensure this value is unique from Backends and Backend servers
             editable: false,
             read_only: true,
+            verbose_name: 'Server ID',
             help_text: 'The unique ID for this backend server. This value is set by the system for internal use and ' .
                 'cannot be changed.',
         );
         $this->advanced = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Advanced',
             help_text: 'Allows adding custom HAProxy server settings to the server.',
         );
 

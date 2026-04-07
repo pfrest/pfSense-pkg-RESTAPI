@@ -34,6 +34,7 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Common Name',
             help_text: 'The common name of the OpenVPN server connection.',
         );
         $this->remote_host = new StringField(
@@ -41,6 +42,7 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Remote Host',
             help_text: 'The remote host of the OpenVPN server connection.',
         );
         $this->virtual_addr = new StringField(
@@ -48,6 +50,7 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Virtual Addr',
             help_text: 'The virtual address of the OpenVPN server connection.',
         );
         $this->virtual_addr6 = new StringField(
@@ -55,18 +58,21 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Virtual Addr6',
             help_text: 'The virtual IPv6 address of the OpenVPN server connection.',
         );
         $this->bytes_recv = new IntegerField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Bytes Recv',
             help_text: 'The number of bytes received by the OpenVPN server connection.',
         );
         $this->bytes_sent = new IntegerField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Bytes Sent',
             help_text: 'The number of bytes sent by the OpenVPN server connection.',
         );
         $this->connect_time = new StringField(
@@ -74,12 +80,14 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Connect Time',
             help_text: 'The connection time of the OpenVPN server connection.',
         );
         $this->connect_time_unix = new IntegerField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Connect Time Unix',
             help_text: 'The connection time of the OpenVPN server connection in Unix time.',
         );
         $this->user_name = new StringField(
@@ -87,18 +95,21 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'User Name',
             help_text: 'The user name of the OpenVPN server connection.',
         );
         $this->client_id = new IntegerField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Client ID',
             help_text: 'The client ID of the OpenVPN server connection.',
         );
         $this->peer_id = new IntegerField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Peer ID',
             help_text: 'The peer ID of the OpenVPN server connection.',
         );
         $this->cipher = new StringField(
@@ -106,6 +117,7 @@ class OpenVPNServerConnectionStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Cipher',
             help_text: 'The cipher of the OpenVPN server connection.',
         );
 

@@ -55,20 +55,24 @@ class PortForward extends Model {
             allow_ipsec_interface: true,
             allow_openvpn_interface: true,
             allow_carp_interface: false,
+            verbose_name: 'Interface',
             help_text: 'The interface this port forward rule applies to.',
         );
         $this->ipprotocol = new StringField(
             default: 'inet',
             choices: ['inet', 'inet6', 'inet46'],
+            verbose_name: 'IP Protocol',
             help_text: 'The IP protocol this port forward rule should match.',
         );
         $this->protocol = new StringField(
             required: true,
             choices: ['any', 'tcp', 'udp', 'tcp/udp', 'icmp', 'esp', 'ah', 'gre', 'ipv6', 'igmp', 'pim', 'ospf'],
+            verbose_name: 'Protocol',
             help_text: 'The IP/transport protocol this port forward rule should match.',
         );
         $this->source = new FilterAddressField(
             required: true,
+            verbose_name: 'Source',
             help_text: 'The source address this port forward rule applies to.',
         );
         $this->source_port = new PortField(
@@ -79,10 +83,12 @@ class PortForward extends Model {
             internal_name: 'port',
             internal_namespace: 'source',
             conditions: ['protocol' => ['tcp', 'udp', 'tcp/udp']],
+            verbose_name: 'Source Port',
             help_text: 'The source port this port forward rule applies to. Set to `null` to allow any source port.',
         );
         $this->destination = new FilterAddressField(
             required: true,
+            verbose_name: 'Destination',
             help_text: 'The destination address this rule applies to.',
         );
         $this->destination_port = new PortField(
@@ -93,6 +99,7 @@ class PortForward extends Model {
             internal_name: 'port',
             internal_namespace: 'destination',
             conditions: ['protocol' => ['tcp', 'udp', 'tcp/udp']],
+            verbose_name: 'Destination Port',
             help_text: 'The destination port this port forward rule applies to. Set to `null` to allow any destination port.',
         );
         $this->target = new SpecialNetworkField(
@@ -106,6 +113,7 @@ class PortForward extends Model {
             allow_self: false,
             allow_l2tp: false,
             allow_pppoe: false,
+            verbose_name: 'Target',
             help_text: 'The IP address or alias of the internal host to forward matching traffic to.',
         );
         $this->local_port = new PortField(
@@ -114,28 +122,33 @@ class PortForward extends Model {
             allow_range: false,
             internal_name: 'local-port',
             conditions: ['protocol' => ['tcp', 'udp', 'tcp/udp']],
+            verbose_name: 'Local Port',
             help_text: 'The port on the internal host to forward matching traffic to. In most cases, this must match ' .
                 'the `destination_port` value. In the event that the `desintation_port` is a range, this value should ' .
                 'be the first value in that range.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disables this port forward rule.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this port forward rule.');
         $this->nordr = new BooleanField(
             default: false,
+            verbose_name: 'No Redirect',
             help_text: 'Disables redirection for traffic matching this rule.',
         );
         $this->nosync = new BooleanField(
             default: false,
+            verbose_name: 'No Sync',
             help_text: 'Prevents this port forward rule from being synced to non-primary CARP members.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this port forward rule.',
         );
         $this->natreflection = new StringField(
             default: null,
             choices: ['enable', 'disable', 'purenat'],
             allow_null: true,
+            verbose_name: 'NAT Reflection',
             help_text: 'The NAT reflection mode to use for traffic matching this port forward rule. Set to `null` to ' .
                 'use the system default.',
         );
@@ -146,6 +159,7 @@ class PortForward extends Model {
             default: '',
             allow_empty: true,
             internal_name: 'associated-rule-id',
+            verbose_name: 'Associated Rule ID',
             help_text: 'The associated firewall rule mode. Use an empty string to require a separate firewall rule ' .
                 'to be created to pass traffic matching this port forward rule. Use `new` to create a new associated ' .
                 'firewall rule to pass traffic matching this port forward rule. Use `pass` to automatically pass ' .
@@ -158,6 +172,7 @@ class PortForward extends Model {
             auto_add_now: true,
             internal_name: 'time',
             internal_namespace: 'created',
+            verbose_name: 'Created Time',
             help_text: 'The unix timestamp of when this port forward rule was original created.',
         );
         $this->created_by = new StringField(
@@ -166,6 +181,7 @@ class PortForward extends Model {
             read_only: true,
             internal_name: 'username',
             internal_namespace: 'created',
+            verbose_name: 'Created By',
             help_text: 'The username and IP of the user who originally created this port forward rule.',
         );
         $this->updated_time = new UnixTimeField(
@@ -174,6 +190,7 @@ class PortForward extends Model {
             auto_update_now: true,
             internal_name: 'time',
             internal_namespace: 'updated',
+            verbose_name: 'Updated Time',
             help_text: 'The unix timestamp of when this port forward rule was original created.',
         );
         $this->updated_by = new StringField(
@@ -181,6 +198,7 @@ class PortForward extends Model {
             read_only: true,
             internal_name: 'username',
             internal_namespace: 'updated',
+            verbose_name: 'Updated By',
             help_text: 'The username and IP of the user who last updated this port forward rule.',
         );
 

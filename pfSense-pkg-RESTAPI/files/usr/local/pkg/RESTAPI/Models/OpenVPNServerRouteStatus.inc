@@ -24,6 +24,7 @@ class OpenVPNServerRouteStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Common Name',
             help_text: 'The common name of the OpenVPN server connection.',
         );
         $this->remote_host = new StringField(
@@ -31,6 +32,7 @@ class OpenVPNServerRouteStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Remote Host',
             help_text: 'The remote host of the OpenVPN server connection.',
         );
         $this->virtual_addr = new StringField(
@@ -38,6 +40,7 @@ class OpenVPNServerRouteStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Virtual Addr',
             help_text: 'The virtual address of the OpenVPN server connection.',
         );
         $this->last_time = new StringField(
@@ -45,6 +48,7 @@ class OpenVPNServerRouteStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Last Time',
             help_text: 'The last time of the route was used.',
         );
 

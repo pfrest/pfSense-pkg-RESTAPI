@@ -32,12 +32,14 @@ class RoutingGatewayGroupPriority extends Model {
             model_field: 'name',
             required: true,
             unique: true,
+            verbose_name: 'Gateway',
             help_text: 'The name of the gateway to prioritize in this gateway group.',
         );
         $this->tier = new IntegerField(
             required: true,
             minimum: 1,
             maximum: 5,
+            verbose_name: 'Tier',
             help_text: 'The priority of this gateway in the group. Lower numbered tiers are higher priority.',
         );
         $this->virtual_ip = new ForeignModelField(
@@ -45,6 +47,7 @@ class RoutingGatewayGroupPriority extends Model {
             model_field: 'uniqid',
             allowed_keywords: ['address'],
             default: 'address',
+            verbose_name: 'Virtual IP',
             help_text: "The virtual IP to use for this gateway group. Use `address` to use the interface's current IP.",
         );
 

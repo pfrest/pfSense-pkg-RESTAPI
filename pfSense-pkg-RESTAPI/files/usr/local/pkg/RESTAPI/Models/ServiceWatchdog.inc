@@ -30,21 +30,25 @@ class ServiceWatchdog extends Model {
             model_field: 'name',
             required: true,
             unique: true,
+            verbose_name: 'Name',
             help_text: 'The name of the service to be watched.',
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
             read_only: true,
+            verbose_name: 'Description',
             help_text: 'The description for the service being watched.',
         );
         $this->notify = new BooleanField(
             default: false,
+            verbose_name: 'Notify',
             help_text: 'Enable or disable notifications being sent when Service Watchdogs finds this service stopped.',
         );
         $this->enabled = new BooleanField(
             default: true,
             read_only: true,
+            verbose_name: 'Enabled',
             help_text: 'Indicates if this Service Watchdog is enabled or disabled. This value is unused.',
         );
 

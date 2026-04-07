@@ -33,26 +33,31 @@ class BINDSyncRemoteHost extends Model {
         $this->syncdestinenable = new BooleanField(
             default: false,
             indicates_true: 'ON',
+            verbose_name: 'Sync Destination Enable',
             help_text: 'Enable this remote host for syncing.',
         );
         $this->syncprotocol = new StringField(
             required: true,
             choices: ['http', 'https'],
+            verbose_name: 'Sync Protocol',
             help_text: 'The protocol to use for syncing.',
         );
         $this->ipaddress = new StringField(
             required: true,
             validators: [new IPAddressValidator(allow_fqdn: true)],
+            verbose_name: 'IP Address',
             help_text: 'The IP address/hostname of the remote host.',
         );
-        $this->syncport = new PortField(required: true, help_text: 'The remote host port to use for syncing.');
+        $this->syncport = new PortField(required: true, verbose_name: 'Sync Port', help_text: 'The remote host port to use for syncing.');
         $this->username = new StringField(
             required: true,
+            verbose_name: 'Username',
             help_text: 'The username to use to authenticate when syncing.',
         );
         $this->password = new StringField(
             required: true,
             sensitive: true,
+            verbose_name: 'Password',
             help_text: 'The password to use to authenticate when syncing.',
         );
 

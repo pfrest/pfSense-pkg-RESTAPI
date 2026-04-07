@@ -66,6 +66,7 @@ class CronJob extends Model {
                     error_msg: 'Value must be a numeric 0-59, a range, a divided value, an @ event or delay, or `*`.',
                 ),
             ],
+            verbose_name: 'Minute',
             help_text: 'The minute(s) at which the command will be executed or a special @ event string. ' .
                 '(0-59, ranges, divided, @ event or delay, *=all). When using a special @ event, such as @reboot, ' .
                 'the other time fields must be empty.',
@@ -79,6 +80,7 @@ class CronJob extends Model {
                     error_msg: 'Value must be a numeric 0-59, a range, a divided value, or `*`.',
                 ),
             ],
+            verbose_name: 'Hour',
             help_text: 'The hour(s) at which the command will be executed. (0-23, ranges, or divided, *=all)',
         );
         $this->mday = new StringField(
@@ -90,6 +92,7 @@ class CronJob extends Model {
                     error_msg: 'Value must be a numeric 0-59, a range, a divided value, or `*`.',
                 ),
             ],
+            verbose_name: 'Mday',
             help_text: 'The day(s) of the month on which the command will be executed. (1-31, ranges, or divided, *=all).',
         );
         $this->month = new StringField(
@@ -101,6 +104,7 @@ class CronJob extends Model {
                     error_msg: 'Value must be a numeric 0-59, a range, a divided value, or `*`.',
                 ),
             ],
+            verbose_name: 'Month',
             help_text: 'The month(s) of the year in which the command will be executed. (1-31, ranges, or divided, *=all).',
         );
         $this->wday = new StringField(
@@ -112,12 +116,14 @@ class CronJob extends Model {
                     error_msg: 'Value must be a numeric 0-7, a range, a divided value, or `*`.',
                 ),
             ],
+            verbose_name: 'Wday',
             help_text: 'The day(s) of the week on which the command will be executed. (0-7, 7=Sun or use names, ' .
                 'ranges, or divided, *=all).',
         );
-        $this->who = new StringField(required: true, help_text: 'The OS user to use when cron runs the command.');
+        $this->who = new StringField(required: true, verbose_name: 'Who', help_text: 'The OS user to use when cron runs the command.');
         $this->command = new StringField(
             required: true,
+            verbose_name: 'Command',
             help_text: 'The command to run. Use full file paths for this command and include an command parameters.',
         );
 

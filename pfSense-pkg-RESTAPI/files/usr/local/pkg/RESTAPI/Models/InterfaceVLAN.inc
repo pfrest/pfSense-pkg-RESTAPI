@@ -31,12 +31,14 @@ class InterfaceVLAN extends Model {
             required: true,
             editable: false,
             maximum_length: 32,
+            verbose_name: 'Interface Name',
             help_text: 'The real parent interface this VLAN will be applied to.',
         );
         $this->tag = new IntegerField(
             required: true,
             minimum: 1,
             maximum: 4094,
+            verbose_name: 'Tag',
             help_text: 'The VLAN ID tag to use. This must be unique from all other VLANs on the parent interface.',
         );
         $this->vlanif = new StringField(
@@ -44,6 +46,7 @@ class InterfaceVLAN extends Model {
             default: '',
             allow_empty: true,
             read_only: true,
+            verbose_name: 'VLAN Interface',
             help_text: 'Displays the full interface VLAN. This value is automatically populated and cannot be set.',
         );
         $this->pcp = new IntegerField(
@@ -51,11 +54,13 @@ class InterfaceVLAN extends Model {
             allow_null: true,
             minimum: 0,
             maximum: 7,
+            verbose_name: 'PCP',
             help_text: 'The 802.1p VLAN priority code point (PCP) to assign to this VLAN.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description to help document the purpose of this VLAN.',
         );
 

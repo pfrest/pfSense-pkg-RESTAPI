@@ -30,12 +30,13 @@ class BINDView extends Model {
         $this->verbose_name = 'BIND View';
 
         # Set model fields
-        $this->name = new StringField(required: true, unique: true, help_text: 'The name of the view.');
-        $this->descr = new StringField(default: '', allow_empty: true, help_text: 'A description for the view.');
+        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the view.');
+        $this->descr = new StringField(default: '', allow_empty: true, verbose_name: 'Description', help_text: 'A description for the view.');
         $this->recursion = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Recursion',
             help_text: 'Enables or disables recursion for the view.',
         );
         $this->match_clients = new ForeignModelField(
@@ -45,6 +46,7 @@ class BINDView extends Model {
             allow_empty: true,
             many: true,
             internal_name: 'match-clients',
+            verbose_name: 'Match Clients',
             help_text: 'The access lists to match clients against.',
         );
         $this->allow_recursion = new ForeignModelField(
@@ -54,11 +56,13 @@ class BINDView extends Model {
             allow_empty: true,
             many: true,
             internal_name: 'allow-recursion',
+            verbose_name: 'Allow Recursion',
             help_text: 'The access lists to allow recursion for.',
         );
         $this->bind_custom_options = new Base64Field(
             default: '',
             allow_empty: true,
+            verbose_name: 'BIND Custom Options',
             help_text: 'Custom BIND options for the view.',
         );
 

@@ -22,13 +22,14 @@ class SystemTunable extends Model {
         $this->subsystem = 'sysctl';
 
         # Set model Fields
-        $this->tunable = new StringField(required: true, unique: true, help_text: 'The name of the tunable to set.');
+        $this->tunable = new StringField(required: true, unique: true, verbose_name: 'Tunable', help_text: 'The name of the tunable to set.');
         $this->value = new StringField(
             required: true,
             validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9.\-_%\/]/', invert: true)],
+            verbose_name: 'Value',
             help_text: 'The value to assign this tunable.',
         );
-        $this->descr = new StringField(default: '', allow_empty: true, help_text: 'A description for this tunable.');
+        $this->descr = new StringField(default: '', allow_empty: true, verbose_name: 'Description', help_text: 'A description for this tunable.');
 
         # Keep track of the original sysctl defaults
         global $sysctls;

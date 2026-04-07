@@ -42,42 +42,49 @@ class SystemStatus extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Platform',
             help_text: "The verbose name of this system's platform.",
         );
         $this->serial = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Serial',
             help_text: "The system's unique serial number/ID.",
         );
         $this->netgate_id = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Netgate ID',
             help_text: 'The unique ID issued for this pfSense instance by Netgate.',
         );
         $this->uptime = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Uptime',
             help_text: 'The amount of time this system has been up since the last reboot.',
         );
         $this->bios_vendor = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'BIOS Vendor',
             help_text: 'The name of the BIOS vendor.',
         );
         $this->bios_version = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'BIOS Version',
             help_text: 'The BIOS version installed on this system.',
         );
         $this->bios_date = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'BIOS Date',
             help_text: 'The build date of the BIOS version.',
         );
         $this->kernel_pti = new BooleanField(
@@ -85,30 +92,35 @@ class SystemStatus extends Model {
             read_only: true,
             indicates_true: '1',
             indicates_false: '0',
+            verbose_name: 'Kernel Pti',
             help_text: 'Indicates whether kernel PTI is enabled or not.',
         );
         $this->mds_mitigation = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'MDS Mitigation',
             help_text: 'Indicates whether MDS mitigation is enabled or not.',
         );
         $this->temp_c = new FloatField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Temp C',
             help_text: 'The current system temperature in celsius.',
         );
         $this->temp_f = new FloatField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Temp F',
             help_text: 'The current system temperature in fahrenheit.',
         );
         $this->cpu_model = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'CPU Model',
             help_text: 'The model of CPU installed in this system and other CPU info.',
         );
         $this->cpu_load_avg = new FloatField(
@@ -117,6 +129,7 @@ class SystemStatus extends Model {
             read_only: true,
             many: true,
             delimiter: ' ',
+            verbose_name: 'CPU Load Avg',
             help_text: 'The CPU load averages. The first value represents the load average for the last minute, the ' .
                 'second value represents the load average for the last 5 minutes, and the third value represents the ' .
                 'load average for the last 15 minutes.',
@@ -125,12 +138,14 @@ class SystemStatus extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'CPU Count',
             help_text: 'The total number of CPUs cores available on this system.',
         );
         $this->cpu_usage = new FloatField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'CPU Usage',
             help_text: 'The current CPU usage as a whole percentage. Note: This is an approximate usage based on the ' .
                 'last minute load average and total number of CPU cores. This may not represent exact CPU usage.',
         );
@@ -138,24 +153,28 @@ class SystemStatus extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Mem Usage',
             help_text: 'The current memory usage as a whole percentage.',
         );
         $this->mbuf_usage = new FloatField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'MBUF Usage',
             help_text: 'The current MBUF usage as a whole percentage.',
         );
         $this->swap_usage = new FloatField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Swap Usage',
             help_text: 'The current swap usage as a whole percentage.',
         );
         $this->disk_usage = new FloatField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Disk Usage',
             help_text: 'The current disk usage as a whole percentage.',
         );
 

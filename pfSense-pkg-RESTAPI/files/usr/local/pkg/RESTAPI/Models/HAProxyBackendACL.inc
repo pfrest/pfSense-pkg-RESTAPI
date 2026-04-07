@@ -32,6 +32,7 @@ class HAProxyBackendACL extends Model {
             required: true,
             minimum_length: 2,
             validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
+            verbose_name: 'Name',
             help_text: 'The unique name for this backend ACL.',
         );
         $this->expression = new StringField(
@@ -63,21 +64,25 @@ class HAProxyBackendACL extends Model {
                 'ssl_sni_regex',
                 'custom',
             ],
+            verbose_name: 'Expression',
             help_text: 'The expression to use to determine the match for this ACL.',
         );
         $this->value = new StringField(
             required: true,
             allow_empty: true,
+            verbose_name: 'Value',
             help_text: 'The value which indicates a match for this ACL.',
         );
         $this->casesensitive = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Case Sensitive',
             help_text: 'Enables or disables case-sensitive matching for this ACL.',
         );
         $this->not = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'Not',
             help_text: 'Enables or disables inverting the context of this ACL.',
         );
 

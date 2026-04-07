@@ -44,6 +44,7 @@ class FreeRADIUSClient extends Model {
             unique: true,
             internal_name: 'varclientip',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'Address',
             help_text: 'The IP address or network of the RADIUS client(s) in CIDR notation. This is the IP of the ' .
                 'NAS (switch, access point, firewall, router, etc.)',
         );
@@ -51,11 +52,13 @@ class FreeRADIUSClient extends Model {
             default: 'ipaddr',
             choices: ['ipaddr', 'ipv6addr'],
             internal_name: 'varclientipversion',
+            verbose_name: 'IP Version',
             help_text: 'The IP version of the this Client.',
         );
         $this->shortname = new StringField(
             required: true,
             internal_name: 'varclientshortname',
+            verbose_name: 'Short Name',
             help_text: 'A short name for the client. This is generally the hostname of the NAS.',
         );
         $this->secret = new StringField(
@@ -63,6 +66,7 @@ class FreeRADIUSClient extends Model {
             sensitive: true,
             maximum_length: 31,
             internal_name: 'varclientsharedsecret',
+            verbose_name: 'Secret',
             help_text: 'This is the shared secret (password) which the NAS (switch, accesspoint, etc.) needs to ' .
                 'communicate with the RADIUS server.',
         );
@@ -71,6 +75,7 @@ class FreeRADIUSClient extends Model {
             default: 'udp',
             choices: ['udp', 'tcp'],
             internal_name: 'varclientproto',
+            verbose_name: 'Protocol',
             help_text: 'The protocol the client uses.',
         );
         $this->nastype = new StringField(
@@ -90,6 +95,7 @@ class FreeRADIUSClient extends Model {
             ],
             allow_empty: true,
             internal_name: 'varclientnastype',
+            verbose_name: 'NAS Type',
             help_text: 'The NAS type of the client. This is used by checkrad.pl for simultaneous use checks.',
         );
         $this->msgauth = new BooleanField(
@@ -97,6 +103,7 @@ class FreeRADIUSClient extends Model {
             indicates_true: 'yes',
             indicates_false: 'no',
             internal_name: 'varrequiremessageauthenticator',
+            verbose_name: 'Message Auth',
             help_text: 'RFC5080 requires Message-Authenticator in Access-Request. But older NAS (switches or ' .
                 'accesspoints) do not include that.',
         );
@@ -105,6 +112,7 @@ class FreeRADIUSClient extends Model {
             minimum: 1,
             maximum: 32,
             internal_name: 'varclientmaxconnections',
+            verbose_name: 'Max Connections',
             help_text: 'Takes only effect if you use TCP as protocol. Limits the number of simultaneous TCP 
                 connections from a client.',
         );
@@ -112,6 +120,7 @@ class FreeRADIUSClient extends Model {
             default: '',
             allow_empty: true,
             internal_name: 'varclientlogininput',
+            verbose_name: 'NAS Login',
             help_text: 'If supported by your NAS, you can use SNMP or finger for simultaneous-use checks instead of ' .
                 '(s)radutmp file and accounting. Leave empty to choose (s)radutmp.',
         );
@@ -120,6 +129,7 @@ class FreeRADIUSClient extends Model {
             allow_empty: true,
             sensitive: true,
             internal_name: 'varclientpasswordinput',
+            verbose_name: 'NAS Password',
             help_text: 'If supported by your NAS, you can use SNMP or finger for simultaneous-use checks instead of ' .
                 '(s)radutmp file and accounting. Leave empty to choose (s)radutmp.',
         );
@@ -134,6 +144,7 @@ class FreeRADIUSClient extends Model {
                     error_msg: 'Value contains invalid characters.',
                 ),
             ],
+            verbose_name: 'Description',
             help_text: 'The description for this interface.',
         );
 

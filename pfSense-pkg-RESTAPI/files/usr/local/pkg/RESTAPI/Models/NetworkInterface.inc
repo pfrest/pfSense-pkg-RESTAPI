@@ -80,11 +80,13 @@ class NetworkInterface extends Model {
             unique: true,
             choices_callable: 'get_interface_ports',
             maximum_length: 128,
+            verbose_name: 'Interface Name',
             help_text: 'The real interface this configuration will be applied to.',
         );
         $this->enable = new BooleanField(
             required: false,
             default: false,
+            verbose_name: 'Enable',
             help_text: 'Enable or disable this interface.',
         );
         $this->descr = new StringField(
@@ -95,6 +97,7 @@ class NetworkInterface extends Model {
                 new FilterNameValidator(),
                 new UniqueFromForeignModelValidator(model: 'FirewallAlias', field: 'name'),
             ],
+            verbose_name: 'Description',
             help_text: 'The descriptive name for this interface.',
         );
         $this->spoofmac = new StringField(
@@ -103,6 +106,7 @@ class NetworkInterface extends Model {
             allow_empty: true,
             maximum_length: 17,
             validators: [new MACAddressValidator()],
+            verbose_name: 'Spoof MAC Address',
             help_text: "Assigns (spoofs) the MAC address for this interface instead of using the interface's real MAC.",
         );
         $this->mtu = new IntegerField(
@@ -110,6 +114,7 @@ class NetworkInterface extends Model {
             allow_null: true,
             minimum: 1280,
             maximum: 8192,
+            verbose_name: 'MTU',
             help_text: 'Sets the MTU for this interface. Assumes default MTU if value is `null`.',
         );
         $this->mss = new IntegerField(
@@ -117,6 +122,7 @@ class NetworkInterface extends Model {
             allow_null: true,
             minimum: 576,
             maximum: 65535,
+            verbose_name: 'MSS',
             help_text: 'Sets the MSS for this interface. Assumes default MSS if value is `null`.',
         );
         $this->media = new StringField(
@@ -124,6 +130,7 @@ class NetworkInterface extends Model {
             default: '',
             allow_empty: true,
             internal_name: 'media',
+            verbose_name: 'Media',
             help_text: 'Sets the link speed for this interface. In most situations this can be left as the default.',
         );
         $this->mediaopt = new StringField(
@@ -131,28 +138,33 @@ class NetworkInterface extends Model {
             default: '',
             allow_empty: true,
             internal_name: 'mediaopt',
+            verbose_name: 'Media Options',
             help_text: 'Sets the link duplex for this interface. In most situations this can be left as the default.',
         );
         $this->blockpriv = new BooleanField(
             required: false,
             default: false,
+            verbose_name: 'Block Private Networks',
             help_text: 'Enable or disable automatically blocking RFC 1918 private networks on this interface.',
         );
         $this->blockbogons = new BooleanField(
             required: false,
             default: false,
+            verbose_name: 'Block Bogon Networks',
             help_text: 'Enable or disable automatically blocking bogon networks on this interface.',
         );
         $this->typev4 = new StringField(
             required: true,
             choices: ['static', 'dhcp', 'none'],
             representation_only: true,
+            verbose_name: 'Typev4',
             help_text: 'Selects the IPv4 address type to assign this interface.',
         );
         $this->ipaddr = new StringField(
             required: true,
             conditions: ['typev4' => ['static', 'dhcp']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_keywords: ['dhcp'])],
+            verbose_name: 'IP Address',
             help_text: 'Sets the IPv4 address to assign to this interface.',
         );
         $this->subnet = new IntegerField(
@@ -160,6 +172,7 @@ class NetworkInterface extends Model {
             minimum: 1,
             maximum: 32,
             conditions: ['typev4' => 'static'],
+            verbose_name: 'Subnet',
             help_text: 'Sets the subnet bit count to assign this interface.',
         );
         $this->gateway = new ForeignModelField(
@@ -168,6 +181,7 @@ class NetworkInterface extends Model {
             model_query: ['ipprotocol' => 'inet'],
             allow_null: true,
             conditions: ['typev4' => 'static'],
+            verbose_name: 'Gateway',
             help_text: 'Sets the upstream gateway this interface will use. This is only applicable for WAN-type interfaces.',
         );
         $this->dhcphostname = new StringField(
@@ -175,6 +189,7 @@ class NetworkInterface extends Model {
             allow_empty: true,
             conditions: ['typev4' => 'dhcp'],
             validators: [new IPAddressValidator(allow_ipv4: false, allow_ipv6: false, allow_fqdn: true)],
+            verbose_name: 'DHCP Hostname',
             help_text: 'Sets the DHCP hostname this interface will advertise via DHCP.',
         );
         $this->alias_address = new StringField(
@@ -183,6 +198,7 @@ class NetworkInterface extends Model {
             internal_name: 'alias-address',
             conditions: ['typev4' => 'dhcp'],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_fqdn: false)],
+            verbose_name: 'Alias Address',
             help_text: 'Sets the value used as a fixed alias IPv4 address by the DHCP client.',
         );
         $this->alias_subnet = new IntegerField(
@@ -192,6 +208,7 @@ class NetworkInterface extends Model {
             maximum: 32,
             internal_name: 'alias-subnet',
             conditions: ['typev4' => 'dhcp'],
+            verbose_name: 'Alias Subnet',
             help_text: "Sets the value used as the fixed alias IPv4 address's subnet bit count by the DHCP client.",
         );
         $this->dhcprejectfrom = new StringField(
@@ -201,6 +218,7 @@ class NetworkInterface extends Model {
             delimiter: ',',
             conditions: ['typev4' => 'dhcp'],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false, allow_fqdn: false)],
+            verbose_name: 'DHCP Reject From',
             help_text: 'Sets a list of IPv4 DHCP server addresses to reject DHCP offers for on this interface.',
         );
         $this->adv_dhcp_config_advanced = new BooleanField(
@@ -208,68 +226,80 @@ class NetworkInterface extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['typev4' => 'dhcp'],
+            verbose_name: 'Advanced DHCP Config',
             help_text: 'Enables or disables the advanced DHCP settings on this interface.',
         );
         $this->adv_dhcp_pt_values = new StringField(
             default: 'SavedCfg',
             choices: ['SavedCfg'],
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Timing Values',
             help_text: 'Selects the advanced DHCP timing preset.',
         );
         $this->adv_dhcp_pt_timeout = new IntegerField(
             allow_null: true,
             minimum: 1,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Timeout',
             help_text: 'Manually sets the timeout timing value used when requested DHCP leases on this interface.',
         );
         $this->adv_dhcp_pt_retry = new IntegerField(
             allow_null: true,
             minimum: 1,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Retry',
             help_text: 'Manually sets the retry timing value used when requested DHCP leases on this interface.',
         );
         $this->adv_dhcp_pt_select_timeout = new IntegerField(
             allow_null: true,
             minimum: 0,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Select Timeout',
             help_text: 'Manually sets the select timing value used when requested DHCP leases on this interface.',
         );
         $this->adv_dhcp_pt_reboot = new IntegerField(
             allow_null: true,
             minimum: 1,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Reboot',
             help_text: 'Manually sets the reboot timing value used when requested DHCP leases on this interface.',
         );
         $this->adv_dhcp_pt_backoff_cutoff = new IntegerField(
             allow_null: true,
             minimum: 1,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Backoff Cutoff',
             help_text: 'Manually sets the backoff cutoff timing value used when requested DHCP leases on this interface.',
         );
         $this->adv_dhcp_pt_initial_interval = new IntegerField(
             allow_null: true,
             minimum: 1,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Initial Interval',
             help_text: 'Manually sets the initial interval timing value used when requested DHCP leases on this interface.',
         );
         $this->adv_dhcp_send_options = new StringField(
             allow_null: true,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Send Options',
             help_text: 'Sets DHCP options to be sent when requesting a DHCP lease for this interface.',
         );
         $this->adv_dhcp_request_options = new StringField(
             allow_null: true,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Request Options',
             help_text: 'Sets DHCP option 55 values to be sent when requesting a DHCP lease for this interface.',
         );
         $this->adv_dhcp_required_options = new StringField(
             allow_null: true,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Required Options',
             help_text: 'Sets DHCP options required by the client when requesting a DHCP lease for this interface.',
         );
         $this->adv_dhcp_option_modifiers = new StringField(
             allow_null: true,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_advanced' => true],
+            verbose_name: 'DHCP Option Modifiers',
             help_text: 'Sets DHCP option modifiers applied to the obtained DHCP lease.',
         );
         $this->adv_dhcp_config_file_override = new BooleanField(
@@ -277,17 +307,20 @@ class NetworkInterface extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['typev4' => 'dhcp'],
+            verbose_name: 'DHCP Config File Override',
             help_text: 'Enables or disables overriding the entire DHCP configuration file for this interface.',
         );
         $this->adv_dhcp_config_file_override_path = new StringField(
             allow_null: true,
             conditions: ['typev4' => 'dhcp', 'adv_dhcp_config_file_override' => true],
+            verbose_name: 'DHCP Config Override Path',
             help_text: 'Sets the local file path of the custom DHCP configuration file.',
         );
         $this->typev6 = new StringField(
             choices: ['staticv6', 'dhcp6', 'slaac', '6rd', 'track6', '6to4', 'none'],
             allow_null: true,
             representation_only: true,
+            verbose_name: 'Typev6',
             help_text: 'Selects the IPv6 address type to assign this interface.',
         );
         $this->ipaddrv6 = new StringField(
@@ -301,6 +334,7 @@ class NetworkInterface extends Model {
                     allow_keywords: ['dhcp6', 'slaac', '6rd', 'track6', '6to4'],
                 ),
             ],
+            verbose_name: 'IPv6 Address',
             help_text: 'Sets the IPv6 address to assign to this interface.',
         );
         $this->subnetv6 = new IntegerField(
@@ -308,6 +342,7 @@ class NetworkInterface extends Model {
             minimum: 1,
             maximum: 128,
             conditions: ['typev6' => 'staticv6'],
+            verbose_name: 'IPv6 Subnet',
             help_text: 'Sets the subnet bit count to assign this interface.',
         );
         $this->gatewayv6 = new ForeignModelField(
@@ -316,16 +351,19 @@ class NetworkInterface extends Model {
             model_query: ['ipprotocol' => 'inet6'],
             allow_null: true,
             conditions: ['typev6' => 'staticv6'],
+            verbose_name: 'IPv6 Gateway',
             help_text: 'Sets the upstream IPv6 gateway this interface will use. This is only applicable for WAN-type interfaces.',
         );
         $this->ipv6usev4iface = new BooleanField(
             default: false,
             conditions: ['typev6' => 'staticv6'],
+            verbose_name: 'IPv6 Use IPv4 Interface',
             help_text: 'Enable or disable IPv6 using the IPv4 connectivity link (PPPoE).',
         );
         $this->slaacusev4iface = new BooleanField(
             default: false,
             conditions: ['typev6' => 'slaac'],
+            verbose_name: 'SLAAC Use IPv4 Interface',
             help_text: 'Enable or disable IPv6 using the IPv4 connectivity link (PPPoE).',
         );
         $this->prefix_6rd = new StringField(
@@ -334,6 +372,7 @@ class NetworkInterface extends Model {
             internal_name: 'prefix-6rd',
             conditions: ['typev6' => '6rd'],
             validators: [new SubnetValidator(allow_ipv4: false, allow_ipv6: true)],
+            verbose_name: 'Prefix 6RD',
             help_text: 'Sets the 6RD IPv6 prefix assigned by the ISP for this interface.',
         );
         $this->gateway_6rd = new StringField(
@@ -341,6 +380,7 @@ class NetworkInterface extends Model {
             internal_name: 'gateway-6rd',
             conditions: ['typev6' => '6rd'],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Gateway 6RD',
             help_text: 'Sets the 6RD IPv4 gateway address assigned by the ISP for this interface.',
         );
         $this->prefix_6rd_v4plen = new IntegerField(
@@ -349,6 +389,7 @@ class NetworkInterface extends Model {
             maximum: 32,
             internal_name: 'prefix-6rd-v4plen',
             conditions: ['typev6' => '6rd'],
+            verbose_name: 'Prefix 6RD V4plen',
             help_text: 'Sets the 6RD IPv4 prefix length. Normally specified by the ISP. A value of 0 means embed the' .
                 'entire IPv4 address in the 6RD prefix.',
         );
@@ -357,12 +398,14 @@ class NetworkInterface extends Model {
             interface_query: ['id__except' => &$this->id, 'typev6__except' => 'none'],
             internal_name: 'track6-interface',
             conditions: ['typev6' => 'track6'],
+            verbose_name: 'Track6 Interface',
             help_text: 'Sets the dynamic IPv6 WAN interface to track for configuration.',
         );
         $this->track6_prefix_id_hex = new StringField(
             default: '0',
             internal_name: 'track6-prefix-id--hex',
             conditions: ['typev6' => 'track6'],
+            verbose_name: 'Track6 Prefix ID Hex',
             help_text: 'Sets the hexadecimal IPv6 prefix ID. This determines the configurable network ID based on the ' .
                 'dynamic IPv6 connection.',
         );

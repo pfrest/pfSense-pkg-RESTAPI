@@ -51,44 +51,52 @@ class HAProxyFrontend extends Model {
             unique: true,
             minimum_length: 2,
             validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
+            verbose_name: 'Name',
             help_text: 'The unique name for this HAProxy frontend.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'The description for this HAProxy frontend.',
         );
         $this->status = new StringField(
             default: 'active',
             choices: ['active', 'disabled'],
+            verbose_name: 'Status',
             help_text: 'The activation status for this HAProxy frontend.',
         );
         $this->a_extaddr = new NestedModelField(
             model_class: 'HAProxyFrontendAddress',
             default: [],
             allow_empty: true,
+            verbose_name: 'External Addresses',
             help_text: 'The external addresses assigned to this frontend.',
         );
         $this->max_connections = new IntegerField(
             default: null,
             allow_null: true,
+            verbose_name: 'Max Connections',
             help_text: 'The maximum number of connections allowed by this frontend.',
         );
         $this->type = new StringField(
             required: true,
             choices: ['http', 'https', 'tcp'],
+            verbose_name: 'Type',
             help_text: 'The processing type for this frontend.',
         );
         $this->ha_acls = new NestedModelField(
             model_class: 'HAProxyFrontendACL',
             default: [],
             allow_empty: true,
+            verbose_name: 'ACLs',
             help_text: 'The ACLs to apply to this frontend.',
         );
         $this->a_actionitems = new NestedModelField(
             model_class: 'HAProxyFrontendAction',
             default: [],
             allow_empty: true,
+            verbose_name: 'Action Items',
             help_text: 'The actions to take when an ACL match is found.',
         );
         $this->backend_serverpool = new ForeignModelField(
@@ -96,6 +104,7 @@ class HAProxyFrontend extends Model {
             model_field: 'name',
             default: null,
             allow_null: true,
+            verbose_name: 'Backend Server Pool',
             help_text: 'The default backend to use for this frontend.',
         );
         $this->ssloffloadcert = new ForeignModelField(
@@ -103,12 +112,14 @@ class HAProxyFrontend extends Model {
             model_field: 'refid',
             default: null,
             allow_null: true,
+            verbose_name: 'SSL Offload Certificate',
             help_text: 'The default SSL/TLS certificate refid to use for this frontend.',
         );
         $this->ha_certificates = new NestedModelField(
             model_class: 'HAProxyFrontendCertificate',
             default: [],
             allow_empty: true,
+            verbose_name: 'Certificates',
             help_text: 'The additional SSL/TLS certificates to use on this frontend.',
         );
         $this->socket_stats = new BooleanField(
@@ -116,12 +127,14 @@ class HAProxyFrontend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             internal_name: 'socket-stats',
+            verbose_name: 'Socket Stats',
             help_text: 'Enables or disables collecting and providing separate statistics for each socket.',
         );
         $this->dontlognull = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Don\'t Log Null',
             help_text: 'Enables or disables logging connections with no data transferred.',
         );
         $this->dontlog_normal = new BooleanField(
@@ -129,6 +142,7 @@ class HAProxyFrontend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             internal_name: 'dontlog-normal',
+            verbose_name: 'Don\'t Log Normal',
             help_text: 'Enables or disables only logging anomalous (not normal) connection.',
         );
         $this->log_separate_errors = new BooleanField(
@@ -136,6 +150,7 @@ class HAProxyFrontend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             internal_name: 'log-separate-errors',
+            verbose_name: 'Log Separate Errors',
             help_text: 'Enables or disables changing the log level from info to err on potentially interesting info.',
         );
         $this->log_detailed = new BooleanField(
@@ -143,17 +158,20 @@ class HAProxyFrontend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             internal_name: 'log-detailed',
+            verbose_name: 'Log Detailed',
             help_text: 'Enables or disables more detailed logging.',
         );
         $this->a_errorfiles = new NestedModelField(
             model_class: 'HAProxyFrontendErrorFile',
             default: [],
             allow_empty: true,
+            verbose_name: 'Error Files',
             help_text: 'The custom error files to use for this frontend.',
         );
         $this->client_timeout = new IntegerField(
             default: 30000,
             allow_null: true,
+            verbose_name: 'Client Timeout',
             help_text: 'The amount of time (in milliseconds) to wait for data from the client.',
         );
         $this->forwardfor = new BooleanField(
@@ -161,22 +179,26 @@ class HAProxyFrontend extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['type' => 'http'],
+            verbose_name: 'Forward For',
             help_text: "Enables or disables the HTTP X-Forwarded-For header which contains the client's IP address.",
         );
         $this->httpclose = new StringField(
             default: 'http-keep-alive',
             choices: ['http-keep-alive', 'http-tunnel', 'httpclose', 'http-server-close', 'forceclose'],
+            verbose_name: 'HTTP Close',
             help_text: 'The `httpclose` option this frontend will operate.',
         );
         $this->advanced_bind = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Advanced Bind Config',
             help_text: 'Custom value to pass behind each bind option.',
         );
         $this->advanced = new Base64Field(
             default: null,
             allow_empty: true,
             allow_null: true,
+            verbose_name: 'Advanced',
             help_text: 'Custom configuration to pass to this frontend.',
         );
 

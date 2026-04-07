@@ -30,33 +30,39 @@ class CertificateAuthorityRenew extends Model {
             model_name: 'CertificateAuthority',
             model_field: 'refid',
             required: true,
+            verbose_name: 'CA Reference',
             help_text: 'The Certificate Authority to renew.',
         );
         $this->reusekey = new BooleanField(
             default: true,
             indicates_true: true,
+            verbose_name: 'Reuse Key',
             help_text: 'Reuses the existing private key when renewing the certificate authority.',
         );
         $this->reuseserial = new BooleanField(
             default: true,
             indicates_true: true,
+            verbose_name: 'Reuse Serial',
             help_text: 'Reuses the existing serial number when renewing the certificate authority.',
         );
         $this->strictsecurity = new BooleanField(
             default: false,
             indicates_true: true,
+            verbose_name: 'Strict Security',
             help_text: 'Enforces strict security measures when renewing the certificate authority.',
         );
         $this->oldserial = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Old Serial',
             help_text: 'The old serial number of the Certificate Authority before the renewal.',
         );
         $this->newserial = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'New Serial',
             help_text: 'The new serial number of the Certificate Authority after the renewal.',
         );
 

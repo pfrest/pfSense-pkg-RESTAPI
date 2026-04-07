@@ -36,6 +36,7 @@ class FreeRADIUSInterface extends Model {
             required: true,
             internal_name: 'varinterfaceip',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_keywords: ['*'])],
+            verbose_name: 'Address',
             help_text: 'The IP address of the listening interface. If you choose * then it means all interfaces.',
         );
         $this->port = new PortField(
@@ -44,12 +45,14 @@ class FreeRADIUSInterface extends Model {
             allow_alias: false,
             allow_range: false,
             internal_name: 'varinterfaceport',
+            verbose_name: 'Port',
             help_text: 'The port number of the listening interface. Different interface types need different ports.',
         );
         $this->ip_version = new StringField(
             required: true,
             choices: ['ipaddr', 'ipv6addr'],
             internal_name: 'varinterfaceipversion',
+            verbose_name: 'IP Version',
             help_text: 'The IP version of the listening interface.',
         );
         $this->type = new StringField(
@@ -57,6 +60,7 @@ class FreeRADIUSInterface extends Model {
             default: 'auth',
             choices: ['auth', 'acct', 'proxy', 'detail', 'status', 'coa'],
             internal_name: 'varinterfacetype',
+            verbose_name: 'Type',
             help_text: 'The type of the listening interface: Authentication/Accounting.',
         );
         $this->description = new StringField(
@@ -69,6 +73,7 @@ class FreeRADIUSInterface extends Model {
                     error_msg: 'Value contains invalid characters.',
                 ),
             ],
+            verbose_name: 'Description',
             help_text: 'The description for this interface.',
         );
 

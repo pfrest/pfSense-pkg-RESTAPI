@@ -29,39 +29,46 @@ class InterfaceLAGG extends Model {
         $this->laggif = new StringField(
             read_only: true,
             maximum_length: 32,
+            verbose_name: 'LAGG Interface',
             help_text: 'The real name of the LAGG interface.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description to help document the purpose of this LAGG interface.',
         );
         $this->members = new StringField(
             required: true,
             many: true,
             many_minimum: 1,
+            verbose_name: 'Members',
             help_text: 'A list of member interfaces to include in the LAGG.',
         );
         $this->proto = new StringField(
             required: true,
             choices: ['lacp', 'failover', 'loadbalance', 'roundrobin', 'none'],
+            verbose_name: 'Protocol',
             help_text: 'The LAGG protocol to use.',
         );
         $this->lacptimeout = new StringField(
             default: 'slow',
             choices: ['slow', 'fast'],
             conditions: ['proto' => 'lacp'],
+            verbose_name: 'LACP Timeout',
             help_text: 'The LACP timeout mode to use.',
         );
         $this->lagghash = new StringField(
             default: 'l2,l3,l4',
             choices: ['l2', 'l3', 'l4', 'l2,l3', 'l2,l4', 'l3,l4', 'l2,l3,l4'],
             conditions: ['proto' => ['lacp', 'loadbalance']],
+            verbose_name: 'LAGG Hash',
             help_text: 'The LAGG hash algorithm to use.',
         );
         $this->failovermaster = new StringField(
             default: 'auto',
             conditions: ['proto' => 'failover'],
+            verbose_name: 'Failover Master',
             help_text: 'The failover master interface to use.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

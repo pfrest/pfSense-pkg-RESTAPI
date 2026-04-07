@@ -32,28 +32,33 @@ class RoutingGatewayGroup extends Model {
             maximum_length: 31,
             referenced_by: ['StaticRoute' => 'gateway', 'FirewallRule' => 'gateway'],
             validators: [new FilterNameValidator()],
+            verbose_name: 'Name',
             help_text: 'The name of the gateway group.',
         );
         $this->trigger = new StringField(
             default: 'down',
             choices: ['down', 'downloss', 'downlatency', 'downlosslatency'],
+            verbose_name: 'Trigger',
             help_text: 'The trigger that will cause a gateway to be excluded from the group.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
             maximum_length: 255,
+            verbose_name: 'Description',
             help_text: 'A description of the gateway group.',
         );
         $this->ipprotocol = new StringField(
             default: 'unknown',
             read_only: true,
             representation_only: true,
+            verbose_name: 'IP Protocol',
             help_text: 'The assumed IP protocol of the gateways in this group.',
         );
         $this->priorities = new NestedModelField(
             model_class: 'RoutingGatewayGroupPriority',
             required: true,
+            verbose_name: 'Priorities',
             help_text: 'The priorities of the gateways in this group.',
         );
 

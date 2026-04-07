@@ -29,6 +29,7 @@ class FirewallApply extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Applied',
             help_text: 'Displays `true` when all firewall changes are applied and there are no pending changes left.' .
                 'Displays `false` when there are pending firewall changes that have not been applied.',
         );
@@ -37,6 +38,7 @@ class FirewallApply extends Model {
             read_only: true,
             many: true,
             delimiter: null,
+            verbose_name: 'Pending Subsystems',
             help_text: 'Displays the specific firewall subsystems that have pending changes.',
         );
 

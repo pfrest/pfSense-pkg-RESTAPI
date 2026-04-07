@@ -38,12 +38,14 @@ class Test extends Model {
             default: true,
             indicates_true: 'on',
             indicates_false: 'off',
+            verbose_name: 'Test Bool',
             help_text: "Demonstrates a boolean field that internally uses 'on' to indicate 'true' or 'off' 
                 to indicate 'false'.",
         );
         $this->test_integer = new IntegerField(
             default: 5,
             allow_null: true,
+            verbose_name: 'Test Integer',
             help_text: 'Demonstrates an integer field that defaults to 5.',
         );
         $this->test_string_conditional = new StringField(
@@ -52,11 +54,13 @@ class Test extends Model {
             allow_empty: true,
             allow_null: true,
             conditions: ['test_bool' => true],
+            verbose_name: 'Test String Conditional',
         );
         $this->test_string_unique = new StringField(
             required: false,
             unique: true,
             default: uniqid(),
+            verbose_name: 'Test String Unique',
             help_text: "Demonstrates a string field that must be unique from all other Test model objects stored
                 in configuration.",
         );
@@ -65,6 +69,7 @@ class Test extends Model {
             allow_empty: true,
             many: true,
             delimiter: '/',
+            verbose_name: 'Test String Many',
             help_text: "Demonstrates a string field that allows many values to be passed in as an array. When 'many'
                 is set, values must be passed in as an array of strings. Also demonstrates that the internal version
                 of this value will be the array of strings joined together by '/'.",
@@ -73,18 +78,21 @@ class Test extends Model {
             required: false,
             default: 'test namespace field value',
             internal_namespace: 'test_namespace',
+            verbose_name: 'Test String Namespace',
             help_text: 'Demonstrates a string field that is nested under the namespace ',
         );
         $this->test_string_choices = new StringField(
             default: 'a',
             choices: ['a' => 'Choice A', 'b' => 'Choice B', 'c' => 'Choice C'],
             allow_empty: true,
+            verbose_name: 'Test String Choices',
             help_text: 'Demonstrates a string field with static choices defined.',
         );
         $this->test_string_choices_callable = new StringField(
             default: 'x',
             choices_callable: 'test_choices_callable',
             allow_empty: true,
+            verbose_name: 'Test String Choices Callable',
             help_text: 'Demonstrates a string field with static choices defined.',
         );
 

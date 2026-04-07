@@ -29,6 +29,7 @@ class OpenVPNServerStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Name',
             help_text: 'The name of the OpenVPN server.',
         );
         $this->port = new PortField(
@@ -36,6 +37,7 @@ class OpenVPNServerStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Port',
             help_text: 'The port number of the OpenVPN server.',
         );
         $this->vpnid = new ForeignModelField(
@@ -45,6 +47,7 @@ class OpenVPNServerStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'VPN ID',
             help_text: 'The VPN ID of the OpenVPN server this status corresponds to.',
         );
         $this->mgmt = new StringField(
@@ -52,6 +55,7 @@ class OpenVPNServerStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Mgmt',
             help_text: 'The management interface of the OpenVPN server.',
         );
         $this->mode = new StringField(
@@ -59,6 +63,7 @@ class OpenVPNServerStatus extends Model {
             allow_empty: true,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Mode',
             help_text: 'The mode of the OpenVPN server.',
         );
         $this->conns = new NestedModelField(
@@ -66,6 +71,7 @@ class OpenVPNServerStatus extends Model {
             default: [],
             allow_empty: true,
             read_only: true,
+            verbose_name: 'Conns',
             help_text: 'The current connections to the OpenVPN server.',
         );
         $this->routes = new NestedModelField(
@@ -73,6 +79,7 @@ class OpenVPNServerStatus extends Model {
             default: [],
             allow_empty: true,
             read_only: true,
+            verbose_name: 'Routes',
             help_text: 'The current routes of the OpenVPN server.',
         );
 

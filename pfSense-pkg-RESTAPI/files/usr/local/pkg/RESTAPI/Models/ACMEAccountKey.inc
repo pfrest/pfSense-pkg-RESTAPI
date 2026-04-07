@@ -40,27 +40,31 @@ class ACMEAccountKey extends Model {
         ];
 
         # Define model Fields
-        $this->name = new StringField(required: true, unique: true, help_text: 'The name of the ACME account key.');
+        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the ACME account key.');
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description of the ACME account key.',
         );
         $this->email = new StringField(
             default: '',
             allow_empty: true,
             validators: [new EmailAddressValidator()],
+            verbose_name: 'Email',
             help_text: 'The email address associated with the ACME account key.',
         );
         $this->acmeserver = new StringField(
             required: true,
             choices_callable: 'get_acmeserver_choices',
+            verbose_name: 'ACME Server',
             help_text: 'The ACME server this account key will belong to.',
         );
         $this->accountkey = new Base64Field(
             default_callable: 'generate_rsa_key',
             sensitive: true,
             validators: [new X509Validator(allow_crt: false, allow_prv: true, allow_rsa: true, allow_ecprv: true)],
+            verbose_name: 'Account Key',
             help_text: 'The RSA private key for the ACME account key.',
         );
 

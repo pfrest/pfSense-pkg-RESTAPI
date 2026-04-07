@@ -38,6 +38,7 @@ class IPsecPhase1Encryption extends Model {
             choices: array_keys($p1_ealgos),
             internal_name: 'name',
             internal_namespace: 'encryption-algorithm',
+            verbose_name: 'Encryption Algorithm',
             help_text: 'The name of the encryption algorithm to use for this P1 encryption item.',
         );
         $this->encryption_algorithm_keylen = new IntegerField(
@@ -45,23 +46,27 @@ class IPsecPhase1Encryption extends Model {
             internal_name: 'keylen',
             internal_namespace: 'encryption-algorithm',
             conditions: ['encryption_algorithm_name' => $this->get_keylen_enabled_algos()],
+            verbose_name: 'Encryption Key Length',
             help_text: 'The key length for the encryption algorithm.',
         );
         $this->hash_algorithm = new StringField(
             required: true,
             choices: array_keys($p1_halgos),
             internal_name: 'hash-algorithm',
+            verbose_name: 'Hash Algorithm',
             help_text: 'The hash algorithm to use for this P1 encryption item.',
         );
         $this->dhgroup = new IntegerField(
             required: true,
             choices: array_keys($p1_dhgroups),
+            verbose_name: 'DH Group',
             help_text: 'The Diffie-Hellman (DH) group to use for this P1 encryption item.',
         );
         $this->prf_algorithm = new StringField(
             default: 'sha256',
             choices: array_keys($p1_halgos),
             internal_name: 'prf-algorithm',
+            verbose_name: 'PRF Algorithm',
             help_text: 'The PRF algorithm to use for this P1 encryption item. This value has no affect unless the ' .
                 'P1 entry has PRF enabled.',
         );

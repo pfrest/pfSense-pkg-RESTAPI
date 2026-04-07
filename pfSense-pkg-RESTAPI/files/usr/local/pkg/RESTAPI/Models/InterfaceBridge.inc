@@ -27,17 +27,20 @@ class InterfaceBridge extends Model {
             unique: true,
             many: true,
             many_minimum: 1,
+            verbose_name: 'Members',
             help_text: 'The member interfaces to include in this bridge.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this interface bridge.',
         );
         $this->bridgeif = new StringField(
             default: $this->get_next_bridgeif(),
             allow_empty: true,
             read_only: true,
+            verbose_name: 'Bridge Interface',
             help_text: 'The real interface name for this bridge interface.',
         );
 

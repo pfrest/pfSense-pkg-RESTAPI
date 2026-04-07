@@ -44,12 +44,14 @@ class User extends Model {
             validators: [
                 new RegexValidator(pattern: "/^[a-zA-Z0-9\.\-_]+$/", error_msg: 'Value contains invalid characters.'),
             ],
+            verbose_name: 'Name',
             help_text: 'The username of this local user.',
         );
         $this->password = new StringField(
             required: true,
             sensitive: true,
             internal_name: $this->get_config('system/webgui/pwhash', 'bcrypt') . '-hash',
+            verbose_name: 'Password',
             help_text: 'The password of this local user.',
         );
         $this->uid = new IntegerField(
@@ -57,12 +59,14 @@ class User extends Model {
             default: (int) $this->get_config('system/nextuid'),
             editable: false,
             read_only: true,
+            verbose_name: 'UID',
             help_text: 'The UID of this local user. This value is automatically assigned and cannot be changed.',
         );
         $this->scope = new StringField(
             default: 'user',
             editable: false,
             read_only: true,
+            verbose_name: 'Scope',
             help_text: 'The scope of this local user. This value is automatically assigned and cannot be changed.',
         );
         $this->priv = new StringField(
@@ -70,18 +74,21 @@ class User extends Model {
             allow_empty: true,
             many: true,
             delimiter: null,
+            verbose_name: 'Privileges',
             help_text: 'The privileges assigned to this local user.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disable this local user.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this local user.');
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'The full descriptive name for this local user.',
         );
         $this->expires = new DateTimeField(
             default: '',
             datetime_format: 'm/d/Y',
             allow_empty: true,
+            verbose_name: 'Expires',
             help_text: 'The expiration date for this user in mm/dd/YYYY format. Use empty string for no ' .
                 'expiration',
         );
@@ -92,11 +99,13 @@ class User extends Model {
             allow_empty: true,
             many: true,
             delimiter: null,
+            verbose_name: 'Certificate',
             help_text: 'The user certificates to assign this user. Items must be existing certificate `refid`s.',
         );
         $this->authorizedkeys = new Base64Field(
             default: '',
             allow_empty: true,
+            verbose_name: 'Authorized Keys',
             help_text: 'The SSH authorized keys to assign this user.',
         );
         $this->ipsecpsk = new StringField(
@@ -105,6 +114,7 @@ class User extends Model {
             validators: [
                 new RegexValidator(pattern: "/^[[:ascii:]]*$/", error_msg: 'Value contains invalid characters.'),
             ],
+            verbose_name: 'IPsec Pre-Shared Key',
             help_text: 'The IPsec pre-shared key to assign this user.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

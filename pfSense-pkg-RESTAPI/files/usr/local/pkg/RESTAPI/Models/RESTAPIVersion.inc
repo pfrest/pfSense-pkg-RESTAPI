@@ -30,10 +30,12 @@ class RESTAPIVersion extends Model {
         # Set model Fields
         $this->current_version = new StringField(
             read_only: true,
+            verbose_name: 'Current Version',
             help_text: 'The current API version installed on this system.',
         );
         $this->latest_version = new StringField(
             read_only: true,
+            verbose_name: 'Latest Version',
             help_text: 'The latest API version available to this system.',
         );
         $this->latest_version_release_date = new StringField(
@@ -44,12 +46,14 @@ class RESTAPIVersion extends Model {
         $this->update_available = new BooleanField(
             read_only: true,
             indicates_true: true,
+            verbose_name: 'Update Available',
             help_text: 'Indicates if an API update is available for this system.',
         );
         $this->install_version = new StringField(
             choices_callable: 'get_all_available_versions',
             allow_null: true,
             write_only: true,
+            verbose_name: 'Install Version',
             help_text: 'Set the API version to update or rollback to.',
         );
         $this->available_versions = new StringField(
@@ -57,6 +61,7 @@ class RESTAPIVersion extends Model {
             read_only: true,
             many: true,
             delimiter: null,
+            verbose_name: 'Available Versions',
             help_text: 'All available versions of the REST API package for this system.',
         );
 

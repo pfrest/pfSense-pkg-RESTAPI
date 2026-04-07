@@ -30,6 +30,7 @@ class DHCPServerCustomOption extends Model {
             unique: true,
             minimum: 1,
             maximum: 254,
+            verbose_name: 'Number',
             help_text: 'The DHCP option number to configure.',
         );
         $this->type = new StringField(
@@ -46,9 +47,10 @@ class DHCPServerCustomOption extends Model {
                 'signed integer 32',
                 'ip-address',
             ],
+            verbose_name: 'Type',
             help_text: 'The type of value to configure for the option.',
         );
-        $this->value = new Base64Field(required: true, help_text: 'The value to configure for the option.');
+        $this->value = new Base64Field(required: true, verbose_name: 'Value', help_text: 'The value to configure for the option.');
         parent::__construct($id, $parent_id, $data, ...$options);
     }
 

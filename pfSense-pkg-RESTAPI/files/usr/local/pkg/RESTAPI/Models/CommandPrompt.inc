@@ -17,15 +17,17 @@ class CommandPrompt extends Model {
     public IntegerField $result_code;
     public function __construct(mixed $id = null, mixed $parent_id = null, mixed $data = [], mixed ...$options) {
         # Define Model Fields
-        $this->command = new StringField(required: true, write_only: true, help_text: 'The command to be executed.');
+        $this->command = new StringField(required: true, write_only: true, verbose_name: 'Command', help_text: 'The command to be executed.');
         $this->output = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Output',
             help_text: 'The output of the executed command.',
         );
         $this->result_code = new IntegerField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Result Code',
             help_text: 'The result code of the executed command.',
         );
 

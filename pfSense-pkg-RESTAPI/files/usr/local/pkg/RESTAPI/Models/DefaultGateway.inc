@@ -28,6 +28,7 @@ class DefaultGateway extends Model {
             allowed_keywords: ['', '-'],
             default: '',
             allow_empty: true,
+            verbose_name: 'Default IPv4 Gateway',
             help_text: 'The gateway to assigns as the default IPv4 gateway for this system. Leave blank to ' .
                 'automatically determine the default gateway, or set to `-` to assign no gateway.',
         );
@@ -38,6 +39,7 @@ class DefaultGateway extends Model {
             allowed_keywords: ['', '-'],
             default: '',
             allow_empty: true,
+            verbose_name: 'Default IPv6 Gateway',
             help_text: 'The gateway to assigns as the default IPv6 gateway for this system. Leave blank to ' .
                 'automatically determine the default gateway, or set to `-` to assign no gateway.',
         );

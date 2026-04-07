@@ -36,34 +36,40 @@ class TrafficShaper extends Model {
         $this->enabled = new BooleanField(
             default: true,
             indicates_true: 'on',
+            verbose_name: 'Enabled',
             help_text: 'Enables or disables this traffic shaper.',
         );
         $this->interface = new InterfaceField(
             required: true,
             unique: true,
             editable: false,
+            verbose_name: 'Interface',
             help_text: 'The interface this traffic shaper will be applied to.',
         );
         $this->name = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Name',
             help_text: 'The name of this traffic shaper. This value is automatically set by the system and cannot ' .
                 'be changed.',
         );
         $this->scheduler = new StringField(
             required: true,
             choices: ['HFSC', 'CBQ', 'FAIRQ', 'CODELQ', 'PRIQ'],
+            verbose_name: 'Scheduler',
             help_text: 'The scheduler type to use for this traffic shaper. Changing this value will automatically ' .
                 'update any child queues assigned to this traffic shaper.',
         );
         $this->bandwidthtype = new StringField(
             required: true,
             choices: ['%', 'b', 'Kb', 'Mb', 'Gb'],
+            verbose_name: 'Bandwidth Type',
             help_text: "The scale type of the `bandwidth` field's value.",
         );
         $this->bandwidth = new IntegerField(
             required: true,
             minimum: 1,
+            verbose_name: 'Bandwidth',
             help_text: 'The total bandwidth amount allowed by this traffic shaper.',
         );
         $this->qlimit = new IntegerField(
@@ -71,12 +77,14 @@ class TrafficShaper extends Model {
             allow_null: true,
             minimum: 1,
             conditions: ['!scheduler' => ['CODELQ']],
+            verbose_name: 'Queue Limit',
             help_text: 'The number of packets that can be held in a queue waiting to be transmitted by the shaper.',
         );
         $this->tbrconfig = new IntegerField(
             default: null,
             allow_null: true,
             minimum: 1,
+            verbose_name: 'TBR Config',
             help_text: 'The size, in bytes, of the token bucket regulator. If `null`, heuristics based on the ' .
                 'interface bandwidth are used to determine the size.',
         );
@@ -84,6 +92,7 @@ class TrafficShaper extends Model {
             model_class: 'TrafficShaperQueue',
             default: [],
             allow_empty: true,
+            verbose_name: 'Queue',
             help_text: 'The child queues assigned to this traffic shaper.',
         );
 

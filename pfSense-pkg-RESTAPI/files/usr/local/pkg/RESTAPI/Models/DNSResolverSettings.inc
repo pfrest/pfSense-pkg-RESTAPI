@@ -40,16 +40,18 @@ class DNSResolverSettings extends Model {
         $this->subsystem = 'unbound';
 
         # Set model fields
-        $this->enable = new BooleanField(default: false, help_text: 'Enables or disables the DNS Resolver service.');
+        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enables or disables the DNS Resolver service.');
         $this->port = new PortField(
             default: '53',
             allow_alias: false,
             allow_range: false,
             allow_empty: true,
+            verbose_name: 'Port',
             help_text: 'The port on which the DNS Resolver service listens.',
         );
         $this->enablessl = new BooleanField(
             default: false,
+            verbose_name: 'Enable SSL',
             help_text: 'Enables or disables SSL/TLS for the DNS Resolver service.',
         );
         $this->sslcertref = new ForeignModelField(
@@ -57,6 +59,7 @@ class DNSResolverSettings extends Model {
             model_field: 'refid',
             required: true,
             conditions: ['enablessl' => true],
+            verbose_name: 'SSL Certificate',
             help_text: 'The SSL/TLS certificate to use for the DNS Resolver service.',
         );
         $this->tlsport = new PortField(
@@ -65,6 +68,7 @@ class DNSResolverSettings extends Model {
             allow_range: false,
             allow_empty: true,
             conditions: ['enablessl' => true],
+            verbose_name: 'Tlsport',
             help_text: 'The port on which the DNS Resolver service listens for SSL/TLS connections.',
         );
         $this->active_interface = new InterfaceField(
@@ -73,6 +77,7 @@ class DNSResolverSettings extends Model {
             allow_custom: ['all', '_llocwan', '_lloclan'],
             allow_empty: true,
             many: true,
+            verbose_name: 'Active Interface',
             help_text: 'The interface on which the DNS Resolver service listens for DNS queries. Set empty value ".
                 "to listen on all interfaces.',
         );
@@ -82,11 +87,13 @@ class DNSResolverSettings extends Model {
             allow_custom: ['all', '_llocwan', '_lloclan'],
             allow_empty: true,
             many: true,
+            verbose_name: 'Outgoing Interface',
             help_text: 'The interface on which the DNS Resolver service sends outgoing DNS queries. Set empty value ".
                 "to use any interface.',
         );
         $this->strictout = new BooleanField(
             default: false,
+            verbose_name: 'Strict Outgoing',
             help_text: 'Enables or disables sending recursive queries if none of the selected Outgoing Network ".
                 "Interfaces are available.',
         );
@@ -103,14 +110,16 @@ class DNSResolverSettings extends Model {
                 'inform_deny',
                 'nodefault',
             ],
+            verbose_name: 'System Domain Local Zone Type',
             help_text: 'The type of local zone used for the system domain.',
         );
-        $this->dnssec = new BooleanField(default: false, help_text: 'Enables or disables DNSSEC validation.');
-        $this->python = new BooleanField(default: false, help_text: 'Enables or disables the Python module.');
+        $this->dnssec = new BooleanField(default: false, verbose_name: 'DNSSEC', help_text: 'Enables or disables DNSSEC validation.');
+        $this->python = new BooleanField(default: false, verbose_name: 'Python', help_text: 'Enables or disables the Python module.');
         $this->python_order = new StringField(
             default: 'pre_validator',
             choices: ['pre_validator', 'post_validator'],
             conditions: ['python' => true],
+            verbose_name: 'Python Order',
             help_text: 'The order in which the Python module is loaded.',
         );
         $this->python_script = new StringField(
@@ -118,27 +127,33 @@ class DNSResolverSettings extends Model {
             choices_callable: 'get_python_script_options',
             allow_empty: true,
             conditions: ['python' => true],
+            verbose_name: 'Python Script',
             help_text: 'The Python module to utilize.',
         );
         $this->forwarding = new BooleanField(
             default: false,
+            verbose_name: 'Forwarding',
             help_text: 'Enables or disables DNS Resolver forwarding mode.',
         );
         $this->regdhcp = new BooleanField(
             default: false,
+            verbose_name: 'Register DHCP Leases',
             help_text: 'Enables or disables registering DHCP leases in the DNS Resolver service.',
         );
         $this->regdhcpstatic = new BooleanField(
             default: false,
+            verbose_name: 'Register DHCP Static Mappings',
             help_text: 'Enables or disables registering static DHCP mappings in the DNS Resolver service.',
         );
         $this->regovpnclients = new BooleanField(
             default: false,
+            verbose_name: 'Register OpenVPN Clients',
             help_text: 'Enables or disables registering OpenVPN clients in the DNS Resolver service.',
         );
         $this->custom_options = new Base64Field(
             default: '',
             allow_empty: true,
+            verbose_name: 'Custom Options',
             help_text: 'Custom options to add to the DNS Resolver configuration.',
         );
 

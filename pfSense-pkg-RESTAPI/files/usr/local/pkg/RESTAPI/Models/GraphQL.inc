@@ -32,11 +32,13 @@ class GraphQL extends Model {
             default: '',
             allow_empty: true,
             maximum_length: PHP_INT_MAX,
+            verbose_name: 'Query',
             help_text: 'The GraphQL query/mutation to execute.',
         );
         $this->variables = new ObjectField(
             default: [],
             allow_empty: true,
+            verbose_name: 'Variables',
             help_text: 'The variables to pass to the GraphQL query or mutation. In general, this will be an object ' .
                 'containing the variables to pass to the query or mutation.',
         );

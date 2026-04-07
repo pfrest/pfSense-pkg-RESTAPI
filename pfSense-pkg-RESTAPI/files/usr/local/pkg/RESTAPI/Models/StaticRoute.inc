@@ -33,20 +33,23 @@ class StaticRoute extends Model {
         $this->network = new StringField(
             required: true,
             validators: [new SubnetValidator(allow_ipv4: true, allow_ipv6: true, allow_alias: true)],
+            verbose_name: 'Network',
             help_text: 'Sets the destination network for this static route in CIDR notation.',
         );
         $this->gateway = new ForeignModelField(
             model_name: ['RoutingGateway', 'RoutingGatewayGroup'],
             model_field: 'name',
             required: true,
+            verbose_name: 'Gateway',
             help_text: 'Sets which gateway this route applies to.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'Sets a description for administrative reference.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disable this static route.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this static route.');
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

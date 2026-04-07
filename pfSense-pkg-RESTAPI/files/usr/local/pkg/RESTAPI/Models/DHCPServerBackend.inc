@@ -23,6 +23,7 @@ class DHCPServerBackend extends Model {
         $this->dhcpbackend = new StringField(
             default: 'isc',
             choices: ['isc', 'kea'],
+            verbose_name: 'DHCP Backend',
             help_text: 'The backend DHCP server service to use. ISC DHCP is deprecate and will be removed in a future ' .
                 'version of pfSense.',
         );

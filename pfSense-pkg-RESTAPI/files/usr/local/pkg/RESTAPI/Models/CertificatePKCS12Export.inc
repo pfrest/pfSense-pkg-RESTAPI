@@ -27,22 +27,26 @@ class CertificatePKCS12Export extends Model {
             model_name: 'Certificate',
             model_field: 'refid',
             required: true,
+            verbose_name: 'Certificate Reference',
             help_text: 'The Certificate to export as a PKCS12 file.',
         );
         $this->encryption = new StringField(
             default: 'high',
             choices: ['high', 'low', 'legacy'],
+            verbose_name: 'Encryption',
             help_text: 'The level of encryption to use when exporting the PKCS#12 archive.',
         );
         $this->passphrase = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Passphrase',
             help_text: 'The passphrase to use when exporting the PKCS#12 archive. Leave empty for no passphrase.',
         );
         $this->filename = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Filename',
             help_text: 'The filename used when exporting the PKCS#12 archive. This value cannot be changed and will ' .
                 'always be certificate refid with the .p12 extension.',
         );
@@ -50,6 +54,7 @@ class CertificatePKCS12Export extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Binary Data',
             help_text: 'The PKCS#12 archive binary data. This value cannot be changed.',
         );
 

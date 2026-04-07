@@ -27,6 +27,7 @@ class RESTAPIJWT extends Model {
         $this->token = new StringField(
             allow_null: true,
             read_only: true,
+            verbose_name: 'Token',
             help_text: 'The generated JWT that can be used for JWT authentication.',
         );
 

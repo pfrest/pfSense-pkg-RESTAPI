@@ -30,22 +30,26 @@ class DNSResolverAccessList extends Model {
             required: true,
             allow_empty: true,
             internal_name: 'aclname',
+            verbose_name: 'Name',
             help_text: 'The name of this access list.',
         );
         $this->action = new StringField(
             required: true,
             choices: ['allow', 'deny', 'refuse', 'allow snoop', 'deny nonlocal', 'refuse nonlocal'],
             internal_name: 'aclaction',
+            verbose_name: 'Action',
             help_text: 'The action to take when an access list match is found.',
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this access list.',
         );
         $this->networks = new NestedModelField(
             model_class: 'DNSResolverAccessListNetwork',
             required: true,
+            verbose_name: 'Networks',
             help_text: 'The DNS Resolver access list network entries to include in this access list.',
         );
 

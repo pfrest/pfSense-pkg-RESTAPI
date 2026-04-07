@@ -57,6 +57,7 @@ class IPsecPhase2 extends Model {
 
         # Set model fields
         $this->uniqid = new UIDField(
+            verbose_name: 'Unique ID',
             help_text: 'A unique ID used to identify this IPsec phase2 entry internally. This value is automatically ' .
                 'set by the system and cannot be changed.',
         );
@@ -65,6 +66,7 @@ class IPsecPhase2 extends Model {
             default: ipsec_new_reqid(),
             editable: false,
             read_only: true,
+            verbose_name: 'Reqid',
             help_text: 'A unique ID used to identify this IPsec phase2 entry internally. This value is automatically ' .
                 'set by the system and cannot be changed.',
         );
@@ -72,17 +74,20 @@ class IPsecPhase2 extends Model {
             model_name: 'IPsecPhase1',
             model_field: 'ikeid',
             required: true,
+            verbose_name: 'IKE ID',
             help_text: 'The `ikeid` of the parent IPsec phase 1 entry this IPsec phase 2 entry belongs to.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this IPsec phase 2 entry.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disables this IPsec phase 2 entry.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this IPsec phase 2 entry.');
         $this->mode = new StringField(
             required: true,
             choices: array_keys($p2_modes),
+            verbose_name: 'Mode',
             help_text: 'The IPsec phase 2 mode this entry will use.',
         );
         $this->localid_type = new SpecialNetworkField(
@@ -100,6 +105,7 @@ class IPsecPhase2 extends Model {
             internal_name: 'type',
             internal_namespace: 'localid',
             conditions: ['!mode' => 'transport'],
+            verbose_name: 'Local ID Type',
             help_text: 'The local ID type to use for this phase 2 entry.',
         );
         $this->localid_address = new StringField(
@@ -108,6 +114,7 @@ class IPsecPhase2 extends Model {
             internal_namespace: 'localid',
             conditions: ['localid_type' => $this->localid_type->allowed_keywords],
             validators: [new IPAddressValidator()],
+            verbose_name: 'Local ID Address',
             help_text: 'The local network IP component of this IPsec security association.',
         );
         $this->localid_netbits = new IntegerField(
@@ -117,6 +124,7 @@ class IPsecPhase2 extends Model {
             internal_name: 'netbits',
             internal_namespace: 'localid',
             conditions: ['localid_type' => 'network'],
+            verbose_name: 'Local ID Network Bits',
             help_text: 'The subnet bits of the `localid_address` network.',
         );
         $this->natlocalid_type = new SpecialNetworkField(
@@ -135,6 +143,7 @@ class IPsecPhase2 extends Model {
             internal_name: 'type',
             internal_namespace: 'natlocalid',
             conditions: ['!mode' => ['transport', 'vti']],
+            verbose_name: 'NAT Local ID Type',
             help_text: 'The NAT/BINAT translation type for this IPsec phase 2 entry. Leave as `null` if NAT/BINAT is ' .
                 'not needed.',
         );
@@ -144,6 +153,7 @@ class IPsecPhase2 extends Model {
             internal_namespace: 'natlocalid',
             conditions: ['natlocalid_type' => $this->natlocalid_type->allowed_keywords],
             validators: [new IPAddressValidator()],
+            verbose_name: 'NAT Local ID Address',
             help_text: 'The NAT/BINAT local network IP component of this IPsec security association.',
         );
         $this->natlocalid_netbits = new IntegerField(
@@ -153,6 +163,7 @@ class IPsecPhase2 extends Model {
             internal_name: 'netbits',
             internal_namespace: 'natlocalid',
             conditions: ['natlocalid_type' => 'network'],
+            verbose_name: 'NAT Local ID Network Bits',
             help_text: 'The subnet bits of the `natlocalid_address` network.',
         );
         $this->remoteid_type = new SpecialNetworkField(
@@ -170,6 +181,7 @@ class IPsecPhase2 extends Model {
             internal_name: 'type',
             internal_namespace: 'remoteid',
             conditions: ['!mode' => 'transport'],
+            verbose_name: 'Remote ID Type',
             help_text: 'The remote ID type to use for this phase 2 entry.',
         );
         $this->remoteid_address = new StringField(
@@ -178,6 +190,7 @@ class IPsecPhase2 extends Model {
             internal_namespace: 'remoteid',
             conditions: ['remoteid_type' => $this->remoteid_type->allowed_keywords],
             validators: [new IPAddressValidator()],
+            verbose_name: 'Remote ID Address',
             help_text: 'The remote network IP component of this IPsec security association.',
         );
         $this->remoteid_netbits = new IntegerField(
@@ -187,11 +200,13 @@ class IPsecPhase2 extends Model {
             internal_name: 'netbits',
             internal_namespace: 'remoteid',
             conditions: ['remoteid_type' => 'network'],
+            verbose_name: 'Remote ID Network Bits',
             help_text: 'The subnet bits of the `remoteid_address` network.',
         );
         $this->protocol = new StringField(
             default: 'esp',
             choices: ['esp', 'ah'],
+            verbose_name: 'Protocol',
             help_text: 'the IPsec phase 2 proposal protocol for this entry. Encapsulating Security Payload (`esp`) ' .
                 'performs encryption and authentication, Authentication Header (`ah`) is authentication only.',
         );
@@ -199,6 +214,7 @@ class IPsecPhase2 extends Model {
             model_class: 'IPsecPhase2Encryption',
             required: true,
             conditions: ['protocol' => 'esp'],
+            verbose_name: 'Encryption Algorithm',
             help_text: 'The encryption algorithms to be used by this phase 2 entry.',
         );
         $this->hash_algorithm_option = new StringField(
@@ -208,25 +224,30 @@ class IPsecPhase2 extends Model {
             many_minimum: 1,
             delimiter: null,
             internal_name: 'hash-algorithm-option',
+            verbose_name: 'Hash Algorithm',
             help_text: 'The hashing algorithms used by this IPsec phase 2 entry. Note: Hash is ignored with GCM ' .
                 'algorithms. SHA1 provides weak security and should be avoided.',
         );
         $this->pfsgroup = new IntegerField(
             default: 14,
             choices: array_keys($p2_pfskeygroups),
+            verbose_name: 'PFS Group',
             help_text: 'The PFS key group this IPsec phase 2 entry should use. Note: Groups 1, 2, 5, 22, 23, and 24 ' .
                 'provide weak security and should be avoided.',
         );
         $this->lifetime = new IntegerField(
             default: 3600,
+            verbose_name: 'Lifetime',
             help_text: 'The hard IKE SA lifetime (in seconds) after which the IKE SA will be expired.',
         );
         $this->rekey_time = new IntegerField(
             default: 3240,
+            verbose_name: 'Rekey Time',
             help_text: 'The amount of time (in seconds) before an IKE SA establishes new keys.',
         );
         $this->rand_time = new IntegerField(
             default: 360,
+            verbose_name: 'Random Time',
             help_text: 'A random value up to this amount will be subtracted from the `rekey_time` and `reauth_time` ' .
                 'to avoid simultaneous renegotiation.',
         );
@@ -234,6 +255,7 @@ class IPsecPhase2 extends Model {
             default: '',
             allow_empty: true,
             validators: [new IPAddressValidator(allow_fqdn: true)],
+            verbose_name: 'Ping Host',
             help_text: 'The IP address to send an ICMP echo request to inside the tunnel. Can trigger initiation ' .
                 'of a tunnel mode P2, but does not trigger initiation of a VTI mode P2.',
         );
@@ -241,6 +263,7 @@ class IPsecPhase2 extends Model {
             default: false,
             indicates_true: 'enabled',
             indicates_false: 'disabled',
+            verbose_name: 'Keepalive',
             help_text: 'Enables or disables checking this P2 and initiating if disconnected; does not send traffic ' .
                 "inside the tunnel. This check ignores the P1 option 'Child SA Start Action' and works for both VTI " .
                 'and tunnel mode P2s. For IKEv2 without split connections, this only needs to be enabled on one P2.',

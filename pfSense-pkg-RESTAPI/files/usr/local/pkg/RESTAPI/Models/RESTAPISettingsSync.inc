@@ -27,6 +27,7 @@ class RESTAPISettingsSync extends Model {
             required: true,
             representation_only: true,
             maximum_length: 65535,
+            verbose_name: 'Sync Data',
             help_text: 'The serialized REST API settings data to be synced.',
         );
 

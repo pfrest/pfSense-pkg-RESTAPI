@@ -30,15 +30,18 @@ class Enum extends Model {
         # Define model Fields
         $this->model_name = new StringField(
             required: true,
+            verbose_name: 'Model Name',
             help_text: "The name of the model whose field's choices are being requested.",
         );
         $this->model_field = new StringField(
             required: true,
+            verbose_name: 'Model Field',
             help_text: 'The name of the field whose choices are being requested.',
         );
         $this->choices = new ObjectField(
             default: null,
             read_only: true,
+            verbose_name: 'Choices',
             help_text: 'The available choices for the specified model and field. The key represents the internal ' .
                 'name of the choice, and the value is the verbose, human-friendly name of the choice.',
         );

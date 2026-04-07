@@ -23,6 +23,7 @@ class RoutingApply extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Applied',
             help_text: 'Displays `true` when all routing changes are applied and there are no pending changes left.' .
                 'Displays `false` when there are pending routing changes that have not been applied.',
         );

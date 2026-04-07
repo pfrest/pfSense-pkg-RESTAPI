@@ -60,12 +60,14 @@ class TrafficShaperQueue extends Model {
             default: null,
             read_only: true,
             editable: false,
+            verbose_name: 'Interface',
             help_text: 'The parent interface this traffic shaper queue a child of. This value is automatically ' .
                 "determined by the queue's parent and cannot be manually set or changed.",
         );
         $this->enabled = new BooleanField(
             default: false,
             indicates_true: 'on',
+            verbose_name: 'Enabled',
             help_text: 'Enables or disables the traffic shaper queue.',
         );
         $this->name = new StringField(
@@ -73,6 +75,7 @@ class TrafficShaperQueue extends Model {
             unique: true,
             maximum_length: 15,
             validators: [new FilterNameValidator()],
+            verbose_name: 'Name',
             help_text: 'The name to assign this traffic shaper queue.',
         );
         $this->priority = new IntegerField(
@@ -81,76 +84,90 @@ class TrafficShaperQueue extends Model {
             minimum: 0,
             maximum: 15,
             conditions: ['parent__scheduler' => ['FAIRQ', 'CBQ', 'PRIQ']],
+            verbose_name: 'Priority',
             help_text: 'The priority level for this traffic shaper queue.',
         );
         $this->qlimit = new IntegerField(
             required: true,
             minimum: 1,
+            verbose_name: 'Queue Limit',
             help_text: 'The number of packets that can be held in a queue waiting to be transmitted by the shaper.',
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this traffic shaper queue.',
         );
         $this->default = new BooleanField(
             default: false,
             indicates_true: 'default',
+            verbose_name: 'Default',
             help_text: 'Mark this traffic shaper queue as the default queue.',
         );
         $this->red = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'RED',
             help_text: "Use the 'Random Early Detection' scheduler option for this traffic shaper queue.",
         );
         $this->rio = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'RIO',
             help_text: "Use the 'Random Early Detection In and Out' scheduler option for this traffic shaper queue.",
         );
         $this->ecn = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'ECN',
             help_text: "Use the 'Explicit Congestion Notification' scheduler option for this traffic shaper queue.",
         );
         $this->codel = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'CoDel',
             help_text: "Use the 'Codel Active Queue' scheduler option for this traffic shaper queue.",
         );
         $this->bandwidth = new IntegerField(
             required: true,
             minimum: 1,
             conditions: ['parent__scheduler' => ['FAIRQ', 'CBQ', 'HFSC']],
+            verbose_name: 'Bandwidth',
             help_text: 'The total bandwidth amount allowed by this traffic shaper.',
         );
         $this->bandwidthtype = new StringField(
             default: 'Mb',
             choices: ['%', 'b', 'Kb', 'Mb', 'Gb'],
             conditions: ['parent__scheduler' => ['FAIRQ', 'CBQ', 'HFSC']],
+            verbose_name: 'Bandwidth Type',
             help_text: "The scale type of the `bandwidth` field's value.",
         );
         $this->buckets = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['parent__scheduler' => 'FAIRQ'],
+            verbose_name: 'Buckets',
         );
         $this->hogs = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['parent__scheduler' => 'FAIRQ'],
+            verbose_name: 'Hogs',
             help_text: 'The bandwidth limit per host.',
         );
         $this->borrow = new BooleanField(
             default: false,
             indicates_true: 'yes',
             conditions: ['parent__scheduler' => 'CBQ'],
+            verbose_name: 'Borrow',
             help_text: 'Allow this queue to borrow from other queues when available.',
         );
         $this->upperlimit = new BooleanField(
             default: false,
             indicates_true: 'on',
             conditions: ['parent__scheduler' => 'HFSC'],
+            verbose_name: 'Upper Limit',
             help_text: 'Allow setting the maximum bandwidth allowed for the queue. Will force hard bandwidth limiting.',
         );
         $this->upperlimit_m1 = new StringField(
@@ -158,6 +175,7 @@ class TrafficShaperQueue extends Model {
             allow_null: true,
             internal_name: 'upperlimit1',
             conditions: ['upperlimit' => true],
+            verbose_name: 'Upper Limit M1',
             help_text: 'The burst-able bandwidth limit for this traffic shaper queue.',
         );
         $this->upperlimit_d = new IntegerField(
@@ -172,6 +190,7 @@ class TrafficShaperQueue extends Model {
             required: true,
             internal_name: 'upperlimit3',
             conditions: ['upperlimit' => true],
+            verbose_name: 'Upper Limit M2',
             help_text: 'The normal bandwidth limit for this traffic shaper queue. If `upperlimit_m1` is not defined, ' .
                 'this limit will always be in effect. If `upperlimit_m1` is defined, this limit will take effect ' .
                 'after the `upperlimit_d` duration has expired.',
@@ -180,6 +199,7 @@ class TrafficShaperQueue extends Model {
             default: false,
             indicates_true: 'on',
             conditions: ['parent__scheduler' => 'HFSC'],
+            verbose_name: 'Real Time',
             help_text: 'Allow setting the guaranteed bandwidth minimum allotted to the queue.',
         );
         $this->realtime_m1 = new StringField(
@@ -187,6 +207,7 @@ class TrafficShaperQueue extends Model {
             allow_null: true,
             internal_name: 'realtime1',
             conditions: ['realtime' => true],
+            verbose_name: 'Real Time M1',
             help_text: 'The guaranteed minimum bandwidth limit for this traffic shaper queue during real time.',
         );
         $this->realtime_d = new IntegerField(
@@ -195,12 +216,14 @@ class TrafficShaperQueue extends Model {
             minimum: 1,
             internal_name: 'realtime2',
             conditions: ['realtime' => true],
+            verbose_name: 'Real Time D',
             help_text: 'The duration (in milliseconds) that the guaranteed bandwidth limit (`realtime_m1`) is in effect.',
         );
         $this->realtime_m2 = new StringField(
             required: true,
             internal_name: 'realtime3',
             conditions: ['realtime' => true],
+            verbose_name: 'Real Time M2',
             help_text: 'The maximum bandwidth this traffic shaper queue is allowed to use. Note: This value should ' .
                 "not exceed 30% of parent queue's maximum bandwidth.",
         );
@@ -208,6 +231,7 @@ class TrafficShaperQueue extends Model {
             default: false,
             indicates_true: 'on',
             conditions: ['parent__scheduler' => 'HFSC'],
+            verbose_name: 'Link Share',
             help_text: 'Allow sharing bandwidth from this queue for other queues as long as the real time values ' .
                 'have been satisfied.',
         );
@@ -216,6 +240,7 @@ class TrafficShaperQueue extends Model {
             allow_null: true,
             internal_name: 'linkshare1',
             conditions: ['linkshare' => true],
+            verbose_name: 'Link Share M1',
             help_text: 'The initial bandwidth limit for this traffic shaper queue when link sharing.',
         );
         $this->linkshare_d = new IntegerField(
@@ -224,12 +249,14 @@ class TrafficShaperQueue extends Model {
             minimum: 1,
             internal_name: 'linkshare2',
             conditions: ['linkshare' => true],
+            verbose_name: 'Link Share D',
             help_text: 'The duration (in milliseconds) that the initial bandwidth limit (`linkshare_m1`) is in effect.',
         );
         $this->linkshare_m2 = new StringField(
             required: true,
             internal_name: 'linkshare3',
             conditions: ['linkshare' => true],
+            verbose_name: 'Link Share M2',
             help_text: 'The maximum bandwidth this traffic shaper queue is allowed to use. Note: This behaves exactly ' .
                 'the same as the `bandwidth` field. If this field is set, it will override whatever value is ' .
                 'current assigned to the `bandwidth` field.',

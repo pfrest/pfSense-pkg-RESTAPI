@@ -24,6 +24,7 @@ class SystemTimezone extends Model {
             allow_empty: false,
             allow_null: false,
             many: false,
+            verbose_name: 'Time Zone',
             help_text: 'Set geographic region name (Continent/Location) to determine the timezone for the firewall.',
         );
 

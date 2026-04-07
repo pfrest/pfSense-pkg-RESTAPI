@@ -22,6 +22,7 @@ class SystemConsole extends Model {
         $this->passwd_protect_console = new BooleanField(
             default: false,
             internal_name: 'disableconsolemenu',
+            verbose_name: 'Passwd Protect Console',
             help_text: 'Enables or disables password protecting the console.',
         );
 

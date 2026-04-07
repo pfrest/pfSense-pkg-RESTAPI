@@ -24,12 +24,13 @@ class AvailablePackage extends Model {
         $this->cache_class = 'AvailablePackageCache';
 
         # Set model fields
-        $this->name = new StringField(required: true, unique: true, help_text: 'The name of the pfSense package.');
-        $this->shortname = new StringField(default: '', read_only: true, help_text: "The package's shortname.");
-        $this->descr = new StringField(default: '', read_only: true, help_text: "The package's description.");
+        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the pfSense package.');
+        $this->shortname = new StringField(default: '', read_only: true, verbose_name: 'Short Name', help_text: "The package's shortname.");
+        $this->descr = new StringField(default: '', read_only: true, verbose_name: 'Description', help_text: "The package's description.");
         $this->version = new StringField(
             default: '',
             read_only: true,
+            verbose_name: 'Version',
             help_text: 'The latest version available for this package.',
         );
         $this->installed = new BooleanField(
@@ -37,6 +38,7 @@ class AvailablePackage extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Installed',
             help_text: 'Indicates whether the package is currently installed or not.',
         );
         $this->deps = new StringField(
@@ -44,6 +46,7 @@ class AvailablePackage extends Model {
             read_only: true,
             many: true,
             delimiter: null,
+            verbose_name: 'Deps',
             help_text: 'Dependencies for this package that are also installed when this package is installed.',
         );
 

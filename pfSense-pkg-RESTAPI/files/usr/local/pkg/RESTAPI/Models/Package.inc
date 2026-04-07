@@ -28,18 +28,21 @@ class Package extends Model {
             model_name: 'AvailablePackage',
             model_field: 'name',
             required: true,
+            verbose_name: 'Name',
             help_text: 'The name of the pfSense package.',
         );
-        $this->shortname = new StringField(default: '', read_only: true, help_text: "The package's shortname.");
-        $this->descr = new StringField(default: '', read_only: true, help_text: "The package's description.");
+        $this->shortname = new StringField(default: '', read_only: true, verbose_name: 'Short Name', help_text: "The package's shortname.");
+        $this->descr = new StringField(default: '', read_only: true, verbose_name: 'Description', help_text: "The package's description.");
         $this->installed_version = new StringField(
             default: '',
             read_only: true,
+            verbose_name: 'Installed Version',
             help_text: 'The version of the package currently installed.',
         );
         $this->latest_version = new StringField(
             default: '',
             read_only: true,
+            verbose_name: 'Latest Version',
             help_text: 'The latest version available for this package.',
         );
         $this->update_available = new BooleanField(
@@ -47,6 +50,7 @@ class Package extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Update Available',
             help_text: 'Indicates whether the installed package has an update available.',
         );
 

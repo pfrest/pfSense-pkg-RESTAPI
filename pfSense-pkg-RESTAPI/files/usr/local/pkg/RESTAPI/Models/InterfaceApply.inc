@@ -27,6 +27,7 @@ class InterfaceApply extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Applied',
             help_text: 'Displays `true` when all interfaces are applied and there are no pending changes left.' .
                 'Displays `false` when there are pending interface changes that have not been applied.',
         );
@@ -34,6 +35,7 @@ class InterfaceApply extends Model {
             allow_empty: true,
             read_only: true,
             many: true,
+            verbose_name: 'Pending Interfaces',
             help_text: 'Displays a list of interfaces that have pending changes waiting to be applied.',
         );
 

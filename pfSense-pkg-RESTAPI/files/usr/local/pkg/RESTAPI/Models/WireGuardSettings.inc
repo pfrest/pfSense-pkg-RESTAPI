@@ -36,6 +36,7 @@ class WireGuardSettings extends Model {
             default: false,
             indicates_true: 'on',
             indicates_false: 'off',
+            verbose_name: 'Enable',
             help_text: 'Enables or disables WireGuard on this system. WireGuard cannot be disabled when one or more ' .
                 'tunnels is assigned to a pfSense interface.',
         );
@@ -43,6 +44,7 @@ class WireGuardSettings extends Model {
             default: true,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Keep Conf',
             help_text: 'Enables or disables keeping the WireGuard configuration when the package is ' .
                 'uninstalled/reinstalled.',
         );
@@ -50,29 +52,34 @@ class WireGuardSettings extends Model {
             default: false,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Resolve Interval Track',
             help_text: "Enables or disables tracking the 'Aliases Hostnames Resolve Interval' value as the " .
                 '`resolve_internal` value instead of specifying a value directly.',
         );
         $this->resolve_interval = new IntegerField(
             default: 300,
             conditions: ['resolve_interval_track' => false],
+            verbose_name: 'Resolve Interval',
             help_text: 'The interval (in seconds) for re-resolving endpoint host/domain names.',
         );
         $this->interface_group = new StringField(
             default: 'all',
             choices: ['all', 'unassigned', 'none'],
+            verbose_name: 'Interface Group',
             help_text: 'Configures which WireGuard tunnels are members of the WireGuard interface group.',
         );
         $this->hide_secrets = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Hide Secrets',
             help_text: 'Enables or disables hiding all secrets (private and pre-shared keys) in the user interface.',
         );
         $this->hide_peers = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Hide Peers',
             help_text: 'Enables or disables initially hiding all peers in the user interface.',
         );
 

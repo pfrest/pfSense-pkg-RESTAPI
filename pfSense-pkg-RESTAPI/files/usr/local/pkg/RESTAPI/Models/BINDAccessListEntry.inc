@@ -29,11 +29,13 @@ class BINDAccessListEntry extends Model {
         $this->value = new StringField(
             required: true,
             validators: [new SubnetValidator()],
+            verbose_name: 'Value',
             help_text: 'The network CIDR to allow.',
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description of the access list entry.',
         );
 

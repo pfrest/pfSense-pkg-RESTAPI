@@ -30,17 +30,20 @@ class HAProxyEmailMailer extends Model {
             required: true,
             unique: true,
             allow_empty: true,
+            verbose_name: 'Name',
             help_text: 'The descriptive name for this mail server.',
         );
         $this->mailserver = new StringField(
             required: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Mail Server',
             help_text: 'The IP or hostname of the mail server.',
         );
         $this->mailserverport = new PortField(
             default: '53',
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Mail Server Port',
             help_text: 'The port used by this mail server.',
         );
 

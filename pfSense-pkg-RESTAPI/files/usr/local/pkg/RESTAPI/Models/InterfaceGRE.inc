@@ -36,22 +36,26 @@ class InterfaceGRE extends Model {
         # Set model fields
         $this->if = new InterfaceField(
             required: true,
+            verbose_name: 'Interface Name',
             help_text: 'The pfSense interface interface serving as the local address to be used for the GRE tunnel.',
         );
         $this->greif = new StringField(
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'GRE Interface',
             help_text: 'The real interface name for this GRE interface.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this GRE interface.',
         );
         $this->add_static_route = new BooleanField(
             default: false,
             internal_name: 'link1',
+            verbose_name: 'Add Static Route',
             help_text: 'Whether to add an explicit static route for the remote inner tunnel address/subnet via the ' .
                 'local tunnel address.',
         );
@@ -59,6 +63,7 @@ class InterfaceGRE extends Model {
             required: true,
             internal_name: 'remote-addr',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'Remote Addr',
             help_text: 'The remote address to use for the GRE tunnel.',
         );
         $this->tunnel_local_addr = new StringField(
@@ -66,6 +71,7 @@ class InterfaceGRE extends Model {
             allow_null: true,
             internal_name: 'tunnel-local-addr',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Tunnel Local Address',
             help_text: 'The local IPv4 address to use for the GRE tunnel.',
         );
         $this->tunnel_remote_addr = new StringField(
@@ -74,6 +80,7 @@ class InterfaceGRE extends Model {
             internal_name: 'tunnel-remote-addr',
             conditions: ['!tunnel_local_addr' => null],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Tunnel Remote Address',
             help_text: 'The remote IPv4 address to use for the GRE tunnel.',
         );
         $this->tunnel_remote_net = new IntegerField(
@@ -82,6 +89,7 @@ class InterfaceGRE extends Model {
             maximum: 32,
             internal_name: 'tunnel-remote-net',
             conditions: ['!tunnel_local_addr' => null],
+            verbose_name: 'Tunnel Remote Network',
             help_text: 'The remote IPv4 subnet bitmask to use for the GRE tunnel.',
         );
         $this->tunnel_local_addr6 = new StringField(
@@ -89,6 +97,7 @@ class InterfaceGRE extends Model {
             allow_null: true,
             internal_name: 'tunnel-local-addr6',
             validators: [new IPAddressValidator(allow_ipv4: false, allow_ipv6: true)],
+            verbose_name: 'Tunnel Local IPv6 Address',
             help_text: 'The local IPv6 address to use for the GRE tunnel.',
         );
         $this->tunnel_remote_addr6 = new StringField(
@@ -97,6 +106,7 @@ class InterfaceGRE extends Model {
             internal_name: 'tunnel-remote-addr6',
             conditions: ['!tunnel_local_addr6' => null],
             validators: [new IPAddressValidator(allow_ipv4: false, allow_ipv6: true)],
+            verbose_name: 'Tunnel Remote IPv6 Address',
             help_text: 'The remote IPv6 address to use for the GRE tunnel.',
         );
         $this->tunnel_remote_net6 = new IntegerField(
@@ -105,6 +115,7 @@ class InterfaceGRE extends Model {
             maximum: 128,
             internal_name: 'tunnel-remote-net6',
             conditions: ['!tunnel_local_addr6' => null],
+            verbose_name: 'Tunnel Remote IPv6 Network',
             help_text: 'The remote IPv6 subnet bitmask to use for the GRE tunnel.',
         );
 

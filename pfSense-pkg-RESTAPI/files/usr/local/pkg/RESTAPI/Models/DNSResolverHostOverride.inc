@@ -35,29 +35,34 @@ class DNSResolverHostOverride extends Model {
             allow_empty: true,
             maximum_length: 255,
             validators: [new HostnameValidator()],
+            verbose_name: 'Host',
             help_text: 'The hostname portion of the host override.',
         );
         $this->domain = new StringField(
             required: true,
             maximum_length: 255,
             validators: [new HostnameValidator()],
+            verbose_name: 'Domain',
             help_text: 'The hostname portion of the host override.',
         );
         $this->ip = new StringField(
             required: true,
             many: true,
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'IP',
             help_text: 'The IP addresses this host override will resolve.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A detailed description for this host override.',
         );
         $this->aliases = new NestedModelField(
             model_class: 'DNSResolverHostOverrideAlias',
             default: [],
             allow_empty: true,
+            verbose_name: 'Aliases',
             help_text: 'Additional alias hostnames that should resolve the same IP(s).',
         );
 

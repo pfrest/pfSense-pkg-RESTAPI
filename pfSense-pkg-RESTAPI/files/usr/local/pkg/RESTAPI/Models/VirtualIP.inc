@@ -42,20 +42,23 @@ class VirtualIP extends Model {
         $this->many = true;
 
         # Define model Fields
-        $this->uniqid = new UIDField(help_text: 'The unique ID for this virtual IP.');
+        $this->uniqid = new UIDField(verbose_name: 'Unique ID', help_text: 'The unique ID for this virtual IP.');
         $this->mode = new StringField(
             required: true,
             choices: ['ipalias', 'proxyarp', 'carp', 'other'],
+            verbose_name: 'Mode',
             help_text: 'The virtual IP mode to use for this virtual IP.',
         );
         $this->interface = new InterfaceField(
             required: true,
             allow_carp_interface: true,
+            verbose_name: 'Interface',
             help_text: 'The interface this virtual IP will apply to.',
         );
         $this->type = new StringField(
             default: 'single',
             choices: ['single', 'network'],
+            verbose_name: 'Type',
             help_text: 'The virtual IP scope type. The `network` option is only applicable to the `proxyarp` and ' .
                 '`other` virtual IP modes.',
         );
@@ -67,18 +70,21 @@ class VirtualIP extends Model {
                 new UniqueFromForeignModelValidator(model: 'NetworkInterface', field: 'ipaddr'),
                 new UniqueFromForeignModelValidator(model: 'NetworkInterface', field: 'ipaddrv6'),
             ],
+            verbose_name: 'Subnet',
             help_text: 'The address for this virtual IP.',
         );
         $this->subnet_bits = new IntegerField(
             required: true,
             minimum: 1,
             maximum: 128,
+            verbose_name: 'Subnet Bits',
             help_text: 'The subnet bits for this virtual IP. For `proxyarp` and `other` virtual IPs, this value ' .
                 'specifies a block of many IP address. For all other virtual IP modes, this specifies the subnet mask',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for administrative reference',
         );
         $this->noexpand = new BooleanField(
@@ -86,6 +92,7 @@ class VirtualIP extends Model {
             indicates_true: '',
             indicates_false: null,
             conditions: ['mode' => ['proxyarp', 'other']],
+            verbose_name: 'No Expand',
             help_text: 'Disable expansion of this entry into IPs on NAT lists (e.g. 192.168.1.0/24 expands to 256 entries.)',
         );
         $this->vhid = new IntegerField(
@@ -93,6 +100,7 @@ class VirtualIP extends Model {
             minimum: 1,
             maximum: 255,
             conditions: ['mode' => 'carp'],
+            verbose_name: 'VHID',
             help_text: 'The VHID group that the machines will share.',
         );
         $this->advbase = new IntegerField(
@@ -100,6 +108,7 @@ class VirtualIP extends Model {
             minimum: 1,
             maximum: 254,
             conditions: ['mode' => 'carp'],
+            verbose_name: 'Advertisement Base',
             help_text: 'The base frequency that this machine will advertise.',
         );
         $this->advskew = new IntegerField(
@@ -107,12 +116,14 @@ class VirtualIP extends Model {
             minimum: 0,
             maximum: 254,
             conditions: ['mode' => 'carp'],
+            verbose_name: 'Advertisement Skew',
             help_text: 'The frequency skew that this machine will advertise.',
         );
         $this->password = new StringField(
             required: true,
             sensitive: true,
             conditions: ['mode' => 'carp'],
+            verbose_name: 'Password',
             help_text: 'The VHID group password shared by all CARP members.',
         );
         $this->carp_status = new StringField(
@@ -121,6 +132,7 @@ class VirtualIP extends Model {
             read_only: true,
             representation_only: true,
             conditions: ['mode' => 'carp'],
+            verbose_name: 'CARP Status',
             help_text: 'The current CARP status of this virtual IP. This will display show whether this CARP node ' .
                 'is the primary or backup peer.',
         );
@@ -128,6 +140,7 @@ class VirtualIP extends Model {
             default: 'mcast',
             choices: ['mcast', 'ucast'],
             conditions: ['mode' => 'carp'],
+            verbose_name: 'CARP Mode',
             help_text: 'The CARP mode to use for this virtual IP. Please note this field is exclusive to ' .
                 'pfSense Plus and has no effect on CE.',
         );
@@ -135,6 +148,7 @@ class VirtualIP extends Model {
             required: true,
             conditions: ['carp_mode' => 'ucast'],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'CARP Peer',
             help_text: 'The IP address of the CARP peer. Please note this field is exclusive to pfSense Plus and ' .
                 'has no effect on CE.',
         );

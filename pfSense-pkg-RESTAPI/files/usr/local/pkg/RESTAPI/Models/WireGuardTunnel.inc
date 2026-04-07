@@ -42,6 +42,7 @@ class WireGuardTunnel extends Model {
             default_callable: 'get_next_tunnel_name',
             editable: false,
             read_only: true,
+            verbose_name: 'Name',
             help_text: 'The name of the WireGuard interface. This value is automatically assigned by the system and ' .
                 'cannot be changed.',
         );
@@ -49,12 +50,14 @@ class WireGuardTunnel extends Model {
             default: true,
             indicates_true: 'yes',
             indicates_false: 'no',
+            verbose_name: 'Enabled',
             help_text: 'Enables or disables this tunnels and any associated peers.',
         );
         $this->descr = new StringField(
             required: false,
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this WireGuard tunnel.',
         );
         $this->listenport = new PortField(
@@ -62,21 +65,25 @@ class WireGuardTunnel extends Model {
             default: '51820',
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Listen Port',
             help_text: 'The port WireGuard will listen on for this tunnel.',
         );
         $this->publickey = new StringField(
             required: false,
             read_only: true,
+            verbose_name: 'Public Key',
             help_text: 'The public key for this tunnel. This value is automatically derived from the `privatekey` ' .
                 'value and cannot be set manually.',
         );
         $this->privatekey = new StringField(
             required: true,
             sensitive: true,
+            verbose_name: 'Private Key',
             help_text: 'The private key for this tunnel.',
         );
         $this->mtu = new IntegerField(
             default: 1420,
+            verbose_name: 'MTU',
             help_text: 'The MTU for this WireGuard tunnel interface. This value is ignored if this tunnel is ' .
                 'assigned as a pfSense interface.',
         );
@@ -84,6 +91,7 @@ class WireGuardTunnel extends Model {
             model_class: 'WireGuardTunnelAddress',
             default: [],
             allow_empty: true,
+            verbose_name: 'Addresses',
             help_text: 'The IPv4 or IPv6 addresses to assign this WireGuard tunnel interface. This field is ignored ' .
                 'if this tunnel interface is assigned to an existing pfSense interface object.',
         );

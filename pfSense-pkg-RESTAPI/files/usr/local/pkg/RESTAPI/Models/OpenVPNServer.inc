@@ -112,6 +112,7 @@ class OpenVPNServer extends Model {
             default_callable: 'get_next_vpn_id',
             editable: false,
             read_only: true,
+            verbose_name: 'VPN ID',
             help_text: 'The unique ID for this OpenVPN server. This value is assigned by the ' .
                 'system and cannot be changed.',
         );
@@ -121,18 +122,21 @@ class OpenVPNServer extends Model {
             editable: false,
             read_only: true,
             representation_only: true,
+            verbose_name: 'VPN Interface',
             help_text: 'The VPN interface name for this OpenVPN server. This value is assigned by the system and ' .
                 'cannot be changed.',
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'The description for this OpenVPN server.',
         );
-        $this->disable = new BooleanField(default: false, help_text: 'Disables this OpenVPN server.');
+        $this->disable = new BooleanField(default: false, verbose_name: 'Disable', help_text: 'Disables this OpenVPN server.');
         $this->mode = new StringField(
             required: true,
             choices: ['p2p_tls', 'server_tls', 'server_user', 'server_tls_user'],
+            verbose_name: 'Mode',
             help_text: 'The OpenVPN server mode.',
         );
         $this->authmode = new ForeignModelField(
@@ -142,12 +146,14 @@ class OpenVPNServer extends Model {
             default: ['Local Database'],
             many: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
+            verbose_name: 'Auth Mode',
             help_text: 'The name of the authentication server to use as the authentication ' .
                 'backend for this OpenVPN server',
         );
         $this->dev_mode = new StringField(
             required: true,
             choices: ['tun', 'tap'],
+            verbose_name: 'Dev Mode',
             help_text: 'The carrier mode for this OpenVPN server. `tun` mode carries IPv4 and IPv6 (layer 3) and ' .
                 'is the most common and compatible mode across all platforms. `tap` mode is capable of carrying ' .
                 '802.3 (layer 2).',
@@ -155,6 +161,7 @@ class OpenVPNServer extends Model {
         $this->protocol = new StringField(
             required: true,
             choices: ['UDP4', 'UDP6', 'UDP', 'TCP4', 'TCP6', 'TCP'],
+            verbose_name: 'Protocol',
             help_text: 'The protocol used by this OpenVPN server.',
         );
         $this->interface = new InterfaceField(
@@ -162,6 +169,7 @@ class OpenVPNServer extends Model {
             allow_carp_interface: true,
             allow_localhost_interface: true,
             conditions: ['!protocol' => ['UDP', 'TCP']],
+            verbose_name: 'Interface',
             help_text: 'The interface or Virtual IP address where OpenVPN will receive client connections.',
         );
         $this->local_port = new PortField(
@@ -169,6 +177,7 @@ class OpenVPNServer extends Model {
             default: '1194',
             allow_alias: false,
             allow_range: false,
+            verbose_name: 'Local Port',
             help_text: 'The port used by OpenVPN to receive client connections.',
         );
         $this->use_tls = new BooleanField(
@@ -176,12 +185,14 @@ class OpenVPNServer extends Model {
             representation_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Use TLS',
             help_text: 'Enables or disables the use of a TLS key for this OpenVPN server.',
         );
         $this->tls = new Base64Field(
             default_callable: 'generate_tls_key',
             sensitive: true,
             conditions: ['use_tls' => true],
+            verbose_name: 'TLS',
             help_text: 'The TLS key this OpenVPN server will use to sign control channel packets with an HMAC ' .
                 'signature for authentication when establishing the tunnel.',
         );
@@ -189,6 +200,7 @@ class OpenVPNServer extends Model {
             required: true,
             choices: ['auth', 'crypt'],
             conditions: ['use_tls' => true],
+            verbose_name: 'TLS Type',
             help_text: 'The TLS key usage type. In `auth` mode, the TLS key is used only as HMAC authentication for ' .
                 'the control channel, protecting the peers from unauthorized connections. The `crypt` mode encrypts ' .
                 'the control channel communication in addition to providing authentication, providing more privacy ' .
@@ -198,6 +210,7 @@ class OpenVPNServer extends Model {
             default: 'default',
             choices: ['default', '0', '1', '2'],
             conditions: ['use_tls' => true],
+            verbose_name: 'Tlsauth Keydir',
             help_text: 'The TLS key direction. This must be set to complementary values on the client and server. ' .
                 'For example, if the server is set to 0, the client must be set to 1. Both may be set to omit the ' .
                 'direction, in which case the TLS Key will be used bidirectionally.',
@@ -206,18 +219,21 @@ class OpenVPNServer extends Model {
             model_name: 'CertificateAuthority',
             model_field: 'refid',
             required: true,
+            verbose_name: 'CA Reference',
             help_text: 'The `refid` of the CA object to assume as the peer CA.',
         );
         $this->certref = new ForeignModelField(
             model_name: 'Certificate',
             model_field: 'refid',
             required: true,
+            verbose_name: 'Certificate Reference',
             help_text: 'The `refid` of the certificate object to assume as the OpenVPN server certificate.',
         );
         $this->cert_depth = new IntegerField(
             default: 1,
             choices: [1, 2, 3, 4, 5],
             allow_null: true,
+            verbose_name: 'Cert Depth',
             help_text: 'The depth of the certificate chain to check when a certificate based client signs in. ' .
                 'Certificates below this depth are not accepted. This is useful for denying certificates made with ' .
                 'intermediate CAs generated from the same CA as the server. Set to null to use system default.',
@@ -225,11 +241,13 @@ class OpenVPNServer extends Model {
         $this->dh_length = new StringField(
             required: true,
             choices_callable: 'get_dh_length_choices',
+            verbose_name: 'DH Length',
             help_text: 'The Diffie-Hellman (DH) parameter set used for key exchange.',
         );
         $this->ecdh_curve = new StringField(
             required: true,
             choices_callable: 'get_ecdh_curve_choices',
+            verbose_name: 'ECDH Curve',
             help_text: 'The Elliptic Curve to use for key exchange. The curve from the server certificate is used by ' .
                 'default when the server uses an ECDSA certificate. Otherwise, secp384r1 is used as a fallback.',
         );
@@ -238,17 +256,20 @@ class OpenVPNServer extends Model {
             choices_callable: 'get_available_cipher_choices',
             many: true,
             many_minimum: 1,
+            verbose_name: 'Data Ciphers',
             help_text: 'The encryption algorithms/ciphers allowed by this OpenVPN server.',
         );
         $this->data_ciphers_fallback = new StringField(
             required: true,
             choices_callable: 'get_available_cipher_choices',
+            verbose_name: 'Data Ciphers Fallback',
             help_text: 'The fallback encryption algorithm/cipher used for data channel packets when communicating ' .
                 'with clients that do not support data encryption algorithm negotiation (e.g. Shared Key).',
         );
         $this->digest = new StringField(
             required: true,
             choices_callable: 'get_available_digest_choices',
+            verbose_name: 'Digest',
             help_text: 'The algorithm used to authenticate data channel packets, and control channel packets ' .
                 'if a TLS Key is present.',
         );
@@ -257,23 +278,27 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['mode' => ['server_user', 'server_tls_user']],
+            verbose_name: 'Strict User CN',
             help_text: 'Enables or disables enforcing a match between the common name of the client certificate ' .
                 'and the username given at login.',
         );
         $this->remote_cert_tls = new BooleanField(
             default: true,
+            verbose_name: 'Remote Certificate TLS',
             help_text: 'Enables or disables requiring hosts to have a client certificate to connect.',
         );
         $this->tunnel_network = new StringField(
             default: '',
             allow_empty: true,
             validators: [new SubnetValidator(allow_ipv4: true, allow_ipv6: false, allow_alias: false)],
+            verbose_name: 'Tunnel Network',
             help_text: 'The IPv4 virtual network used for private communications between this server and client hosts.',
         );
         $this->tunnel_networkv6 = new StringField(
             default: '',
             allow_empty: true,
             validators: [new SubnetValidator(allow_ipv4: false, allow_ipv6: true, allow_alias: false)],
+            verbose_name: 'IPv6 Tunnel Network',
             help_text: 'The IPv6 virtual network used for private communications between this server and client hosts.',
         );
         $this->serverbridge_dhcp = new BooleanField(
@@ -281,11 +306,13 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['dev_mode' => 'tap'],
+            verbose_name: 'Server Bridge DHCP',
             help_text: 'Enables or disables clients on the bridge to obtain DHCP.',
         );
         $this->serverbridge_interface = new InterfaceField(
             required: true,
             conditions: ['serverbridge_dhcp' => true],
+            verbose_name: 'Server Bridge Interface',
             help_text: 'The interface to which this TAP instance will be bridged. This is not done automatically. ' .
                 'This interface must be assigned and the bridge created separately. This setting controls which ' .
                 'existing IP address and subnet mask are used by OpenVPN for the bridge.',
@@ -295,6 +322,7 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['serverbridge_dhcp' => true],
+            verbose_name: 'Server Bridge Route Gateway',
             help_text: "Enables or disables pushing the bridge interface's IPv4 address to connecting clients as " .
                 'a route gateway.',
         );
@@ -302,24 +330,28 @@ class OpenVPNServer extends Model {
             required: true,
             conditions: ['serverbridge_dhcp' => true],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Server Bridge DHCP Start',
             help_text: "The bridge DHCP range's start address.",
         );
         $this->serverbridge_dhcp_end = new StringField(
             required: true,
             conditions: ['serverbridge_dhcp' => true],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
+            verbose_name: 'Server Bridge DHCP End',
             help_text: "The bridge DHCP range's end address.",
         );
         $this->gwredir = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Gateway Redirect',
             help_text: 'Enable forcing all client-generated IPv4 traffic through the tunnel.',
         );
         $this->gwredir6 = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'IPv6 Gateway Redirect',
             help_text: 'Enable forcing all client-generated IPv6 traffic through the tunnel.',
         );
         $this->local_network = new StringField(
@@ -329,6 +361,7 @@ class OpenVPNServer extends Model {
             many_maximum: 10000,
             conditions: ['gwredir' => false],
             validators: [new SubnetValidator(allow_ipv4: true, allow_ipv6: false, allow_alias: true)],
+            verbose_name: 'Local Network',
             help_text: 'The IPv4 networks that will be accessible from the remote endpoint. Expressed as a ' .
                 'list of one or more CIDR ranges or host/network type aliases. This may be left blank if not adding ' .
                 'a route to the local network through this tunnel on the remote machine. This is generally set to ' .
@@ -340,6 +373,7 @@ class OpenVPNServer extends Model {
             many: true,
             conditions: ['gwredir6' => false],
             validators: [new SubnetValidator(allow_ipv4: false, allow_ipv6: true, allow_alias: true)],
+            verbose_name: 'IPv6 Local Network',
             help_text: 'The IPv6 networks that will be accessible from the remote endpoint. Expressed as a ' .
                 'list of one or more CIDR ranges or host/network type aliases. This may be left blank if not adding ' .
                 'a route to the local network through this tunnel on the remote machine. This is generally set to ' .
@@ -350,6 +384,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             many: true,
             validators: [new SubnetValidator(allow_ipv4: true, allow_ipv6: false, allow_alias: true)],
+            verbose_name: 'Remote Network',
             help_text: 'IPv4 networks that will be routed through the tunnel, so that a site-to-site VPN can be ' .
                 'established without manually changing the routing tables. Expressed as a list of ' .
                 'one or more CIDR ranges or host/network type aliases. If this is a site-to-site VPN, enter the ' .
@@ -360,6 +395,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             many: true,
             validators: [new SubnetValidator(allow_ipv4: false, allow_ipv6: true, allow_alias: true)],
+            verbose_name: 'IPv6 Remote Network',
             help_text: 'IPv6 networks that will be routed through the tunnel, so that a site-to-site VPN can be ' .
                 'established without manually changing the routing tables. Expressed as a list of ' .
                 'one or more CIDR ranges or host/network type aliases. If this is a site-to-site VPN, enter the ' .
@@ -368,11 +404,13 @@ class OpenVPNServer extends Model {
         $this->maxclients = new IntegerField(
             default: null,
             allow_null: true,
+            verbose_name: 'Max Clients',
             help_text: 'The maximum number of clients allowed to concurrently connect to this server.',
         );
         $this->allow_compression = new StringField(
             default: 'no',
             choices: ['no', 'yes', 'asym'],
+            verbose_name: 'Allow Compression',
             help_text: 'The compression mode allowed by this OpenVPN server. Compression can potentially increase ' .
                 'throughput but may allow an attacker to extract secrets if they can control compressed plaintext ' .
                 'traversing the VPN (e.g. HTTP)',
@@ -381,6 +419,7 @@ class OpenVPNServer extends Model {
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Pass TOS',
             help_text: 'Enables or disables setting the TOS IP header value of tunnel packets to match the ' .
                 'encapsulated packet value.',
         );
@@ -388,22 +427,26 @@ class OpenVPNServer extends Model {
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Client-to-Client',
             help_text: 'Enables or disables allowing communication between clients connected to this server.',
         );
         $this->duplicate_cn = new BooleanField(
             default: false,
+            verbose_name: 'Allow Duplicate CN',
             help_text: 'Enables or disable allowing the same user to connect multiple times.',
         );
         $this->connlimit = new IntegerField(
             default: null,
             allow_null: true,
             conditions: ['duplicate_cn' => true],
+            verbose_name: 'Connection Limit',
             help_text: 'The number of concurrent connections a single user can have.',
         );
         $this->dynamic_ip = new BooleanField(
             default: false,
             indicates_true: 'yes',
             indicates_false: '',
+            verbose_name: 'Dynamic IP',
             help_text: 'Enables or disables allowing connected clients to retain their connections if ' .
                 'their IP address changes.',
         );
@@ -411,30 +454,36 @@ class OpenVPNServer extends Model {
             default: 'subnet',
             choices: ['subnet', 'net30'],
             conditions: ['dev_mode' => 'tun'],
+            verbose_name: 'Topology',
             help_text: 'The method used to supply a virtual adapter IP address to clients when using TUN mode on IPv4.',
         );
         $this->inactive_seconds = new IntegerField(
             default: 300,
+            verbose_name: 'Inactive Seconds',
             help_text: 'The amount of time (in seconds) until a client connection is closed for inactivity.',
         );
         $this->ping_method = new StringField(
             default: 'keepalive',
             choices: ['keepalive', 'ping'],
+            verbose_name: 'Ping Method',
             help_text: 'The method used to define ping configuration.',
         );
         $this->keepalive_interval = new IntegerField(
             default: 10,
             conditions: ['ping_method' => 'keepalive'],
+            verbose_name: 'Keepalive Interval',
             help_text: 'The keepalive interval parameter.',
         );
         $this->keepalive_timeout = new IntegerField(
             default: 60,
             conditions: ['ping_method' => 'keepalive'],
+            verbose_name: 'Keepalive Timeout',
             help_text: 'The keepalive timeout parameter.',
         );
         $this->ping_seconds = new IntegerField(
             default: 10,
             conditions: ['ping_method' => 'ping'],
+            verbose_name: 'Ping Seconds',
             help_text: 'The number of seconds to accept no packets before sending a ping to the ' .
                 'remote peer over the TCP/UDP control channel.',
         );
@@ -443,17 +492,20 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['ping_method' => 'ping'],
+            verbose_name: 'Ping Push',
             help_text: 'Enables or disables push ping to the VPN client.',
         );
         $this->ping_action = new StringField(
             default: 'ping_restart',
             choices: ['ping_restart', 'ping_exit'],
             conditions: ['ping_method' => 'ping'],
+            verbose_name: 'Ping Action',
             help_text: 'The action to take after a ping to the remote peer times-out.',
         );
         $this->ping_action_seconds = new IntegerField(
             default: 60,
             conditions: ['ping_method' => 'ping'],
+            verbose_name: 'Ping Action Seconds',
             help_text: 'The number of seconds that must elapse before the ping is considered a timeout and the ' .
                 'configured `ping_action` is performed.',
         );
@@ -462,6 +514,7 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['ping_method' => 'ping'],
+            verbose_name: 'Ping Action Push',
             help_text: 'Enables or disables pushing the ping action to the VPN client.',
         );
         $this->dns_domain = new StringField(
@@ -469,6 +522,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new HostnameValidator(allow_hostname: true, allow_domain: true, allow_fqdn: true)],
+            verbose_name: 'DNS Domain',
             help_text: 'The default domain to provide to clients.',
         );
         $this->dns_server1 = new StringField(
@@ -476,6 +530,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'DNS Server 1',
             help_text: 'The primary DNS server to provide to clients.',
         );
         $this->dns_server2 = new StringField(
@@ -483,6 +538,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'DNS Server 2',
             help_text: 'The secondary DNS server to provide to clients.',
         );
         $this->dns_server3 = new StringField(
@@ -490,6 +546,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'DNS Server 3',
             help_text: 'The tertiary DNS server to provide to clients.',
         );
         $this->dns_server4 = new StringField(
@@ -497,6 +554,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'DNS Server 4',
             help_text: 'The quaternary DNS server to provide to clients.',
         );
         $this->push_blockoutsidedns = new BooleanField(
@@ -504,6 +562,7 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['mode' => ['server_user', 'server_tls_user']],
+            verbose_name: 'Push Block Outside DNS',
             help_text: "Enables or disables blocking Windows 10 clients' access to DNS servers except across OpenVPN " .
                 'while connected, forcing clients to use only VPN DNS servers.',
         );
@@ -512,6 +571,7 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['mode' => ['server_user', 'server_tls_user']],
+            verbose_name: 'Push Register DNS',
             help_text: 'Enables or disables running `net stop dnscache`, `net start dnscache`, `ipconfig /flushdns` ' .
                 'and `ipconfig /registerdns` on connection initiation for Windows clients.',
         );
@@ -520,6 +580,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'NTP Server 1',
             help_text: 'The primary NTP server to provide to clients.',
         );
         $this->ntp_server2 = new StringField(
@@ -527,6 +588,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'NTP Server 2',
             help_text: 'The secondary NTP server to provide to clients.',
         );
         $this->netbios_enable = new BooleanField(
@@ -534,18 +596,21 @@ class OpenVPNServer extends Model {
             indicates_true: 'yes',
             indicates_false: '',
             conditions: ['mode' => ['server_user', 'server_tls_user']],
+            verbose_name: 'NetBIOS Enable',
             help_text: 'Enables or disables NetBIOS over TCP/IP.',
         );
         $this->netbios_ntype = new IntegerField(
             default: 0,
             choices: [0, 1, 2, 4, 8],
             conditions: ['netbios_enable' => true],
+            verbose_name: 'NetBIOS Node Type',
             help_text: 'The NetBIOS node type.',
         );
         $this->netbios_scope = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['netbios_enable' => true],
+            verbose_name: 'NetBIOS Scope',
             help_text: 'The NetBIOS Scope ID. This provides an extended naming service for NetBIOS over TCP/IP. The ' .
                 'NetBIOS scope ID isolates NetBIOS traffic on a single network to only those nodes with the same ' .
                 'NetBIOS scope ID.',
@@ -555,6 +620,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'WINS Server 1',
             help_text: 'The primary WINS server to provide to clients.',
         );
         $this->wins_server2 = new StringField(
@@ -562,6 +628,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             conditions: ['mode' => ['server_user', 'server_tls_user']],
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true)],
+            verbose_name: 'WINS Server 2',
             help_text: 'The secondary WINS server to provide to clients.',
         );
         $this->custom_options = new StringField(
@@ -569,6 +636,7 @@ class OpenVPNServer extends Model {
             allow_empty: true,
             many: true,
             delimiter: ';',
+            verbose_name: 'Custom Options',
             help_text: 'Additional options to add to the OpenVPN server configuration.',
         );
         $this->username_as_common_name = new BooleanField(
@@ -576,6 +644,7 @@ class OpenVPNServer extends Model {
             indicates_true: 'enabled',
             indicates_false: 'disabled',
             conditions: ['mode' => ['server_user', 'server_tls_user']],
+            verbose_name: 'Username as Common Name',
             help_text: 'Enables or disable the username of the client being used in place of the certificate common ' .
                 'name for purposes such as determining Client Specific Overrides.',
         );
@@ -583,17 +652,20 @@ class OpenVPNServer extends Model {
             default: null,
             choices: [65536, 131072, 262144, 524288, 1048576, 2097152],
             allow_null: true,
+            verbose_name: 'Send/Receive Buffer',
             help_text: 'The send and receive buffer size for OpenVPN. Set to null to use the system default.',
         );
         $this->create_gw = new StringField(
             default: 'both',
             choices: ['both', 'v4only', 'v6only'],
+            verbose_name: 'Create Gw',
             help_text: 'The gateway type(s) that will be created when a virtual interface is assigned ' .
                 'to this OpenVPN server',
         );
         $this->verbosity_level = new IntegerField(
             default: 1,
             choices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            verbose_name: 'Verbosity Level',
             help_text: 'The OpenVPN logging verbosity level.',
         );
 

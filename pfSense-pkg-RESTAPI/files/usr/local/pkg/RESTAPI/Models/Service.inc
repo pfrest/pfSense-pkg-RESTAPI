@@ -28,20 +28,23 @@ class Service extends Model {
             required: true,
             choices: ['start', 'stop', 'restart'],
             write_only: true,
+            verbose_name: 'Action',
             help_text: 'The action to perform against this service.',
         );
-        $this->name = new StringField(required: true, unique: true, help_text: 'The internal name of the service.');
-        $this->description = new StringField(read_only: true, help_text: 'The full descriptive name of the service.');
+        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The internal name of the service.');
+        $this->description = new StringField(read_only: true, verbose_name: 'Description', help_text: 'The full descriptive name of the service.');
         $this->enabled = new BooleanField(
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Enabled',
             help_text: 'Indicates if the service is enabled.',
         );
         $this->status = new BooleanField(
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Status',
             help_text: 'Indicates if the service is actively running.',
         );
 

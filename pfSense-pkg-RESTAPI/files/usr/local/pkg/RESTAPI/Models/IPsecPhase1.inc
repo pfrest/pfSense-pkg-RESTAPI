@@ -67,34 +67,40 @@ class IPsecPhase1 extends Model {
             unique: true,
             default: ipsec_ikeid_next(),
             read_only: true,
+            verbose_name: 'IKE ID',
             help_text: 'The unique IKE ID for this phase 1 entry. This value is dynamically set and cannot be set or ' .
                 'changed by users.',
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for this IPsec phase 1 entry.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disables this IPsec phase 1 entry.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this IPsec phase 1 entry.');
         $this->iketype = new StringField(
             required: true,
             choices: ['ikev1', 'ikev2', 'auto'],
+            verbose_name: 'IKE Type',
             help_text: 'The IKE protocol version this phase 1 entry will use.',
         );
         $this->mode = new StringField(
             required: true,
             choices: ['main', 'aggressive'],
             conditions: ['iketype' => ['ikev1', 'auto']],
+            verbose_name: 'Mode',
             help_text: 'The IKEv1 negotiation mode this phase 1 entry will use.',
         );
         $this->protocol = new StringField(
             required: true,
             choices: ['inet', 'inet6', 'both'],
+            verbose_name: 'Protocol',
             help_text: 'The IP version this phase 1 entry will use.',
         );
         $this->interface = new InterfaceField(
             required: true,
             allow_carp_interface: true,
+            verbose_name: 'Interface',
             help_text: 'The interface for the local endpoint of this phase 1 entry. This should be an interface ' .
                 'that is reachable by the remote peer.',
         );
@@ -102,32 +108,38 @@ class IPsecPhase1 extends Model {
             required: true,
             internal_name: 'remote-gateway',
             validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
+            verbose_name: 'Remote Gateway',
             help_text: 'The IP address or hostname of the remote gateway.',
         );
         $this->authentication_method = new StringField(
             required: true,
             choices: ['pre_shared_key', 'cert'],
+            verbose_name: 'Authentication Method',
             help_text: 'The IPsec authentication method this tunnel will use.',
         );
         $this->myid_type = new StringField(
             required: true,
             choices: ['myaddress', 'address', 'fqdn', 'user_fqdn', 'asn1dn', 'keyid tag', 'dyn_dns', 'auto'],
+            verbose_name: 'My ID Type',
             help_text: 'The identifier type used by the local end of the tunnel.',
         );
         $this->myid_data = new StringField(
             required: true,
             conditions: ['!myid_type' => 'myaddress'],
+            verbose_name: 'My ID Data',
             help_text: 'The identifier value used by the local end of the tunnel. This must be a value that ' .
                 'corresponds with the current `myid_type` value.',
         );
         $this->peerid_type = new StringField(
             required: true,
             choices: ['any', 'peeraddress', 'address', 'fqdn', 'user_fqdn', 'asn1dn', 'keyid tag', 'dyn_dns', 'auto'],
+            verbose_name: 'Peer ID Type',
             help_text: 'The identifier type used by the remote end of the tunnel.',
         );
         $this->peerid_data = new StringField(
             required: true,
             conditions: ['!peerid_type' => ['any', 'peeraddress']],
+            verbose_name: 'Peer ID Data',
             help_text: 'The identifier value used by the remote end of the tunnel. This must be a value that ' .
                 'corresponds with the current `peerid_type` value.',
         );
@@ -136,6 +148,7 @@ class IPsecPhase1 extends Model {
             sensitive: true,
             internal_name: 'pre-shared-key',
             conditions: ['authentication_method' => 'pre_shared_key'],
+            verbose_name: 'Pre Shared Key',
             help_text: 'The Pre-Shared Key (PSK) value. This key must match on both peers and should be long and ' .
                 'random to protect the tunnel and its contents. A weak Pre-Shared Key can lead to a tunnel compromise.',
         );
@@ -144,6 +157,7 @@ class IPsecPhase1 extends Model {
             model_field: 'refid',
             required: true,
             conditions: ['authentication_method' => 'cert'],
+            verbose_name: 'Certificate Reference',
             help_text: 'The certificate which identifies this system. The certificate must have at least one ' .
                 'non-wildcard SAN.',
         );
@@ -152,23 +166,28 @@ class IPsecPhase1 extends Model {
             model_field: 'refid',
             required: true,
             conditions: ['authentication_method' => 'cert'],
+            verbose_name: 'CA Reference',
             help_text: 'The certificate authority to use when validating the peer certificate.',
         );
         $this->lifetime = new IntegerField(
             default: 28800,
+            verbose_name: 'Lifetime',
             help_text: 'The hard child SA lifetime (in seconds) after which the child SA will be expired.',
         );
         $this->rekey_time = new IntegerField(
             default: 25920,
+            verbose_name: 'Rekey Time',
             help_text: 'The amount of time (in seconds) before an child SA establishes new keys.',
         );
         $this->reauth_time = new IntegerField(
             default: 0,
+            verbose_name: 'Re-Auth Time',
             help_text: 'The amount of time (in seconds) before an child SA is torn down and recreated from scratch, ' .
                 'including authentication.',
         );
         $this->rand_time = new IntegerField(
             default: 2880,
+            verbose_name: 'Random Time',
             help_text: 'A random value up to this amount will be subtracted from the `rekey_time` ' .
                 'to avoid simultaneous renegotiation.',
         );
@@ -176,17 +195,20 @@ class IPsecPhase1 extends Model {
             default: '',
             choices: ['', 'none', 'start', 'trap'],
             allow_empty: true,
+            verbose_name: 'Start Action',
             help_text: 'The option used to force specific initiation/responder behavior for child SA (P2) entries.',
         );
         $this->closeaction = new StringField(
             default: '',
             choices: ['', 'none', 'start', 'trap'],
             allow_empty: true,
+            verbose_name: 'Close Action',
             help_text: 'The option used to control the behavior when the remote peer unexpectedly closes a child SA (P2)',
         );
         $this->nat_traversal = new StringField(
             default: 'on',
             choices: ['on', 'force'],
+            verbose_name: 'NAT Traversal',
             help_text: 'The option used to enable the use of NAT-T (i.e. the encapsulation of ESP in UDP packets) ' .
                 'if needed, which can help with clients that are behind restrictive firewalls.',
         );
@@ -194,38 +216,45 @@ class IPsecPhase1 extends Model {
             default: false,
             indicates_true: 'on',
             indicates_false: 'off',
+            verbose_name: 'MOBIKE',
             help_text: 'Enables or disables the use of MOBIKE for this tunnel.',
         );
         $this->gw_duplicates = new BooleanField(
             default: false,
+            verbose_name: 'Gateway Duplicates',
             help_text: 'Enables or disables the allowance of multiple phase 1 configurations with the same remote ' .
                 'gateway endpoint.',
         );
         $this->splitconn = new BooleanField(
             default: false,
+            verbose_name: 'Split Connection',
             help_text: 'Enables or disables the use split connection entries with multiple phase 2 configurations. ' .
                 'Required for remote endpoints that support only a single traffic selector per child SA.',
         );
         $this->prfselect_enable = new BooleanField(
             default: false,
             indicates_true: 'yes',
+            verbose_name: 'PRF Select Enable',
             help_text: 'Enables or disables manual Pseudo-Random Function (PRF) selection.',
         );
-        $this->ikeport = new PortField(default: '500', help_text: 'The UDP port for IKE on the remote gateway.');
-        $this->nattport = new PortField(default: '4500', help_text: 'The UDP port for NAT-T on the remote gateway.');
+        $this->ikeport = new PortField(default: '500', verbose_name: 'IKE Port', help_text: 'The UDP port for IKE on the remote gateway.');
+        $this->nattport = new PortField(default: '4500', verbose_name: 'NAT-T Port', help_text: 'The UDP port for NAT-T on the remote gateway.');
         $this->dpd_delay = new IntegerField(
             default: 10,
             allow_null: true,
+            verbose_name: 'DPD Delay',
             help_text: 'The delay (in seconds) between sending peer acknowledgement messages.',
         );
         $this->dpd_maxfail = new IntegerField(
             default: 5,
             allow_null: true,
+            verbose_name: 'DPD Max Failures',
             help_text: 'The number of consecutive failures allowed before disconnecting.',
         );
         $this->encryption = new NestedModelField(
             model_class: 'IPsecPhase1Encryption',
             required: true,
+            verbose_name: 'Encryption',
             help_text: 'The encryption algorithms supported by this P1 encryption.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

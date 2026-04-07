@@ -26,6 +26,7 @@ class HAProxyApply extends Model {
             read_only: true,
             indicates_true: true,
             indicates_false: false,
+            verbose_name: 'Applied',
             help_text: 'Indicates whether all HAProxy configuration changes have been applied.',
         );
 

@@ -46,6 +46,7 @@ class OutboundNATMapping extends Model {
         $this->interface = new InterfaceField(
             required: true,
             allow_interface_groups: true,
+            verbose_name: 'Interface',
             help_text: 'The interface on which traffic is matched as it exits the firewall. In most cases this is a ' .
                 'WAN-type or another externally-connected interface.',
         );
@@ -53,11 +54,12 @@ class OutboundNATMapping extends Model {
             default: null,
             choices: ['tcp', 'udp', 'tcp/udp', 'icmp', 'esp', 'ah', 'gre', 'ipv6', 'igmp', 'pim', 'ospf'],
             allow_null: true,
+            verbose_name: 'Protocol',
             help_text: 'The protocol this rule should match. Use `null` for any protocol.',
         );
-        $this->disabled = new BooleanField(default: false, help_text: 'Disable this outbound NAT rule.');
-        $this->nonat = new BooleanField(default: false, help_text: 'Do not NAT traffic matching this rule.');
-        $this->nosync = new BooleanField(default: false, help_text: 'Do not sync this rule to HA peers.');
+        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this outbound NAT rule.');
+        $this->nonat = new BooleanField(default: false, verbose_name: 'No NAT', help_text: 'Do not NAT traffic matching this rule.');
+        $this->nosync = new BooleanField(default: false, verbose_name: 'No Sync', help_text: 'Do not sync this rule to HA peers.');
         $this->source = new FilterAddressField(
             required: true,
             allow_ipaddr: false,
@@ -71,6 +73,7 @@ class OutboundNATMapping extends Model {
             allow_self: true,
             allow_l2tp: false,
             internal_value_key: 'network',
+            verbose_name: 'Source',
             help_text: 'The source network this rule should match.',
         );
         $this->source_port = new PortField(
@@ -79,6 +82,7 @@ class OutboundNATMapping extends Model {
             allow_range: true,
             allow_null: true,
             internal_name: 'sourceport',
+            verbose_name: 'Source Port',
             help_text: 'The source port this rule should match.',
         );
         $this->destination = new FilterAddressField(
@@ -94,6 +98,7 @@ class OutboundNATMapping extends Model {
             allow_self: false,
             allow_l2tp: false,
             internal_value_key: 'network',
+            verbose_name: 'Destination',
             help_text: 'The destination network this rule should match.',
         );
         $this->destination_port = new PortField(
@@ -102,6 +107,7 @@ class OutboundNATMapping extends Model {
             allow_range: true,
             allow_null: true,
             internal_name: 'dstport',
+            verbose_name: 'Destination Port',
             help_text: 'The destination port this rule should match.',
         );
         $this->target = new SpecialNetworkField(
@@ -116,6 +122,7 @@ class OutboundNATMapping extends Model {
             allow_l2tp: false,
             allow_pppoe: false,
             conditions: ['nonat' => false],
+            verbose_name: 'Target',
             help_text: 'The target network traffic matching this rule should be translated to.',
         );
         $this->target_subnet = new IntegerField(
@@ -123,6 +130,7 @@ class OutboundNATMapping extends Model {
             minimum: 1,
             maximum: 128,
             conditions: ['nonat' => false],
+            verbose_name: 'Target Subnet',
             help_text: 'The subnet bits for the assigned `target`. This field is only applicable if `target` is set ' .
                 'to an IP address. This has no affect for alias or interface `targets`.',
         );
@@ -130,6 +138,7 @@ class OutboundNATMapping extends Model {
             default: false,
             internal_name: 'staticnatport',
             conditions: ['nonat' => false],
+            verbose_name: 'Static NAT Port',
             help_text: 'Do not rewrite source port for traffic matching this rule.',
         );
         $this->nat_port = new PortField(
@@ -140,6 +149,7 @@ class OutboundNATMapping extends Model {
             allow_empty: true,
             internal_name: 'natport',
             conditions: ['static_nat_port' => false, 'nonat' => false],
+            verbose_name: 'NAT Port',
             help_text: 'The external source port or port range used for rewriting the original source port on ' .
                 'connections matching the rule.',
         );
@@ -155,6 +165,7 @@ class OutboundNATMapping extends Model {
             ],
             allow_null: true,
             conditions: ['nonat' => false],
+            verbose_name: 'Pool Options',
             help_text: 'The pool option used to load balance external IP mapping when `target` is set to a subnet ' .
                 'or alias of many addresses. Set to `null` to revert to the system default.',
         );
@@ -162,6 +173,7 @@ class OutboundNATMapping extends Model {
             default: '0x' . bin2hex(openssl_random_pseudo_bytes(length: self::SOURCE_HASH_KEY_BYTES)),
             conditions: ['poolopts' => 'source-hash', 'nonat' => false],
             validators: [new HexValidator(bytes: self::SOURCE_HASH_KEY_BYTES, allow_hex_prefix: true)],
+            verbose_name: 'Source Hash Key',
             help_text: 'The key that is fed to the hashing algorithm in hex format. This must be a 16 byte (32 ' .
                 'character) hex string prefixed with `0x`. If a value is not provided, one will automatically be ' .
                 'generated',
@@ -169,6 +181,7 @@ class OutboundNATMapping extends Model {
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'A description for the outbound NAT mapping.',
         );
 

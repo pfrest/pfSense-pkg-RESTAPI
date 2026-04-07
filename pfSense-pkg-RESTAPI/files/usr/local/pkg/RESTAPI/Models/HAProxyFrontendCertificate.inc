@@ -26,6 +26,7 @@ class HAProxyFrontendCertificate extends Model {
             model_field: 'refid',
             default: null,
             allow_null: true,
+            verbose_name: 'SSL Certificate',
             help_text: 'The SSL/TLS certificate refid to add to this frontend.',
         );
 

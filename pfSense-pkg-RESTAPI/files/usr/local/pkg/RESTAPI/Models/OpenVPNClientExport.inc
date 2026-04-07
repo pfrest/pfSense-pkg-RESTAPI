@@ -76,6 +76,7 @@ class OpenVPNClientExport extends Model {
                 'inst-x64-current',
                 'visc',
             ],
+            verbose_name: 'Type',
             help_text: 'The type of OpenVPN client export to generate. This determines the format and content of ' .
                 'the export file.',
         );
@@ -84,6 +85,7 @@ class OpenVPNClientExport extends Model {
             model_field: 'name',
             default: null,
             allow_null: true,
+            verbose_name: 'Username',
             help_text: 'The username of the user this client export corresponds to. This is only applicable ' .
                 'for OpenVPN servers that use the Local Database AND client certificates.',
         );
@@ -92,6 +94,7 @@ class OpenVPNClientExport extends Model {
             model_field: 'refid',
             default: null,
             allow_null: true,
+            verbose_name: 'Certificate Reference',
             help_text: 'The reference ID of the certificate to use for this OpenVPN client export. This is only ' .
                 'applicable for OpenVPN servers that require client certificates.',
         );
@@ -100,6 +103,7 @@ class OpenVPNClientExport extends Model {
             default: null,
             allow_null: true,
             read_only: true,
+            verbose_name: 'Filename',
             help_text: 'The filename used when exporting the OpenVPN client export. This value cannot be changed',
         );
         $this->binary_data = new StringField(
@@ -107,6 +111,7 @@ class OpenVPNClientExport extends Model {
             default: '',
             allow_empty: true,
             read_only: true,
+            verbose_name: 'Binary Data',
             help_text: 'The binary data of the OpenVPN client export. This is used to store the actual ' .
                 'exported configuration file content. When the content-type is set to "application/octet-stream", ' .
                 'this field will contain the data of the OpenVPN client export download.',

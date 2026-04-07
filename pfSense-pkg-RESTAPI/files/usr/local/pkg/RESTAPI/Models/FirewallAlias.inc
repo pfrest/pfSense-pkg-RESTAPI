@@ -32,17 +32,20 @@ class FirewallAlias extends Model {
             editable: false,
             maximum_length: 31,
             validators: [new FilterNameValidator()],
+            verbose_name: 'Name',
             help_text: 'Sets the name for the alias. This name must be unique from all other aliases.',
         );
         $this->type = new StringField(
             required: true,
             choices: ['host', 'network', 'port'],
+            verbose_name: 'Type',
             help_text: "Sets the type of alias this object will be. This directly impacts what values can be
                 specified in the `address` field.",
         );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'Sets a description to help specify the purpose or contents of the alias.',
         );
         $this->address = new StringField(
@@ -51,6 +54,7 @@ class FirewallAlias extends Model {
             many: true,
             many_maximum: 0, // Do not enforce a maximum number of entries
             delimiter: ' ',
+            verbose_name: 'Address',
             help_text: "Sets the host, network or port entries for the alias. When `type` is set to `host`, each
                 entry must be a valid IP address or FQDN. When `type` is set to `network`, each entry must be a valid
                 network CIDR or FQDN. When `type` is set to `port`, each entry must be a valid port or port range. You
@@ -62,6 +66,7 @@ class FirewallAlias extends Model {
             many: true,
             many_maximum: 0, // Do not enforce a maximum number of entries
             delimiter: '||',
+            verbose_name: 'Detail',
             help_text: "Sets descriptions for each alias `address`. Values must match the order of the `address` 
                 value it relates to. For example, the first value specified here is the description for the first
                 value specified in the `address` field. This value cannot contain ",

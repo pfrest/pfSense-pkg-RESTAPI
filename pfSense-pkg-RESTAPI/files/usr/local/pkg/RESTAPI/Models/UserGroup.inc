@@ -39,17 +39,20 @@ class UserGroup extends Model {
             unique: true,
             maximum_length: 64,
             validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
+            verbose_name: 'Name',
             help_text: 'The name for this user group.',
         );
         $this->gid = new IntegerField(
             default: (int) $this->get_config('system/nextgid'),
             editable: false,
             read_only: true,
+            verbose_name: 'GID',
             help_text: 'The GID of this user group. This value is automatically assigned and cannot be changed.',
         );
         $this->scope = new StringField(
             default: 'local',
             choices: ['local', 'remote', 'system'],
+            verbose_name: 'Scope',
             help_text: 'The scope of this user group. Use `local` for user groups that only apply to this system. use ' .
                 '`remote` for groups that also apply to remote authentication servers. Please note the `system` scope ' .
                 'is reserved for built-in, system-defined user groups and cannot be assigned manually.',
@@ -63,6 +66,7 @@ class UserGroup extends Model {
             many: true,
             many_maximum: 2048,
             delimiter: null,
+            verbose_name: 'Member',
             help_text: 'The local user names to assign to this user group.',
         );
         $this->priv = new StringField(
@@ -70,11 +74,13 @@ class UserGroup extends Model {
             allow_empty: true,
             many: true,
             delimiter: null,
+            verbose_name: 'Privileges',
             help_text: 'The privileges to assign to this user group.',
         );
         $this->description = new StringField(
             default: '',
             allow_empty: true,
+            verbose_name: 'Description',
             help_text: 'The description to assign to this user group.',
         );
         parent::__construct($id, $parent_id, $data, ...$options);

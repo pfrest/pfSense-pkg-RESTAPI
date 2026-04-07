@@ -332,34 +332,40 @@ class ACMECertificateDomain extends Model {
             required: true,
             unique: true,
             validators: [new HostnameValidator(allow_hostname: false, allow_fqdn: true)],
+            verbose_name: 'Name',
             help_text: 'The fully-qualified domain name of this domain (SAN).',
         );
         $this->status = new StringField(
             default: 'enable',
             choices: ['enable', 'disable'],
+            verbose_name: 'Status',
             help_text: 'The activation status of the ACME certificate.',
         );
         $this->method = new StringField(
             required: true,
             choices_callable: 'get_method_choices',
+            verbose_name: 'Method',
             help_text: 'The method to use to validate this domain.',
         );
         $this->webrootfolder = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['method' => 'webroot'],
+            verbose_name: 'Web Root Folder',
             help_text: 'Folder into which the acme challenge response is written; for example: /usr/local/www/.well-known/acme-challenge/',
         );
         $this->webrootftpftpserver = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['method' => 'webrootftp'],
+            verbose_name: 'Web Root FTP Server',
             help_text: 'Hostname of FTP server to which ACME will connect (e.g. ftps://www.webserver.tld ). Currently supports FTPS (passive) and SFTP.',
         );
         $this->webrootftpusername = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['method' => 'webrootftp'],
+            verbose_name: 'Web Root FTP Username',
             help_text: 'Username for the remote server',
         );
         $this->webrootftppassword = new StringField(
@@ -367,29 +373,34 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             sensitive: true,
             conditions: ['method' => 'webrootftp'],
+            verbose_name: 'Web Root FTP Password',
             help_text: 'Password to authenticate this user on the remote server',
         );
         $this->webrootftpfolder = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['method' => 'webrootftp'],
+            verbose_name: 'Web Root FTP Folder',
             help_text: 'Folder into which the acme challenge response is written (e.g. /.well-known/acme-challenge/)',
         );
         $this->standaloneport = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['method' => 'standalone'],
+            verbose_name: 'Standalone Port',
             help_text: 'HTTP listen port for stand-alone server. Must be 80 or have port 80 on WAN forwarded to this port. Firewall rules must allow traffic to reach this port.',
         );
         $this->standaloneipv6 = new BooleanField(
             default: false,
             conditions: ['method' => 'standalone'],
+            verbose_name: 'Standalone IPv6',
             help_text: 'Bind to IPv6 instead of IPv4.',
         );
         $this->standalonetlsport = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['method' => 'standalonetls'],
+            verbose_name: 'Standalone TLS Port',
             help_text: 'TLS listen port for stand-alone server. Must be 443 or have port 443 on WAN forwarded to this port. Firewall rules must allow traffic to reach this port.',
         );
         $this->nsupdate_server = new StringField(
@@ -397,6 +408,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nsupdatensupdate_server',
             conditions: ['method' => 'dns_nsupdate'],
+            verbose_name: 'Nsupdate Server',
             help_text: 'The DNS server to which updates are sent (IP address or hostname)',
         );
         $this->nsupdate_keyname = new StringField(
@@ -404,6 +416,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nsupdatensupdate_keyname',
             conditions: ['method' => 'dns_nsupdate'],
+            verbose_name: 'Nsupdate Keyname',
             help_text: '(Optional) A name for the key, if it is different than _acme-challenge.[DomainName]',
         );
         $this->nsupdate_keyalgo = new StringField(
@@ -412,6 +425,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nsupdatensupdate_keyalgo',
             conditions: ['method' => 'dns_nsupdate'],
+            verbose_name: 'Nsupdate Keyalgo',
             help_text: 'Algorithm used to generate the authentication Key for this zone',
         );
         $this->nsupdate_key = new StringField(
@@ -419,6 +433,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nsupdatensupdate_key',
             conditions: ['method' => 'dns_nsupdate'],
+            verbose_name: 'Nsupdate Key',
             help_text: 'The key which authenticates updates for this zone',
         );
         $this->nsupdate_zone = new StringField(
@@ -426,6 +441,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nsupdatensupdate_zone',
             conditions: ['method' => 'dns_nsupdate'],
+            verbose_name: 'Nsupdate Zone',
             help_text: '(Optional) Explicitly set the zone name for updates.',
         );
         $this->one984hosting_username = new StringField(
@@ -433,6 +449,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_1984hostingone984hosting_username',
             conditions: ['method' => 'dns_1984hosting'],
+            verbose_name: '1984Hosting Username',
             help_text: '1984Hosting Username',
         );
         $this->one984hosting_password = new StringField(
@@ -441,6 +458,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_1984hostingone984hosting_password',
             conditions: ['method' => 'dns_1984hosting'],
+            verbose_name: '1984Hosting Password',
             help_text: '1984Hosting Password',
         );
         $this->acmeproxy_endpoint = new StringField(
@@ -448,6 +466,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_acmeproxyacmeproxy_endpoint',
             conditions: ['method' => 'dns_acmeproxy'],
+            verbose_name: 'ACME Proxy Endpoint',
             help_text: 'Acmeproxy Endpoint URL (https://ip:port)',
         );
         $this->acmeproxy_username = new StringField(
@@ -455,6 +474,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_acmeproxyacmeproxy_username',
             conditions: ['method' => 'dns_acmeproxy'],
+            verbose_name: 'ACME Proxy Username',
             help_text: 'Acmeproxy Username',
         );
         $this->acmeproxy_password = new StringField(
@@ -463,6 +483,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_acmeproxyacmeproxy_password',
             conditions: ['method' => 'dns_acmeproxy'],
+            verbose_name: 'ACME Proxy Password',
             help_text: 'Acmeproxy Password',
         );
         $this->acmedns_username = new StringField(
@@ -470,6 +491,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_acmednsacmedns_username',
             conditions: ['method' => 'dns_acmedns'],
+            verbose_name: 'ACME-DNS Username',
             help_text: 'acme-dns.io Username',
         );
         $this->acmedns_password = new StringField(
@@ -478,6 +500,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_acmednsacmedns_password',
             conditions: ['method' => 'dns_acmedns'],
+            verbose_name: 'ACME-DNS Password',
             help_text: 'acme-dns.io Password',
         );
         $this->acmedns_subdomain = new StringField(
@@ -485,6 +508,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_acmednsacmedns_subdomain',
             conditions: ['method' => 'dns_acmedns'],
+            verbose_name: 'ACME-DNS Subdomain',
             help_text: 'acme-dns.io subdomain',
         );
         $this->acmedns_update_url = new StringField(
@@ -492,6 +516,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_acmednsacmedns_update_url',
             conditions: ['method' => 'dns_acmedns'],
+            verbose_name: 'ACME-DNS Update URL',
             help_text: '(optional) Custom ACME DNS Base URL',
         );
         $this->active24_token = new StringField(
@@ -500,6 +525,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_active24active24_token',
             conditions: ['method' => 'dns_active24'],
+            verbose_name: 'Active24 Token',
             help_text: 'Active24 Token',
         );
         $this->akamai_host = new StringField(
@@ -507,6 +533,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_edgednsakamai_host',
             conditions: ['method' => 'dns_edgedns'],
+            verbose_name: 'Akamai Host',
             help_text: 'Hostname',
         );
         $this->akamai_access_token = new StringField(
@@ -515,6 +542,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_edgednsakamai_access_token',
             conditions: ['method' => 'dns_edgedns'],
+            verbose_name: 'Akamai Access Token',
             help_text: 'Access Token',
         );
         $this->akamai_client_token = new StringField(
@@ -523,6 +551,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_edgednsakamai_client_token',
             conditions: ['method' => 'dns_edgedns'],
+            verbose_name: 'Akamai Client Token',
             help_text: 'Client Token',
         );
         $this->akamai_client_secret = new StringField(
@@ -531,6 +560,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_edgednsakamai_client_secret',
             conditions: ['method' => 'dns_edgedns'],
+            verbose_name: 'Akamai Client Secret',
             help_text: 'Client Secret',
         );
         $this->ali_key = new StringField(
@@ -539,6 +569,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_aliali_key',
             conditions: ['method' => 'dns_ali'],
+            verbose_name: 'Alibaba Key',
             help_text: 'API Key',
         );
         $this->ali_secret = new StringField(
@@ -547,6 +578,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_aliali_secret',
             conditions: ['method' => 'dns_ali'],
+            verbose_name: 'Alibaba Secret',
             help_text: 'API Secret',
         );
         $this->kas_login = new StringField(
@@ -554,6 +586,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_kaskas_login',
             conditions: ['method' => 'dns_kas'],
+            verbose_name: 'Kas Login',
             help_text: 'Login',
         );
         $this->kas_authtype = new StringField(
@@ -561,6 +594,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_kaskas_authtype',
             conditions: ['method' => 'dns_kas'],
+            verbose_name: 'Kas Authtype',
             help_text: 'Auth type (default: sha1)',
         );
         $this->kas_authdata = new StringField(
@@ -569,6 +603,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_kaskas_authdata',
             conditions: ['method' => 'dns_kas'],
+            verbose_name: 'Kas Authdata',
             help_text: 'Auth data',
         );
         $this->ad_api_key = new StringField(
@@ -577,6 +612,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_adad_api_key',
             conditions: ['method' => 'dns_ad'],
+            verbose_name: 'AD API Key',
             help_text: 'Alwaysdata API Key',
         );
         $this->anx_token = new StringField(
@@ -585,6 +621,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_anxanx_token',
             conditions: ['method' => 'dns_anx'],
+            verbose_name: 'Anx Token',
             help_text: 'API Token',
         );
         $this->af_api_username = new StringField(
@@ -592,6 +629,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_artfilesaf_api_username',
             conditions: ['method' => 'dns_artfiles'],
+            verbose_name: 'AF API Username',
             help_text: 'ArtFiles Username',
         );
         $this->af_api_password = new StringField(
@@ -600,6 +638,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_artfilesaf_api_password',
             conditions: ['method' => 'dns_artfiles'],
+            verbose_name: 'AF API Password',
             help_text: 'ArtFiles Password',
         );
         $this->arvan_token = new StringField(
@@ -608,6 +647,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_arvanarvan_token',
             conditions: ['method' => 'dns_arvan'],
+            verbose_name: 'Arvan Token',
             help_text: 'Arvan API Token',
         );
         $this->aurora_key = new StringField(
@@ -616,6 +656,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_auroraaurora_key',
             conditions: ['method' => 'dns_aurora'],
+            verbose_name: 'Aurora Key',
             help_text: 'API Key',
         );
         $this->aurora_secret = new StringField(
@@ -624,6 +665,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_auroraaurora_secret',
             conditions: ['method' => 'dns_aurora'],
+            verbose_name: 'Aurora Secret',
             help_text: 'API Secret. Obtain the key and secret from https://cp.pcextreme.nl/auroradns/users.',
         );
         $this->autodns_user = new StringField(
@@ -631,6 +673,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_autodnsautodns_user',
             conditions: ['method' => 'dns_autodns'],
+            verbose_name: 'AutoDNS User',
             help_text: 'autoDNS Username',
         );
         $this->autodns_password = new StringField(
@@ -639,6 +682,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_autodnsautodns_password',
             conditions: ['method' => 'dns_autodns'],
+            verbose_name: 'AutoDNS Password',
             help_text: 'autoDNS Password',
         );
         $this->autodns_context = new StringField(
@@ -646,6 +690,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_autodnsautodns_context',
             conditions: ['method' => 'dns_autodns'],
+            verbose_name: 'AutoDNS Context',
             help_text: 'autoDNS Context',
         );
         $this->aws_access_key_id = new StringField(
@@ -653,6 +698,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_awsaws_access_key_id',
             conditions: ['method' => 'dns_aws'],
+            verbose_name: 'Aws Access Key ID',
             help_text: 'AWS Access Key / API ID',
         );
         $this->aws_secret_access_key = new StringField(
@@ -661,6 +707,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_awsaws_secret_access_key',
             conditions: ['method' => 'dns_aws'],
+            verbose_name: 'Aws Secret Access Key',
             help_text: 'AWS Secret Access / API Key',
         );
         $this->aws_dns_slowrate = new StringField(
@@ -668,6 +715,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_awsaws_dns_slowrate',
             conditions: ['method' => 'dns_aws'],
+            verbose_name: 'Aws DNS Slowrate',
             help_text: 'Sleep interval after TXT record update, in seconds (default: 1)',
         );
         $this->azion_email = new StringField(
@@ -675,6 +723,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_azionazion_email',
             conditions: ['method' => 'dns_azion'],
+            verbose_name: 'Azion Email',
             help_text: 'Account e-mail address',
         );
         $this->azion_password = new StringField(
@@ -683,6 +732,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_azionazion_password',
             conditions: ['method' => 'dns_azion'],
+            verbose_name: 'Azion Password',
             help_text: 'Account password',
         );
         $this->azuredns_subscriptionid = new StringField(
@@ -690,6 +740,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_azureazuredns_subscriptionid',
             conditions: ['method' => 'dns_azure'],
+            verbose_name: 'Azure DNS Subscription ID',
             help_text: 'Azure Subscription ID. First, <a href="https://github.com/acmesh-official/acme.sh/wiki/How-to-use-Azure-DNS">setup a service principal for access to the DNS Zone</a>.',
         );
         $this->azuredns_tenantid = new StringField(
@@ -697,6 +748,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_azureazuredns_tenantid',
             conditions: ['method' => 'dns_azure'],
+            verbose_name: 'Azure DNS Tenant ID',
             help_text: 'Azure Tenant ID',
         );
         $this->azuredns_appid = new StringField(
@@ -704,6 +756,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_azureazuredns_appid',
             conditions: ['method' => 'dns_azure'],
+            verbose_name: 'Azure DNS App ID',
             help_text: 'Azure App ID',
         );
         $this->azuredns_clientsecret = new StringField(
@@ -712,6 +765,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_azureazuredns_clientsecret',
             conditions: ['method' => 'dns_azure'],
+            verbose_name: 'Azure DNS Client Secret',
             help_text: 'Azure Client Secret',
         );
         $this->bookmyname_username = new StringField(
@@ -719,6 +773,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_bookmynamebookmyname_username',
             conditions: ['method' => 'dns_bookmyname'],
+            verbose_name: 'BookMyName Username',
             help_text: 'BookMyName Username',
         );
         $this->bookmyname_password = new StringField(
@@ -727,6 +782,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_bookmynamebookmyname_password',
             conditions: ['method' => 'dns_bookmyname'],
+            verbose_name: 'BookMyName Password',
             help_text: 'BookMyName Password',
         );
         $this->bunny_api_key = new StringField(
@@ -735,6 +791,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_bunnybunny_api_key',
             conditions: ['method' => 'dns_bunny'],
+            verbose_name: 'Bunny API Key',
             help_text: 'Bunny DNS API Key',
         );
         $this->clouddns_email = new StringField(
@@ -742,6 +799,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_clouddnsclouddns_email',
             conditions: ['method' => 'dns_clouddns'],
+            verbose_name: 'CloudDNS Email',
             help_text: 'CloudDNS e-mail address',
         );
         $this->clouddns_client_id = new StringField(
@@ -749,6 +807,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_clouddnsclouddns_client_id',
             conditions: ['method' => 'dns_clouddns'],
+            verbose_name: 'CloudDNS Client ID',
             help_text: 'CloudDNS client ID',
         );
         $this->clouddns_password = new StringField(
@@ -757,6 +816,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_clouddnsclouddns_password',
             conditions: ['method' => 'dns_clouddns'],
+            verbose_name: 'CloudDNS Password',
             help_text: 'CloudDNS Password',
         );
         $this->cloudns_auth_id = new StringField(
@@ -764,6 +824,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cloudnscloudns_auth_id',
             conditions: ['method' => 'dns_cloudns'],
+            verbose_name: 'ClouDNS Auth ID',
             help_text: 'Authentication ID',
         );
         $this->cloudns_sub_auth_id = new StringField(
@@ -771,6 +832,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cloudnscloudns_sub_auth_id',
             conditions: ['method' => 'dns_cloudns'],
+            verbose_name: 'ClouDNS Sub Auth ID',
             help_text: 'Sub authentication ID',
         );
         $this->cloudns_auth_password = new StringField(
@@ -779,6 +841,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_cloudnscloudns_auth_password',
             conditions: ['method' => 'dns_cloudns'],
+            verbose_name: 'ClouDNS Auth Password',
             help_text: 'ClouDNS Password',
         );
         $this->cf_key = new StringField(
@@ -787,6 +850,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_cfcf_key',
             conditions: ['method' => 'dns_cf'],
+            verbose_name: 'Cloudflare Key',
             help_text: 'Cloudflare API Key',
         );
         $this->cf_email = new StringField(
@@ -794,6 +858,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cfcf_email',
             conditions: ['method' => 'dns_cf'],
+            verbose_name: 'Cloudflare Email',
             help_text: 'Cloudflare API Email Address',
         );
         $this->cf_token = new StringField(
@@ -802,6 +867,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_cfcf_token',
             conditions: ['method' => 'dns_cf'],
+            verbose_name: 'Cloudflare Token',
             help_text: 'Cloudflare API Token',
         );
         $this->cf_account_id = new StringField(
@@ -809,6 +875,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cfcf_account_id',
             conditions: ['method' => 'dns_cf'],
+            verbose_name: 'Cloudflare Account ID',
             help_text: 'Cloudflare API Account ID',
         );
         $this->cf_zone_id = new StringField(
@@ -816,6 +883,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cfcf_zone_id',
             conditions: ['method' => 'dns_cf'],
+            verbose_name: 'Cloudflare Zone ID',
             help_text: 'Cloudflare API Zone ID',
         );
         $this->conoha_username = new StringField(
@@ -823,6 +891,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_conohaconoha_username',
             conditions: ['method' => 'dns_conoha'],
+            verbose_name: 'ConoHa Username',
             help_text: 'Conoha Username',
         );
         $this->conoha_password = new StringField(
@@ -831,6 +900,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_conohaconoha_password',
             conditions: ['method' => 'dns_conoha'],
+            verbose_name: 'ConoHa Password',
             help_text: 'Conoha Password',
         );
         $this->conoha_tenantid = new StringField(
@@ -838,6 +908,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_conohaconoha_tenantid',
             conditions: ['method' => 'dns_conoha'],
+            verbose_name: 'ConoHa Tenant ID',
             help_text: 'Conoha Tenant ID',
         );
         $this->conoha_identityserviceapi = new StringField(
@@ -845,6 +916,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_conohaconoha_identityserviceapi',
             conditions: ['method' => 'dns_conoha'],
+            verbose_name: 'ConoHa Identity Service API',
             help_text: 'Conoha Identity Service API',
         );
         $this->constellix_key = new StringField(
@@ -853,6 +925,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_constellixconstellix_key',
             conditions: ['method' => 'dns_constellix'],
+            verbose_name: 'Constellix Key',
             help_text: 'Constellix Key',
         );
         $this->constellix_secret = new StringField(
@@ -861,6 +934,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_constellixconstellix_secret',
             conditions: ['method' => 'dns_constellix'],
+            verbose_name: 'Constellix Secret',
             help_text: 'Constellix Secret',
         );
         $this->cpanel_username = new StringField(
@@ -868,6 +942,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cpanelcpanel_username',
             conditions: ['method' => 'dns_cpanel'],
+            verbose_name: 'cPanel Username',
             help_text: 'cPanel username',
         );
         $this->cpanel_apitoken = new StringField(
@@ -876,6 +951,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_cpanelcpanel_apitoken',
             conditions: ['method' => 'dns_cpanel'],
+            verbose_name: 'cPanel API Token',
             help_text: 'cPanel API token',
         );
         $this->cpanel_hostname = new StringField(
@@ -883,6 +959,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cpanelcpanel_hostname',
             conditions: ['method' => 'dns_cpanel'],
+            verbose_name: 'cPanel Hostname',
             help_text: 'URL to cPanel instance',
         );
         $this->cn_user = new StringField(
@@ -890,6 +967,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cncn_user',
             conditions: ['method' => 'dns_cn'],
+            verbose_name: 'CN User',
             help_text: 'Core Networks Username',
         );
         $this->cn_password = new StringField(
@@ -898,6 +976,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_cncn_password',
             conditions: ['method' => 'dns_cn'],
+            verbose_name: 'CN Password',
             help_text: 'Core Networks Password',
         );
         $this->curanet_authclientid = new StringField(
@@ -905,6 +984,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_curanetcuranet_authclientid',
             conditions: ['method' => 'dns_curanet'],
+            verbose_name: 'Curanet Authclientid',
             help_text: 'Authentication Client ID',
         );
         $this->curanet_authsecret = new StringField(
@@ -913,6 +993,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_curanetcuranet_authsecret',
             conditions: ['method' => 'dns_curanet'],
+            verbose_name: 'Curanet Authsecret',
             help_text: 'Authentication Secret',
         );
         $this->cy_username = new StringField(
@@ -920,6 +1001,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_cyoncy_username',
             conditions: ['method' => 'dns_cyon'],
+            verbose_name: 'CY Username',
             help_text: 'CY username',
         );
         $this->cy_password = new StringField(
@@ -928,6 +1010,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_cyoncy_password',
             conditions: ['method' => 'dns_cyon'],
+            verbose_name: 'CY Password',
             help_text: 'CY Password',
         );
         $this->ddnss_token = new StringField(
@@ -936,6 +1019,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_ddnssddnss_token',
             conditions: ['method' => 'dns_ddnss'],
+            verbose_name: 'DDNSS Token',
             help_text: 'API Token (e.g. aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee)',
         );
         $this->dedyn_token = new StringField(
@@ -944,6 +1028,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_desecdedyn_token',
             conditions: ['method' => 'dns_desec'],
+            verbose_name: 'deSEC Token',
             help_text: 'deSEC.io API Token',
         );
         $this->dedyn_name = new StringField(
@@ -951,6 +1036,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_desecdedyn_name',
             conditions: ['method' => 'dns_desec'],
+            verbose_name: 'deSEC Name',
             help_text: 'deSEC.io Username',
         );
         $this->do_api_key = new StringField(
@@ -959,6 +1045,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dgondo_api_key',
             conditions: ['method' => 'dns_dgon'],
+            verbose_name: 'DigitalOcean API Key',
             help_text: 'DigitalOcean API Key',
         );
         $this->da_api = new StringField(
@@ -966,6 +1053,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dada_api',
             conditions: ['method' => 'dns_da'],
+            verbose_name: 'DirectAdmin API',
             help_text: 'DirectAdmin API URI (e.g. https://remoteUser:remotePassword@da.example.com:8443)',
         );
         $this->da_api_insecure = new StringField(
@@ -973,6 +1061,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dada_api_insecure',
             conditions: ['method' => 'dns_da'],
+            verbose_name: 'DirectAdmin API Insecure',
             help_text: 'DirectAdmin API Security check, 0=check for valid SSL certificate, 1=always accept',
         );
         $this->dnsexit_api_key = new StringField(
@@ -981,6 +1070,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dnsexitdnsexit_api_key',
             conditions: ['method' => 'dns_dnsexit'],
+            verbose_name: 'DNS Exit API Key',
             help_text: 'DNSExit API Key',
         );
         $this->dnsexit_auth_user = new StringField(
@@ -988,6 +1078,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dnsexitdnsexit_auth_user',
             conditions: ['method' => 'dns_dnsexit'],
+            verbose_name: 'DNS Exit Auth User',
             help_text: 'DNSExit Username',
         );
         $this->dnsexit_auth_pass = new StringField(
@@ -996,6 +1087,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dnsexitdnsexit_auth_pass',
             conditions: ['method' => 'dns_dnsexit'],
+            verbose_name: 'DNS Exit Auth Password',
             help_text: 'DNSExit Password',
         );
         $this->dnshome_subdomain = new StringField(
@@ -1003,6 +1095,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dnshomednshome_subdomain',
             conditions: ['method' => 'dns_dnshome'],
+            verbose_name: 'DNS Home Subdomain',
             help_text: 'Subdomain',
         );
         $this->dnshome_subdomainpassword = new StringField(
@@ -1011,6 +1104,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dnshomednshome_subdomainpassword',
             conditions: ['method' => 'dns_dnshome'],
+            verbose_name: 'DNS Home Subdomain Password',
             help_text: 'Subdomain Password',
         );
         $this->dnsimple_oauth_token = new StringField(
@@ -1018,6 +1112,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dnsimplednsimple_oauth_token',
             conditions: ['method' => 'dns_dnsimple'],
+            verbose_name: 'DNSimple OAuth Token',
             help_text: 'DNSimple oauth token, visit <a href="https://dnsimple.com/user">https://dnsimple.com/user</a> to generate.',
         );
         $this->me_key = new StringField(
@@ -1026,6 +1121,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_meme_key',
             conditions: ['method' => 'dns_me'],
+            verbose_name: 'ME Key',
             help_text: 'DNSMadeEasy API Key',
         );
         $this->me_secret = new StringField(
@@ -1034,6 +1130,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_meme_secret',
             conditions: ['method' => 'dns_me'],
+            verbose_name: 'ME Secret',
             help_text: 'DNSMadeEasy API Secret',
         );
         $this->dnsservices_username = new StringField(
@@ -1041,6 +1138,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dnsservicesdnsservices_username',
             conditions: ['method' => 'dns_dnsservices'],
+            verbose_name: 'DNS Services Username',
             help_text: 'dns.services Username',
         );
         $this->dnsservices_password = new StringField(
@@ -1049,6 +1147,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dnsservicesdnsservices_password',
             conditions: ['method' => 'dns_dnsservices'],
+            verbose_name: 'DNS Services Password',
             help_text: 'dns.services Password',
         );
         $this->do_letoken = new StringField(
@@ -1057,6 +1156,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_doapido_letoken',
             conditions: ['method' => 'dns_doapi'],
+            verbose_name: 'DO LE Token',
             help_text: 'DO.de API Token',
         );
         $this->do_pid = new StringField(
@@ -1064,6 +1164,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dodo_pid',
             conditions: ['method' => 'dns_do'],
+            verbose_name: 'DO PID',
             help_text: 'DO Customer ID',
         );
         $this->do_pw = new StringField(
@@ -1072,6 +1173,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dodo_pw',
             conditions: ['method' => 'dns_do'],
+            verbose_name: 'DO Password',
             help_text: 'DO Password',
         );
         $this->domeneshop_token = new StringField(
@@ -1080,6 +1182,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_domeneshopdomeneshop_token',
             conditions: ['method' => 'dns_domeneshop'],
+            verbose_name: 'Domeneshop Token',
             help_text: 'Domeneshop API Token',
         );
         $this->domeneshop_secret = new StringField(
@@ -1088,6 +1191,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_domeneshopdomeneshop_secret',
             conditions: ['method' => 'dns_domeneshop'],
+            verbose_name: 'Domeneshop Secret',
             help_text: 'Domeneshop API Secret',
         );
         $this->dp_id = new StringField(
@@ -1095,6 +1199,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dpdp_id',
             conditions: ['method' => 'dns_dp'],
+            verbose_name: 'DNSPod ID',
             help_text: 'Dnspod API ID',
         );
         $this->dp_key = new StringField(
@@ -1103,6 +1208,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dpdp_key',
             conditions: ['method' => 'dns_dp'],
+            verbose_name: 'DNSPod Key',
             help_text: 'Dnspod API Key',
         );
         $this->dpi_id = new StringField(
@@ -1110,6 +1216,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dpidpi_id',
             conditions: ['method' => 'dns_dpi'],
+            verbose_name: 'DNSPod Intl ID',
             help_text: 'Dnspod API ID',
         );
         $this->dpi_key = new StringField(
@@ -1118,6 +1225,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dpidpi_key',
             conditions: ['method' => 'dns_dpi'],
+            verbose_name: 'DNSPod Intl Key',
             help_text: 'Dnspod API Key',
         );
         $this->dh_api_key = new StringField(
@@ -1126,6 +1234,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dreamhostdh_api_key',
             conditions: ['method' => 'dns_dreamhost'],
+            verbose_name: 'DreamHost API Key',
             help_text: 'Dreamhost API Token',
         );
         $this->duckdns_token = new StringField(
@@ -1134,6 +1243,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_duckdnsduckdns_token',
             conditions: ['method' => 'dns_duckdns'],
+            verbose_name: 'DuckDNS Token',
             help_text: 'DuckDNS API Token (Look in DuckDNS account settings)',
         );
         $this->dd_api_user = new StringField(
@@ -1141,6 +1251,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_durablednsdd_api_user',
             conditions: ['method' => 'dns_durabledns'],
+            verbose_name: 'DD API User',
             help_text: 'DurableDNS API User',
         );
         $this->dd_api_key = new StringField(
@@ -1149,6 +1260,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_durablednsdd_api_key',
             conditions: ['method' => 'dns_durabledns'],
+            verbose_name: 'DD API Key',
             help_text: 'DurableDNS API Key',
         );
         $this->dyn_customer = new StringField(
@@ -1156,6 +1268,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dyndyn_customer',
             conditions: ['method' => 'dns_dyn'],
+            verbose_name: 'Dyn Customer',
             help_text: 'dyn.com customer ID',
         );
         $this->dyn_username = new StringField(
@@ -1163,6 +1276,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dyndyn_username',
             conditions: ['method' => 'dns_dyn'],
+            verbose_name: 'Dyn Username',
             help_text: 'dyn.com API Username (Dyn Managed DNS user, Needs Z&R Permissions for RecordAdd, RecordUpdate, RecordDelete, RecordGet, ZoneGet, ZoneAddNode, ZoneRemoveNode, ZonePublish)',
         );
         $this->dyn_password = new StringField(
@@ -1171,6 +1285,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dyndyn_password',
             conditions: ['method' => 'dns_dyn'],
+            verbose_name: 'Dyn Password',
             help_text: 'dyn.com Password',
         );
         $this->df_user = new StringField(
@@ -1178,6 +1293,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dfdf_user',
             conditions: ['method' => 'dns_df'],
+            verbose_name: 'DF User',
             help_text: 'dyndnsfree.de Username',
         );
         $this->df_password = new StringField(
@@ -1186,6 +1302,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dfdf_password',
             conditions: ['method' => 'dns_df'],
+            verbose_name: 'DF Password',
             help_text: 'dyndnsfree.de Password',
         );
         $this->dynu_clientid = new StringField(
@@ -1193,6 +1310,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_dynudynu_clientid',
             conditions: ['method' => 'dns_dynu'],
+            verbose_name: 'Dynu Client ID',
             help_text: 'Dynu API Client ID created in the Dynu account settings',
         );
         $this->dynu_secret = new StringField(
@@ -1201,6 +1319,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_dynudynu_secret',
             conditions: ['method' => 'dns_dynu'],
+            verbose_name: 'Dynu Secret',
             help_text: 'Dynu API Secret',
         );
         $this->easydns_key = new StringField(
@@ -1209,6 +1328,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_easydnseasydns_key',
             conditions: ['method' => 'dns_easydns'],
+            verbose_name: 'EasyDNS Key',
             help_text: 'easyDNS API Key. Sign up for a key at https://cp.easydns.com/manage/security/api/signup.php',
         );
         $this->easydns_token = new StringField(
@@ -1217,6 +1337,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_easydnseasydns_token',
             conditions: ['method' => 'dns_easydns'],
+            verbose_name: 'EasyDNS Token',
             help_text: 'easyDNS API Token',
         );
         $this->euserv_username = new StringField(
@@ -1224,6 +1345,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_euserveuserv_username',
             conditions: ['method' => 'dns_euserv'],
+            verbose_name: 'EUserv Username',
             help_text: 'Euserv.eu Username',
         );
         $this->euserv_password = new StringField(
@@ -1232,6 +1354,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_euserveuserv_password',
             conditions: ['method' => 'dns_euserv'],
+            verbose_name: 'EUserv Password',
             help_text: 'Euserv.eu Password',
         );
         $this->exoscale_api_key = new StringField(
@@ -1240,6 +1363,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_exoscaleexoscale_api_key',
             conditions: ['method' => 'dns_exoscale'],
+            verbose_name: 'Exoscale API Key',
             help_text: 'Exoscale API Key',
         );
         $this->exoscale_secret_key = new StringField(
@@ -1248,6 +1372,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_exoscaleexoscale_secret_key',
             conditions: ['method' => 'dns_exoscale'],
+            verbose_name: 'Exoscale Secret Key',
             help_text: 'Exoscale Secret Key',
         );
         $this->fornex_api_key = new StringField(
@@ -1256,6 +1381,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_fornexfornex_api_key',
             conditions: ['method' => 'dns_fornex'],
+            verbose_name: 'Fornex API Key',
             help_text: 'Fornex API Key',
         );
         $this->freedns_user = new StringField(
@@ -1263,6 +1389,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_freednsfreedns_user',
             conditions: ['method' => 'dns_freedns'],
+            verbose_name: 'FreeDNS User',
             help_text: 'FreeDNS username',
         );
         $this->freedns_password = new StringField(
@@ -1271,6 +1398,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_freednsfreedns_password',
             conditions: ['method' => 'dns_freedns'],
+            verbose_name: 'FreeDNS Password',
             help_text: 'FreeDNS Password',
         );
         $this->gandi_livedns_key = new StringField(
@@ -1279,6 +1407,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_gandi_livednsgandi_livedns_key',
             conditions: ['method' => 'dns_gandi_livedns'],
+            verbose_name: 'Gandi LiveDNS Key',
             help_text: 'Gandi LiveDNS API Key, retrieved from <a href="https://account.gandi.net">https://account.gandi.net</a>',
         );
         $this->gcore_key = new StringField(
@@ -1287,6 +1416,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_gcoregcore_key',
             conditions: ['method' => 'dns_gcore'],
+            verbose_name: 'Gcore Key',
             help_text: 'Gcore API Key',
         );
         $this->geoscaling_username = new StringField(
@@ -1294,6 +1424,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_geoscalinggeoscaling_username',
             conditions: ['method' => 'dns_geoscaling'],
+            verbose_name: 'GeoScaling Username',
             help_text: 'Username',
         );
         $this->geoscaling_password = new StringField(
@@ -1302,6 +1433,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_geoscalinggeoscaling_password',
             conditions: ['method' => 'dns_geoscaling'],
+            verbose_name: 'GeoScaling Password',
             help_text: 'Password',
         );
         $this->gd_key = new StringField(
@@ -1309,6 +1441,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_gdgd_key',
             conditions: ['method' => 'dns_gd'],
+            verbose_name: 'GoDaddy Key',
             help_text: 'GoDaddy API Key',
         );
         $this->gd_secret = new StringField(
@@ -1317,6 +1450,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_gdgd_secret',
             conditions: ['method' => 'dns_gd'],
+            verbose_name: 'GoDaddy Secret',
             help_text: 'GoDaddy API Secret',
         );
         $this->googledomains_access_token = new StringField(
@@ -1325,6 +1459,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_googledomainsgoogledomains_access_token',
             conditions: ['method' => 'dns_googledomains'],
+            verbose_name: 'Google Domains Access Token',
             help_text: 'Google Domains API Access Token',
         );
         $this->googledomains_zone = new StringField(
@@ -1332,6 +1467,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_googledomainsgoogledomains_zone',
             conditions: ['method' => 'dns_googledomains'],
+            verbose_name: 'Google Domains Zone',
             help_text: 'Google Domains DNS Zone',
         );
         $this->hetzner_token = new StringField(
@@ -1340,6 +1476,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_hetznerhetzner_token',
             conditions: ['method' => 'dns_hetzner'],
+            verbose_name: 'Hetzner Token',
             help_text: 'Hetzner API Token. Visit https://dns.hetzner.com/settings/api-token to retrieve.',
         );
         $this->hexonet_login = new StringField(
@@ -1347,6 +1484,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_hexonethexonet_login',
             conditions: ['method' => 'dns_hexonet'],
+            verbose_name: 'Hexonet Login',
             help_text: 'Hexonet Username',
         );
         $this->hexonet_password = new StringField(
@@ -1355,6 +1493,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_hexonethexonet_password',
             conditions: ['method' => 'dns_hexonet'],
+            verbose_name: 'Hexonet Password',
             help_text: 'Hexonet Password',
         );
         $this->huaweicloud_username = new StringField(
@@ -1362,6 +1501,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_huaweicloudhuaweicloud_username',
             conditions: ['method' => 'dns_huaweicloud'],
+            verbose_name: 'Huawei Cloud Username',
             help_text: 'Username',
         );
         $this->huaweicloud_password = new StringField(
@@ -1370,6 +1510,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_huaweicloudhuaweicloud_password',
             conditions: ['method' => 'dns_huaweicloud'],
+            verbose_name: 'Huawei Cloud Password',
             help_text: 'Password',
         );
         $this->huaweicloud_domainname = new StringField(
@@ -1377,6 +1518,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_huaweicloudhuaweicloud_domainname',
             conditions: ['method' => 'dns_huaweicloud'],
+            verbose_name: 'Huawei Cloud Domain Name',
             help_text: 'Domain Name',
         );
         $this->he_username = new StringField(
@@ -1384,6 +1526,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_hehe_username',
             conditions: ['method' => 'dns_he'],
+            verbose_name: 'Hurricane Electric Username',
             help_text: 'Hurricane Electric username',
         );
         $this->he_password = new StringField(
@@ -1392,6 +1535,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_hehe_password',
             conditions: ['method' => 'dns_he'],
+            verbose_name: 'Hurricane Electric Password',
             help_text: 'Hurricane Electric password',
         );
         $this->hostingde_apikey = new StringField(
@@ -1400,6 +1544,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_hostingdehostingde_apikey',
             conditions: ['method' => 'dns_hostingde'],
+            verbose_name: 'Hosting.de API Key',
             help_text: 'Hosting.de API Key',
         );
         $this->hostingde_endpoint = new StringField(
@@ -1407,6 +1552,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_hostingdehostingde_endpoint',
             conditions: ['method' => 'dns_hostingde'],
+            verbose_name: 'Hosting.de Endpoint',
             help_text: 'Hosting.de API endpoint, e.g. https://secure.hosting.de',
         );
         $this->infoblox_creds = new StringField(
@@ -1415,6 +1561,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_infobloxinfoblox_creds',
             conditions: ['method' => 'dns_infoblox'],
+            verbose_name: 'Infoblox Credentials',
             help_text: 'Infoblox credentials in <strong>username:password</strong> format',
         );
         $this->infoblox_server = new StringField(
@@ -1422,6 +1569,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_infobloxinfoblox_server',
             conditions: ['method' => 'dns_infoblox'],
+            verbose_name: 'Infoblox Server',
             help_text: 'Infoblox server IP address or hostname',
         );
         $this->infoblox_view = new StringField(
@@ -1429,6 +1577,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_infobloxinfoblox_view',
             conditions: ['method' => 'dns_infoblox'],
+            verbose_name: 'Infoblox View',
             help_text: 'Infoblox DNS View name, or enter "default"',
         );
         $this->infomaniak_api_token = new StringField(
@@ -1437,6 +1586,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_infomaniakinfomaniak_api_token',
             conditions: ['method' => 'dns_infomaniak'],
+            verbose_name: 'Infomaniak API Token',
             help_text: 'Infomaniak API token. Visit https://manager.infomaniak.com/v3/&lt;account_id&gt;/api/dashboard and generate a token with the scope Domain.',
         );
         $this->default_infomaniak_api_url = new StringField(
@@ -1444,6 +1594,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_infomaniakdefault_infomaniak_api_url',
             conditions: ['method' => 'dns_infomaniak'],
+            verbose_name: 'Infomaniak API URL',
             help_text: 'Infomaniak API URL (Default: https://api.infomaniak.com)',
         );
         $this->infomaniak_ttl = new StringField(
@@ -1451,6 +1602,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_infomaniakinfomaniak_ttl',
             conditions: ['method' => 'dns_infomaniak'],
+            verbose_name: 'Infomaniak TTL',
             help_text: 'Infomaniak DNS record TTL (Default: 300)',
         );
         $this->ionos_prefix = new StringField(
@@ -1458,6 +1610,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ionosionos_prefix',
             conditions: ['method' => 'dns_ionos'],
+            verbose_name: 'IONOS Prefix',
             help_text: 'Prefix',
         );
         $this->ionos_secret = new StringField(
@@ -1466,6 +1619,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_ionosionos_secret',
             conditions: ['method' => 'dns_ionos'],
+            verbose_name: 'IONOS Secret',
             help_text: 'Secret. Read https://beta.developer.hosting.ionos.de/docs/getstarted to learn how to get a prefix and secret.',
         );
         $this->ipv64_token = new StringField(
@@ -1474,6 +1628,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_ipv64ipv64_token',
             conditions: ['method' => 'dns_ipv64'],
+            verbose_name: 'IPv64 Token',
             help_text: 'IPv64.net Access Token',
         );
         $this->internetbs_api_key = new StringField(
@@ -1482,6 +1637,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_internetbsinternetbs_api_key',
             conditions: ['method' => 'dns_internetbs'],
+            verbose_name: 'Internet.bs API Key',
             help_text: 'Internet.BS API Key',
         );
         $this->internetbs_api_password = new StringField(
@@ -1490,6 +1646,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_internetbsinternetbs_api_password',
             conditions: ['method' => 'dns_internetbs'],
+            verbose_name: 'Internet.bs API Password',
             help_text: 'Internet.BS API Password',
         );
         $this->inwx_username = new StringField(
@@ -1497,6 +1654,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_inwxinwx_username',
             conditions: ['method' => 'dns_inwx'],
+            verbose_name: 'INWX Username',
             help_text: 'INWX.de username',
         );
         $this->inwx_password = new StringField(
@@ -1505,6 +1663,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_inwxinwx_password',
             conditions: ['method' => 'dns_inwx'],
+            verbose_name: 'INWX Password',
             help_text: 'INWX.de password',
         );
         $this->inwx_shared_secret = new StringField(
@@ -1513,6 +1672,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_inwxinwx_shared_secret',
             conditions: ['method' => 'dns_inwx'],
+            verbose_name: 'INWX Shared Secret',
             help_text: 'INWX.de shared secret',
         );
         $this->ispc_user = new StringField(
@@ -1520,6 +1680,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ispconfigispc_user',
             conditions: ['method' => 'dns_ispconfig'],
+            verbose_name: 'ISPConfig User',
             help_text: 'ISPConfig remoteUser',
         );
         $this->ispc_password = new StringField(
@@ -1528,6 +1689,7 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_ispconfigispc_password',
             conditions: ['method' => 'dns_ispconfig'],
+            verbose_name: 'ISPConfig Password',
             help_text: 'ISPConfig remotePassword',
         );
         $this->ispc_api = new StringField(
@@ -1535,6 +1697,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ispconfigispc_api',
             conditions: ['method' => 'dns_ispconfig'],
+            verbose_name: 'ISPConfig API',
             help_text: 'API URL (e.g. https://ispc.domain.tld:8080/remote/json.php )',
         );
         $this->ispc_api_insecure = new StringField(
@@ -1542,6 +1705,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ispconfigispc_api_insecure',
             conditions: ['method' => 'dns_ispconfig'],
+            verbose_name: 'ISPConfig API Insecure',
             help_text: 'Set 1 for insecure and 0 for secure. Controls whether the server TLS certificate is checked for validity (0) or always accepted (1)',
         );
         $this->jd_access_key_id = new StringField(
@@ -1549,6 +1713,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_jdjd_access_key_id',
             conditions: ['method' => 'dns_jd'],
+            verbose_name: 'JD Access Key ID',
             help_text: 'jdcloud Access Key ID',
         );
         $this->jd_access_key_secret = new StringField(
@@ -1557,6 +1722,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_jdjd_access_key_secret',
             conditions: ['method' => 'dns_jd'],
+            verbose_name: 'JD Access Key Secret',
             help_text: 'jdcloud Access Key Secret',
         );
         $this->jd_region = new StringField(
@@ -1564,6 +1730,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_jdjd_region',
             conditions: ['method' => 'dns_jd'],
+            verbose_name: 'JD Region',
             help_text: 'jdcloud Region',
         );
         $this->joker_username = new StringField(
@@ -1571,6 +1738,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_jokerjoker_username',
             conditions: ['method' => 'dns_joker'],
+            verbose_name: 'Joker Username',
             help_text: 'Joker.com Username',
         );
         $this->joker_password = new StringField(
@@ -1579,6 +1747,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_jokerjoker_password',
             conditions: ['method' => 'dns_joker'],
+            verbose_name: 'Joker Password',
             help_text: 'Joker.com Password',
         );
         $this->kappernetdns_key = new StringField(
@@ -1587,6 +1756,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_kappernetkappernetdns_key',
             conditions: ['method' => 'dns_kappernet'],
+            verbose_name: 'KapperNet DNS Key',
             help_text: 'kapper.net API Key',
         );
         $this->kappernetdns_secret = new StringField(
@@ -1595,6 +1765,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_kappernetkappernetdns_secret',
             conditions: ['method' => 'dns_kappernet'],
+            verbose_name: 'KapperNet DNS Secret',
             help_text: 'kapper.net API Secret',
         );
         $this->kinghost_username = new StringField(
@@ -1602,6 +1773,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_kinghostkinghost_username',
             conditions: ['method' => 'dns_kinghost'],
+            verbose_name: 'KingHost Username',
             help_text: 'Kinghost API Username',
         );
         $this->kinghost_password = new StringField(
@@ -1610,6 +1782,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_kinghostkinghost_password',
             conditions: ['method' => 'dns_kinghost'],
+            verbose_name: 'KingHost Password',
             help_text: 'Kinghost API Password',
         );
         $this->knot_server = new StringField(
@@ -1617,6 +1790,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_knotknot_server',
             conditions: ['method' => 'dns_knot'],
+            verbose_name: 'Knot Server',
             help_text: 'IP address of the Knot server',
         );
         $this->knot_key = new StringField(
@@ -1625,6 +1799,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_knotknot_key',
             conditions: ['method' => 'dns_knot'],
+            verbose_name: 'Knot Key',
             help_text: 'Knot TSIG Key',
         );
         $this->la_id = new StringField(
@@ -1632,6 +1807,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_lala_id',
             conditions: ['method' => 'dns_la'],
+            verbose_name: 'LA ID',
             help_text: 'ID',
         );
         $this->la_key = new StringField(
@@ -1640,6 +1816,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_lala_key',
             conditions: ['method' => 'dns_la'],
+            verbose_name: 'LA Key',
             help_text: 'Key',
         );
         $this->lsw_key = new StringField(
@@ -1648,6 +1825,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_leaseweblsw_key',
             conditions: ['method' => 'dns_leaseweb'],
+            verbose_name: 'LSW Key',
             help_text: 'Leaseweb API Key',
         );
         $this->limacity_apikey = new StringField(
@@ -1656,6 +1834,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_limacitylimacity_apikey',
             conditions: ['method' => 'dns_limacity'],
+            verbose_name: 'Lima City API Key',
             help_text: 'API Key must have the following roles: dns.admin, domains.reader',
         );
         $this->linode_api_key = new StringField(
@@ -1664,6 +1843,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_linodelinode_api_key',
             conditions: ['method' => 'dns_linode'],
+            verbose_name: 'Linode API Key',
             help_text: 'Linode API Key',
         );
         $this->linode_v4_api_key = new StringField(
@@ -1672,6 +1852,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_linode_v4linode_v4_api_key',
             conditions: ['method' => 'dns_linode_v4'],
+            verbose_name: 'Linode v4 API Key',
             help_text: 'Linode v4 API Key',
         );
         $this->loopia_user = new StringField(
@@ -1679,6 +1860,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_loopialoopia_user',
             conditions: ['method' => 'dns_loopia'],
+            verbose_name: 'Loopia User',
             help_text: 'Loopia username',
         );
         $this->loopia_password = new StringField(
@@ -1687,6 +1869,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_loopialoopia_password',
             conditions: ['method' => 'dns_loopia'],
+            verbose_name: 'Loopia Password',
             help_text: 'Loopia Password',
         );
         $this->lua_key = new StringField(
@@ -1695,6 +1878,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_lualua_key',
             conditions: ['method' => 'dns_lua'],
+            verbose_name: 'LuaDNS Key',
             help_text: 'Luadns API Key',
         );
         $this->lua_email = new StringField(
@@ -1702,6 +1886,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_lualua_email',
             conditions: ['method' => 'dns_lua'],
+            verbose_name: 'LuaDNS Email',
             help_text: 'Luadns API Email Address',
         );
         $this->miab_username = new StringField(
@@ -1709,6 +1894,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_miabmiab_username',
             conditions: ['method' => 'dns_miab'],
+            verbose_name: 'Miab Username',
             help_text: 'MailinaBox Username',
         );
         $this->miab_password = new StringField(
@@ -1717,6 +1903,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_miabmiab_password',
             conditions: ['method' => 'dns_miab'],
+            verbose_name: 'Miab Password',
             help_text: 'MailinaBox Password',
         );
         $this->miab_server = new StringField(
@@ -1724,6 +1911,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_miabmiab_server',
             conditions: ['method' => 'dns_miab'],
+            verbose_name: 'Miab Server',
             help_text: 'MailinaBox Server',
         );
         $this->misaka_key = new StringField(
@@ -1732,6 +1920,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_misakamisaka_key',
             conditions: ['method' => 'dns_misaka'],
+            verbose_name: 'Misaka Key',
             help_text: 'misaka.io Key',
         );
         $this->mydnsjp_masterid = new StringField(
@@ -1739,6 +1928,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_mydnsjpmydnsjp_masterid',
             conditions: ['method' => 'dns_mydnsjp'],
+            verbose_name: 'MyDNS.JP Master ID',
             help_text: 'MyDNS.jp Master ID',
         );
         $this->mydnsjp_password = new StringField(
@@ -1747,6 +1937,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_mydnsjpmydnsjp_password',
             conditions: ['method' => 'dns_mydnsjp'],
+            verbose_name: 'MyDNS.JP Password',
             help_text: 'MyDNS.jp Password',
         );
         $this->mb_ak = new StringField(
@@ -1755,6 +1946,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_mythic_beastsmb_ak',
             conditions: ['method' => 'dns_mythic_beasts'],
+            verbose_name: 'Mailbox AK',
             help_text: 'OAuth2 Key',
         );
         $this->mb_as = new StringField(
@@ -1763,6 +1955,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_mythic_beastsmb_as',
             conditions: ['method' => 'dns_mythic_beasts'],
+            verbose_name: 'Mailbox AS',
             help_text: 'OAuth2 Secret',
         );
         $this->namecom_username = new StringField(
@@ -1770,6 +1963,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_namecomnamecom_username',
             conditions: ['method' => 'dns_namecom'],
+            verbose_name: 'Name.com Username',
             help_text: 'Name.com username',
         );
         $this->namecom_token = new StringField(
@@ -1777,6 +1971,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_namecomnamecom_token',
             conditions: ['method' => 'dns_namecom'],
+            verbose_name: 'Name.com Token',
             help_text: 'Name.com API Token',
         );
         $this->namecheap_api_key = new StringField(
@@ -1785,6 +1980,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_namecheapnamecheap_api_key',
             conditions: ['method' => 'dns_namecheap'],
+            verbose_name: 'Namecheap API Key',
             help_text: 'Namecheap API Key',
         );
         $this->namecheap_username = new StringField(
@@ -1792,6 +1988,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_namecheapnamecheap_username',
             conditions: ['method' => 'dns_namecheap'],
+            verbose_name: 'Namecheap Username',
             help_text: 'Namecheap Username',
         );
         $this->nm_user = new StringField(
@@ -1799,6 +1996,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nmnm_user',
             conditions: ['method' => 'dns_nm'],
+            verbose_name: 'NM User',
             help_text: 'namemaster.de API username',
         );
         $this->nm_sha256 = new StringField(
@@ -1807,6 +2005,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_nmnm_sha256',
             conditions: ['method' => 'dns_nm'],
+            verbose_name: 'NM SHA256',
             help_text: 'namemaster.de API password as SHA256 hash',
         );
         $this->nanelo_token = new StringField(
@@ -1815,6 +2014,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_nanelonanelo_token',
             conditions: ['method' => 'dns_nanelo'],
+            verbose_name: 'Nanelo Token',
             help_text: 'Nanelo.com Access Token',
         );
         $this->nederhost_key = new StringField(
@@ -1823,6 +2023,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_nederhostnederhost_key',
             conditions: ['method' => 'dns_nederhost'],
+            verbose_name: 'NederHost Key',
             help_text: 'NederHost API Key',
         );
         $this->namesilo_key = new StringField(
@@ -1831,6 +2032,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_namesilonamesilo_key',
             conditions: ['method' => 'dns_namesilo'],
+            verbose_name: 'NameSilo Key',
             help_text: 'Namesilo API Key',
         );
         $this->neodigit_api_token = new StringField(
@@ -1839,6 +2041,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_neodigitneodigit_api_token',
             conditions: ['method' => 'dns_neodigit'],
+            verbose_name: 'NeoDigit API Token',
             help_text: 'Neodigit API Token',
         );
         $this->nc_apikey = new StringField(
@@ -1847,6 +2050,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_netcupnc_apikey',
             conditions: ['method' => 'dns_netcup'],
+            verbose_name: 'NC API Key',
             help_text: 'Netcup API Key',
         );
         $this->nc_apipw = new StringField(
@@ -1855,6 +2059,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_netcupnc_apipw',
             conditions: ['method' => 'dns_netcup'],
+            verbose_name: 'NC API Password',
             help_text: 'Netcup API Password',
         );
         $this->nc_cid = new StringField(
@@ -1862,6 +2067,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_netcupnc_cid',
             conditions: ['method' => 'dns_netcup'],
+            verbose_name: 'NC Customer ID',
             help_text: 'Netcup Customer ID/Number',
         );
         $this->netlify_access_token = new StringField(
@@ -1870,6 +2076,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_netlifynetlify_access_token',
             conditions: ['method' => 'dns_netlify'],
+            verbose_name: 'Netlify Access Token',
             help_text: 'Netlify API Token',
         );
         $this->nic_clientid = new StringField(
@@ -1877,6 +2084,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nicnic_clientid',
             conditions: ['method' => 'dns_nic'],
+            verbose_name: 'NIC Client ID',
             help_text: 'nic.ru API Client ID',
         );
         $this->nic_clientsecret = new StringField(
@@ -1884,6 +2092,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nicnic_clientsecret',
             conditions: ['method' => 'dns_nic'],
+            verbose_name: 'NIC Client Secret',
             help_text: 'nic.ru API Client Secret',
         );
         $this->nic_username = new StringField(
@@ -1891,6 +2100,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nicnic_username',
             conditions: ['method' => 'dns_nic'],
+            verbose_name: 'NIC Username',
             help_text: 'nic.ru Username',
         );
         $this->nic_password = new StringField(
@@ -1899,6 +2109,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_nicnic_password',
             conditions: ['method' => 'dns_nic'],
+            verbose_name: 'NIC Password',
             help_text: 'nic.ru Password',
         );
         $this->ns1_key = new StringField(
@@ -1907,6 +2118,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_nsonens1_key',
             conditions: ['method' => 'dns_nsone'],
+            verbose_name: 'NS1 Key',
             help_text: 'NS1 API Key',
         );
         $this->nw_api_token = new StringField(
@@ -1915,6 +2127,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_nwnw_api_token',
             conditions: ['method' => 'dns_nw'],
+            verbose_name: 'Netwerk API Token',
             help_text: 'NW API Token',
         );
         $this->nw_api_endpoint = new StringField(
@@ -1923,6 +2136,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_nwnw_api_endpoint',
             conditions: ['method' => 'dns_nw'],
+            verbose_name: 'Netwerk API Endpoint',
             help_text: 'Choose the NW API Endpoint',
         );
         $this->onecom_user = new StringField(
@@ -1930,6 +2144,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_oneonecom_user',
             conditions: ['method' => 'dns_one'],
+            verbose_name: 'One.com User',
             help_text: 'One.com Username',
         );
         $this->onecom_password = new StringField(
@@ -1938,6 +2153,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_oneonecom_password',
             conditions: ['method' => 'dns_one'],
+            verbose_name: 'One.com Password',
             help_text: 'One.com Password',
         );
         $this->online_api_key = new StringField(
@@ -1946,6 +2162,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_onlineonline_api_key',
             conditions: ['method' => 'dns_online'],
+            verbose_name: 'Online API Key',
             help_text: 'Online.net API Key',
         );
         $this->oci_cli_tenancy = new StringField(
@@ -1953,6 +2170,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ocioci_cli_tenancy',
             conditions: ['method' => 'dns_oci'],
+            verbose_name: 'OCI CLI Tenancy',
             help_text: 'OCID of tenancy that contains the target DNS zone',
         );
         $this->oci_cli_user = new StringField(
@@ -1960,6 +2178,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ocioci_cli_user',
             conditions: ['method' => 'dns_oci'],
+            verbose_name: 'OCI CLI User',
             help_text: 'OCID of user with permission to add/remove records from zones',
         );
         $this->oci_cli_region = new StringField(
@@ -1967,6 +2186,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ocioci_cli_region',
             conditions: ['method' => 'dns_oci'],
+            verbose_name: 'OCI CLI Region',
             help_text: 'Tenancy home region',
         );
         $this->oci_cli_key = new StringField(
@@ -1974,6 +2194,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ocioci_cli_key',
             conditions: ['method' => 'dns_oci'],
+            verbose_name: 'OCI CLI Key',
             help_text: 'The private API signing key in PEM format. Using an encrypted private key that needs a passphrase is not supported.',
         );
         $this->openprovider_user = new StringField(
@@ -1981,6 +2202,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_openprovideropenprovider_user',
             conditions: ['method' => 'dns_openprovider'],
+            verbose_name: 'OpenProvider User',
             help_text: 'OpenProvider Username',
         );
         $this->openprovider_passwordhash = new StringField(
@@ -1989,6 +2211,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_openprovideropenprovider_passwordhash',
             conditions: ['method' => 'dns_openprovider'],
+            verbose_name: 'OpenProvider Password Hash',
             help_text: 'OpenProvider Password Hash',
         );
         $this->ovh_ak = new StringField(
@@ -1997,6 +2220,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_ovhovh_ak',
             conditions: ['method' => 'dns_ovh'],
+            verbose_name: 'OVH Application Key',
             help_text: 'OVH Application Key',
         );
         $this->ovh_as = new StringField(
@@ -2005,6 +2229,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_ovhovh_as',
             conditions: ['method' => 'dns_ovh'],
+            verbose_name: 'OVH Application Secret',
             help_text: 'OVH Application Secret',
         );
         $this->ovh_ck = new StringField(
@@ -2013,6 +2238,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_ovhovh_ck',
             conditions: ['method' => 'dns_ovh'],
+            verbose_name: 'OVH Consumer Key',
             help_text: 'OVH Consumer Key',
         );
         $this->ovh_end_point = new StringField(
@@ -2030,6 +2256,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ovhovh_end_point',
             conditions: ['method' => 'dns_ovh'],
+            verbose_name: 'OVH Endpoint',
             help_text: 'Choose the OVH API Endpoint / Region',
         );
         $this->pleskxml_user = new StringField(
@@ -2037,6 +2264,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_pleskxmlpleskxml_user',
             conditions: ['method' => 'dns_pleskxml'],
+            verbose_name: 'Plesk XML User',
             help_text: 'Plesk User',
         );
         $this->pleskxml_pass = new StringField(
@@ -2045,6 +2273,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_pleskxmlpleskxml_pass',
             conditions: ['method' => 'dns_pleskxml'],
+            verbose_name: 'Plesk XML Password',
             help_text: 'Plesk Password',
         );
         $this->pleskxml_uri = new StringField(
@@ -2052,6 +2281,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_pleskxmlpleskxml_uri',
             conditions: ['method' => 'dns_pleskxml'],
+            verbose_name: 'Plesk XML URI',
             help_text: 'Plesk Server URI',
         );
         $this->pointhq_key = new StringField(
@@ -2060,6 +2290,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_pointhqpointhq_key',
             conditions: ['method' => 'dns_pointhq'],
+            verbose_name: 'PointHQ Key',
             help_text: 'PointHQ API Key',
         );
         $this->pointhq_email = new StringField(
@@ -2067,6 +2298,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_pointhqpointhq_email',
             conditions: ['method' => 'dns_pointhq'],
+            verbose_name: 'PointHQ Email',
             help_text: 'PointHQ account E-mail address',
         );
         $this->porkbun_api_key = new StringField(
@@ -2075,6 +2307,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_porkbunporkbun_api_key',
             conditions: ['method' => 'dns_porkbun'],
+            verbose_name: 'Porkbun API Key',
             help_text: 'API Key',
         );
         $this->porkbun_secret_api_key = new StringField(
@@ -2083,6 +2316,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_porkbunporkbun_secret_api_key',
             conditions: ['method' => 'dns_porkbun'],
+            verbose_name: 'Porkbun Secret API Key',
             help_text: 'Secret API Key. Obtain the key and secret from https://porkbun.com/account/api',
         );
         $this->pdns_url = new StringField(
@@ -2090,6 +2324,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_pdnspdns_url',
             conditions: ['method' => 'dns_pdns'],
+            verbose_name: 'PowerDNS URL',
             help_text: 'PowerDNS URL (e.g. http://ns.example.com:8081 )',
         );
         $this->pdns_serverid = new StringField(
@@ -2097,6 +2332,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_pdnspdns_serverid',
             conditions: ['method' => 'dns_pdns'],
+            verbose_name: 'PowerDNS Server ID',
             help_text: 'PowerDNS ServerId (e.g. localhost )',
         );
         $this->pdns_token = new StringField(
@@ -2105,6 +2341,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_pdnspdns_token',
             conditions: ['method' => 'dns_pdns'],
+            verbose_name: 'PowerDNS Token',
             help_text: 'PowerDNS Token (e.g. 0123456789ABCDEF )',
         );
         $this->pdns_ttl = new StringField(
@@ -2112,6 +2349,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_pdnspdns_ttl',
             conditions: ['method' => 'dns_pdns'],
+            verbose_name: 'PowerDNS TTL',
             help_text: 'PowerDNS Record TTL (e.g. 60 )',
         );
         $this->rackcorp_apiuuid = new StringField(
@@ -2119,6 +2357,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_rackcorprackcorp_apiuuid',
             conditions: ['method' => 'dns_rackcorp'],
+            verbose_name: 'RackCorp API UUID',
             help_text: 'API UUID',
         );
         $this->rackcorp_apisecret = new StringField(
@@ -2127,6 +2366,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_rackcorprackcorp_apisecret',
             conditions: ['method' => 'dns_rackcorp'],
+            verbose_name: 'RackCorp API Secret',
             help_text: 'API Secret',
         );
         $this->rackspace_username = new StringField(
@@ -2134,6 +2374,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_rackspacerackspace_username',
             conditions: ['method' => 'dns_rackspace'],
+            verbose_name: 'Rackspace Username',
             help_text: 'Rackspace Username',
         );
         $this->rackspace_apikey = new StringField(
@@ -2141,6 +2382,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_rackspacerackspace_apikey',
             conditions: ['method' => 'dns_rackspace'],
+            verbose_name: 'Rackspace API Key',
             help_text: 'Rackspace API Key',
         );
         $this->rage4_username = new StringField(
@@ -2148,6 +2390,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_rage4rage4_username',
             conditions: ['method' => 'dns_rage4'],
+            verbose_name: 'Rage4 Username',
             help_text: 'Username',
         );
         $this->rage4_token = new StringField(
@@ -2156,6 +2399,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_rage4rage4_token',
             conditions: ['method' => 'dns_rage4'],
+            verbose_name: 'Rage4 Token',
             help_text: 'Token',
         );
         $this->rcode0_api_token = new StringField(
@@ -2164,6 +2408,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_rcode0rcode0_api_token',
             conditions: ['method' => 'dns_rcode0'],
+            verbose_name: 'RcodeZero API Token',
             help_text: 'Rcode0 API Token',
         );
         $this->rcode0_url = new StringField(
@@ -2171,6 +2416,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_rcode0rcode0_url',
             conditions: ['method' => 'dns_rcode0'],
+            verbose_name: 'RcodeZero URL',
             help_text: 'Rcode0 URL',
         );
         $this->rcode0_ttl = new StringField(
@@ -2178,6 +2424,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_rcode0rcode0_ttl',
             conditions: ['method' => 'dns_rcode0'],
+            verbose_name: 'RcodeZero TTL',
             help_text: 'Rcode0 TTL',
         );
         $this->regru_api_username = new StringField(
@@ -2185,6 +2432,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_regruregru_api_username',
             conditions: ['method' => 'dns_regru'],
+            verbose_name: 'Reg.ru API Username',
             help_text: 'reg.ru Username',
         );
         $this->regru_api_password = new StringField(
@@ -2193,6 +2441,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_regruregru_api_password',
             conditions: ['method' => 'dns_regru'],
+            verbose_name: 'Reg.ru API Password',
             help_text: 'reg.ru API Password',
         );
         $this->scaleway_api_token = new StringField(
@@ -2200,6 +2449,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_scalewayscaleway_api_token',
             conditions: ['method' => 'dns_scaleway'],
+            verbose_name: 'Scaleway API Token',
             help_text: 'API Token',
         );
         $this->schlundtech_user = new StringField(
@@ -2207,6 +2457,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_schlundtechschlundtech_user',
             conditions: ['method' => 'dns_schlundtech'],
+            verbose_name: 'SchlundTech User',
             help_text: 'schlundtech.de Username',
         );
         $this->schlundtech_password = new StringField(
@@ -2215,6 +2466,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_schlundtechschlundtech_password',
             conditions: ['method' => 'dns_schlundtech'],
+            verbose_name: 'SchlundTech Password',
             help_text: 'schlundtech.de Password',
         );
         $this->sl_key = new StringField(
@@ -2223,6 +2475,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_selectelsl_key',
             conditions: ['method' => 'dns_selectel'],
+            verbose_name: 'SoftLayer Key',
             help_text: 'Selectel API Key',
         );
         $this->selfhostdns_username = new StringField(
@@ -2230,6 +2483,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_selfhostselfhostdns_username',
             conditions: ['method' => 'dns_selfhost'],
+            verbose_name: 'SelfHost DNS Username',
             help_text: 'Username (Customer number, not email address or DynDNS account)',
         );
         $this->selfhostdns_password = new StringField(
@@ -2238,6 +2492,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_selfhostselfhostdns_password',
             conditions: ['method' => 'dns_selfhost'],
+            verbose_name: 'SelfHost DNS Password',
             help_text: 'Password',
         );
         $this->selfhostdns_map = new StringField(
@@ -2245,6 +2500,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_selfhostselfhostdns_map',
             conditions: ['method' => 'dns_selfhost'],
+            verbose_name: 'SelfHost DNS Map',
             help_text: 'Record ID (Edit the record, value is shown in brackets)',
         );
         $this->servercow_api_username = new StringField(
@@ -2252,6 +2508,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_servercowservercow_api_username',
             conditions: ['method' => 'dns_servercow'],
+            verbose_name: 'ServerCow API Username',
             help_text: 'Servercow username',
         );
         $this->servercow_api_password = new StringField(
@@ -2260,6 +2517,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_servercowservercow_api_password',
             conditions: ['method' => 'dns_servercow'],
+            verbose_name: 'ServerCow API Password',
             help_text: 'Servercow password',
         );
         $this->simply_accountname = new StringField(
@@ -2267,6 +2525,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_simplysimply_accountname',
             conditions: ['method' => 'dns_simply'],
+            verbose_name: 'Simply Account Name',
             help_text: 'Account Name',
         );
         $this->simply_apikey = new StringField(
@@ -2275,6 +2534,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_simplysimply_apikey',
             conditions: ['method' => 'dns_simply'],
+            verbose_name: 'Simply API Key',
             help_text: 'API Key',
         );
         $this->simply_api = new StringField(
@@ -2282,6 +2542,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_simplysimply_api',
             conditions: ['method' => 'dns_simply'],
+            verbose_name: 'Simply API',
             help_text: 'API Endpoint URL. Default: https://api.simply.com/1',
         );
         $this->tele3_key = new StringField(
@@ -2290,6 +2551,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_tele3tele3_key',
             conditions: ['method' => 'dns_tele3'],
+            verbose_name: 'Tele3 Key',
             help_text: 'Tele3 Key',
         );
         $this->tele3_secret = new StringField(
@@ -2298,6 +2560,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_tele3tele3_secret',
             conditions: ['method' => 'dns_tele3'],
+            verbose_name: 'Tele3 Secret',
             help_text: 'Tele3 Secret',
         );
         $this->tencent_secretid = new StringField(
@@ -2306,6 +2569,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_tencenttencent_secretid',
             conditions: ['method' => 'dns_tencent'],
+            verbose_name: 'Tencent Secret ID',
             help_text: 'Tencent Secret ID',
         );
         $this->tencent_secretkey = new StringField(
@@ -2314,6 +2578,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_tencenttencent_secretkey',
             conditions: ['method' => 'dns_tencent'],
+            verbose_name: 'Tencent Secret Key',
             help_text: 'Tencent Secret Key',
         );
         $this->udr_user = new StringField(
@@ -2321,6 +2586,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_udrudr_user',
             conditions: ['method' => 'dns_udr'],
+            verbose_name: 'UDR Username',
             help_text: 'Username',
         );
         $this->udr_pass = new StringField(
@@ -2329,6 +2595,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_udrudr_pass',
             conditions: ['method' => 'dns_udr'],
+            verbose_name: 'UDR Password',
             help_text: 'Password',
         );
         $this->ultra_usr = new StringField(
@@ -2336,6 +2603,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ultraultra_usr',
             conditions: ['method' => 'dns_ultra'],
+            verbose_name: 'UltraDNS Username',
             help_text: 'UltraDNS Username',
         );
         $this->ULTRA_PWD = new StringField(
@@ -2344,6 +2612,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_ultraULTRA_PWD',
             conditions: ['method' => 'dns_ultra'],
+            verbose_name: 'UltraDNS Password',
             help_text: 'UltraDNS Password',
         );
         $this->uno_user = new StringField(
@@ -2351,6 +2620,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_unoeurouno_user',
             conditions: ['method' => 'dns_unoeuro'],
+            verbose_name: 'Uno User',
             help_text: 'UnoEuro username',
         );
         $this->uno_key = new StringField(
@@ -2359,6 +2629,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_unoeurouno_key',
             conditions: ['method' => 'dns_unoeuro'],
+            verbose_name: 'Uno Key',
             help_text: 'UnoEuro API Key',
         );
         $this->variomedia_api_token = new StringField(
@@ -2367,6 +2638,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_variomediavariomedia_api_token',
             conditions: ['method' => 'dns_variomedia'],
+            verbose_name: 'Variomedia API Token',
             help_text: 'variomedia.de API Token',
         );
         $this->veesp_user = new StringField(
@@ -2374,6 +2646,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_veespveesp_user',
             conditions: ['method' => 'dns_veesp'],
+            verbose_name: 'Veesp User',
             help_text: 'Username',
         );
         $this->veesp_password = new StringField(
@@ -2382,6 +2655,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_veespveesp_password',
             conditions: ['method' => 'dns_veesp'],
+            verbose_name: 'Veesp Password',
             help_text: 'Password',
         );
         $this->vercel_token = new StringField(
@@ -2390,6 +2664,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_vercelvercel_token',
             conditions: ['method' => 'dns_vercel'],
+            verbose_name: 'Vercel Token',
             help_text: 'Vercel Token',
         );
         $this->vscale_api_key = new StringField(
@@ -2398,6 +2673,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_vscalevscale_api_key',
             conditions: ['method' => 'dns_vscale'],
+            verbose_name: 'VScale API Key',
             help_text: 'vscale API Key',
         );
         $this->vultr_api_key = new StringField(
@@ -2406,6 +2682,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_vultrvultr_api_key',
             conditions: ['method' => 'dns_vultr'],
+            verbose_name: 'Vultr API Key',
             help_text: 'vultr.com API Key',
         );
         $this->ws_apikey = new StringField(
@@ -2414,6 +2691,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_websupportws_apikey',
             conditions: ['method' => 'dns_websupport'],
+            verbose_name: 'WS API Key',
             help_text: 'API Key / "Identifier" in the WS Admin',
         );
         $this->ws_apisecret = new StringField(
@@ -2422,6 +2700,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_websupportws_apisecret',
             conditions: ['method' => 'dns_websupport'],
+            verbose_name: 'WS API Secret',
             help_text: 'API Secret / "Secret key" in the WS Admin. Obtain the API Key and Secret from https://admin.websupport.sk/en/auth/apiKey.',
         );
         $this->west_username = new StringField(
@@ -2429,6 +2708,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_west_cnwest_username',
             conditions: ['method' => 'dns_west_cn'],
+            verbose_name: 'West Username',
             help_text: 'West.cn Domain API Username',
         );
         $this->west_key = new StringField(
@@ -2437,6 +2717,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_west_cnwest_key',
             conditions: ['method' => 'dns_west_cn'],
+            verbose_name: 'West Key',
             help_text: 'West.cn Domain API Key',
         );
         $this->world4you_username = new StringField(
@@ -2444,6 +2725,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_world4youworld4you_username',
             conditions: ['method' => 'dns_world4you'],
+            verbose_name: 'World4you Username',
             help_text: 'Username',
         );
         $this->world4you_password = new StringField(
@@ -2452,6 +2734,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_world4youworld4you_password',
             conditions: ['method' => 'dns_world4you'],
+            verbose_name: 'World4you Password',
             help_text: 'Password',
         );
         $this->pdd_token = new StringField(
@@ -2460,6 +2743,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_yandexpdd_token',
             conditions: ['method' => 'dns_yandex'],
+            verbose_name: 'PDD Token',
             help_text: 'Yandex PDD Token, generate at <a href="https://pddimp.yandex.ru/api2/admin/get_token">https://pddimp.yandex.ru/api2/admin/get_token</a>',
         );
         $this->yc_zone_id = new StringField(
@@ -2467,6 +2751,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ycyc_zone_id',
             conditions: ['method' => 'dns_yc'],
+            verbose_name: 'Yc Zone ID',
             help_text: 'DNS Zone ID',
         );
         $this->yc_folder_id = new StringField(
@@ -2474,6 +2759,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ycyc_folder_id',
             conditions: ['method' => 'dns_yc'],
+            verbose_name: 'Yc Folder ID',
             help_text: 'Yandex Cloud Folder ID',
         );
         $this->yc_sa_id = new StringField(
@@ -2481,6 +2767,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ycyc_sa_id',
             conditions: ['method' => 'dns_yc'],
+            verbose_name: 'Yc Sa ID',
             help_text: 'Service Account ID',
         );
         $this->yc_sa_key_id = new StringField(
@@ -2488,6 +2775,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ycyc_sa_key_id',
             conditions: ['method' => 'dns_yc'],
+            verbose_name: 'Yc Sa Key ID',
             help_text: 'Service Account IAM Key ID',
         );
         $this->yc_sa_key_file_pem_b64 = new StringField(
@@ -2495,6 +2783,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_ycyc_sa_key_file_pem_b64',
             conditions: ['method' => 'dns_yc'],
+            verbose_name: 'Yc Sa Key File PEM B64',
             help_text: 'Base64 content of private key.',
         );
         $this->zm_key = new StringField(
@@ -2503,6 +2792,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_zonomizm_key',
             conditions: ['method' => 'dns_zonomi'],
+            verbose_name: 'Zm Key',
             help_text: 'Zonomi API Key',
         );
         $this->zone_username = new StringField(
@@ -2510,6 +2800,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_zonezone_username',
             conditions: ['method' => 'dns_zone'],
+            verbose_name: 'Zone Username',
             help_text: 'Zone.ee Username',
         );
         $this->zone_key = new StringField(
@@ -2517,6 +2808,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_zonezone_key',
             conditions: ['method' => 'dns_zone'],
+            verbose_name: 'Zone Key',
             help_text: 'Zone.ee API Key',
         );
         $this->zilore_key = new StringField(
@@ -2525,6 +2817,7 @@ class ACMECertificateDomain extends Model {
             write_only: true,
             internal_name: 'dns_zilorezilore_key',
             conditions: ['method' => 'dns_zilore'],
+            verbose_name: 'Zilore Key',
             help_text: 'Zilore API Key',
         );
         $this->technitium_server = new StringField(
@@ -2532,6 +2825,7 @@ class ACMECertificateDomain extends Model {
             allow_empty: true,
             internal_name: 'dns_technitiumtechnitium_server',
             conditions: ['method' => 'dns_technitium'],
+            verbose_name: 'Technitium Server',
             help_text: 'Technitium DNS Server address',
         );
         $this->technitium_token = new StringField(
@@ -2540,17 +2834,20 @@ class ACMECertificateDomain extends Model {
             sensitive: true,
             internal_name: 'dns_technitiumtechnitium_token',
             conditions: ['method' => 'dns_technitium'],
+            verbose_name: 'Technitium Token',
             help_text: 'Technitium DNS Server API Token',
         );
         $this->anydnschallengealias = new StringField(
             default: '',
             allow_empty: true,
             conditions: ['!method' => ['webroot', 'webrootftp', 'standalone', 'standalonetls']],
+            verbose_name: 'DNS Challenge Alias',
             help_text: '(Optional) Adds the --challenge-alias flag to the acme.sh call.<br/>To use a CNAME for _acme-challenge.importantDomain.tld to direct the acme validation to a different (sub)domain _acme-challenge.aliasDomainForValidationOnly.tld, configure the alternate domain here.<br/>More information can be found <a href="https://github.com/acmesh-official/acme.sh/wiki/DNS-alias-mode" target="_new">here</a>.',
         );
         $this->anydnschallengedomain = new BooleanField(
             default: false,
             conditions: ['!method' => ['webroot', 'webrootftp', 'standalone', 'standalonetls']],
+            verbose_name: 'DNS Challenge Domain',
             help_text: '(Optional) Uses the challenge domain alias value as --domain-alias instead in the acme.sh call.',
         );
 

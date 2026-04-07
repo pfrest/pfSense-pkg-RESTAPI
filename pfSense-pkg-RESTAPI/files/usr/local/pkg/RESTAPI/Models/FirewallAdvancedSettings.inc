@@ -23,10 +23,12 @@ class FirewallAdvancedSettings extends Model {
         $this->aliasesresolveinterval = new IntegerField(
             default: PHP_INT_MAX,
             minimum: 0,
+            verbose_name: 'Alias Resolve Interval',
             help_text: 'The interval (in seconds) at which to resolve hostnames in aliases.',
         );
         $this->checkaliasesurlcert = new BooleanField(
             default: true,
+            verbose_name: 'Check Alias URL Certs',
             help_text: 'Check the certificate of URLs used in aliases.',
         );
 
