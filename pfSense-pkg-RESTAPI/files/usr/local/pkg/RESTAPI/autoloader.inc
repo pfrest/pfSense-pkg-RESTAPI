@@ -39,6 +39,7 @@ const RESTAPI_LIBRARIES = [
     '/usr/local/pkg/RESTAPI/ContentHandlers/',
     '/usr/local/pkg/RESTAPI/Schemas/',
     '/usr/local/pkg/RESTAPI/GraphQL/',
+    '/usr/local/pkg/RESTAPI/MCP/',
     '/usr/local/pkg/RESTAPI/Auth',
     '/usr/local/pkg/RESTAPI/Endpoints/',
     '/usr/local/pkg/RESTAPI/Forms/',

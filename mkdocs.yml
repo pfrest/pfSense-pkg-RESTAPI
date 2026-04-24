@@ -13,6 +13,7 @@ nav:
       - Working with HATEOAS: WORKING_WITH_HATEOAS.md
       - Common Control Parameters: COMMON_CONTROL_PARAMETERS.md
       - GraphQL: GRAPHQL.md
+      - Model Context Protocol (MCP): MCP.md
       - Securing API Access: SECURING_API_ACCESS.md
       - Limitations & FAQs: LIMITATIONS_AND_FAQS.md
       - API Reference: https://pfrest.org/api-docs/

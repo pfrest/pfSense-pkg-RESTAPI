@@ -35,6 +35,7 @@ class RESTAPISettings extends Model {
     public BooleanField $allow_pre_releases;
     public BooleanField $hateoas;
     public BooleanField $expose_sensitive_fields;
+    public BooleanField $mcp_enabled;
     public StringField $override_sensitive_fields;
     public InterfaceField $allowed_interfaces;
     public StringField $represent_interfaces_as;
@@ -140,6 +141,16 @@ class RESTAPISettings extends Model {
             verbose_name: 'expose sensitive fields',
             help_text: 'Enables or disables exposing sensitive fields in API responses. When enabled, sensitive fields ' .
                 'such as passwords, private keys, and other sensitive data will be included in API responses.',
+        );
+        $this->mcp_enabled = new BooleanField(
+            default: false,
+            indicates_true: 'enabled',
+            indicates_false: 'disabled',
+            verbose_name: 'enable MCP server',
+            help_text: 'Enables or disables the Model Context Protocol (MCP) server at /api/v2/mcp. When enabled, ' .
+                'AI agents and other MCP clients can dynamically discover and invoke REST API operations as MCP ' .
+                'tools using the same authentication, authorization and privileges as the standard REST API. The ' .
+                'MCP server is disabled by default and must be explicitly enabled here.',
         );
         $this->override_sensitive_fields = new StringField(
             default: [],

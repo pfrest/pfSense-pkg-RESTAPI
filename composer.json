@@ -1,6 +1,7 @@
 {
   "require": {
     "firebase/php-jwt": "v7.0.*",
-    "webonyx/graphql-php": "^15.13"
+    "webonyx/graphql-php": "^15.13",
+    "mcp/sdk": "^0.4"
   }
 }
