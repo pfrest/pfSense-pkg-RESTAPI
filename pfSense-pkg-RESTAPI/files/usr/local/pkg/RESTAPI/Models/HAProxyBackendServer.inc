@@ -83,7 +83,7 @@ class HAProxyBackendServer extends Model {
             help_text: 'Enables or disables verifying the SSL/TLS certificate when forwarding to this backend server.',
         );
         $this->serverid = new IntegerField(
-            default: rand(100, 1000), # TODO: Ensure this value is unique from Backends and Backend servers
+            default_callable: 'get_serverid_default',
             editable: false,
             read_only: true,
             verbose_name: 'Server ID',
@@ -98,6 +98,14 @@ class HAProxyBackendServer extends Model {
         );
 
         parent::__construct($id, $parent_id, $data, ...$options);
+    }
+
+    /**
+     * Obtains the random default for the serverid field
+     * @returns int A random integer ID
+     */
+    public function get_serverid_default(): int {
+        return rand(100, 1000); # TODO: Ensure this value is unique from Backends and Backend servers
     }
 
     /**
