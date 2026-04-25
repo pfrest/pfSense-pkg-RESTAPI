@@ -39,8 +39,8 @@ class HAProxyBackendServer extends Model {
             required: true,
             unique: true,
             minimum_length: 2,
-            validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
             verbose_name: 'Name',
+            validators: [new RegexValidator(pattern: '/[^a-zA-Z0-9\.\-_]/', invert: true)],
             help_text: 'The unique name for this backend server.',
         );
         $this->status = new StringField(
@@ -51,8 +51,8 @@ class HAProxyBackendServer extends Model {
         );
         $this->address = new StringField(
             required: true,
-            validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
             verbose_name: 'Address',
+            validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: true, allow_fqdn: true)],
             help_text: 'The hostname or IP address of this backend server. Hostname values are only resolved at ' .
                 'service startup.',
         );
