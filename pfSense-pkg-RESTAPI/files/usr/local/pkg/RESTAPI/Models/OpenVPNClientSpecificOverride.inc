@@ -59,7 +59,11 @@ class OpenVPNClientSpecificOverride extends Model {
             help_text: 'The X.509 common name for the client certificate, or the username for VPNs utilizing ' .
                 'password authentication.',
         );
-        $this->disable = new BooleanField(default: false, verbose_name: 'Disable', help_text: 'Disables this client specific override.');
+        $this->disable = new BooleanField(
+            default: false,
+            verbose_name: 'Disable',
+            help_text: 'Disables this client specific override.',
+        );
         $this->block = new BooleanField(
             default: false,
             indicates_true: 'yes',

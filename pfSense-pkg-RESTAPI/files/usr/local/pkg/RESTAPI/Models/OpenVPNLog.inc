@@ -25,7 +25,11 @@ class OpenVPNLog extends Model {
         $this->many = true;
         $this->verbose_name = 'OpenVPN Log';
 
-        $this->text = new StringField(default: '', verbose_name: 'Text', help_text: 'The raw text of the openvpn log entry.');
+        $this->text = new StringField(
+            default: '',
+            verbose_name: 'Text',
+            help_text: 'The raw text of the openvpn log entry.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

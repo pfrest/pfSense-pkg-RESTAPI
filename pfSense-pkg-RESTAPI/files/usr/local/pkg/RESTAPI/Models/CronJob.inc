@@ -120,7 +120,11 @@ class CronJob extends Model {
             help_text: 'The day(s) of the week on which the command will be executed. (0-7, 7=Sun or use names, ' .
                 'ranges, or divided, *=all).',
         );
-        $this->who = new StringField(required: true, verbose_name: 'Who', help_text: 'The OS user to use when cron runs the command.');
+        $this->who = new StringField(
+            required: true,
+            verbose_name: 'Who',
+            help_text: 'The OS user to use when cron runs the command.',
+        );
         $this->command = new StringField(
             required: true,
             verbose_name: 'Command',

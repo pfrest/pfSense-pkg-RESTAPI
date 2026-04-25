@@ -31,7 +31,10 @@ class FirewallSchedule extends Model {
         $this->sort_order = SORT_ASC;
 
         # Set model fields
-        $this->schedlabel = new UIDField(verbose_name: 'Schedule Label', help_text: 'A unique ID for this schedule used internally by the system.');
+        $this->schedlabel = new UIDField(
+            verbose_name: 'Schedule Label',
+            help_text: 'A unique ID for this schedule used internally by the system.',
+        );
         $this->name = new StringField(
             required: true,
             unique: true,

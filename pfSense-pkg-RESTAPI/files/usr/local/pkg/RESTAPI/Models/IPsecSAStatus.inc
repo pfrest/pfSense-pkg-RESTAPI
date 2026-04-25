@@ -50,14 +50,24 @@ class IPsecSAStatus extends Model {
             verbose_name: 'Con ID',
             help_text: 'The connection ID of the tunnel.',
         );
-        $this->uniqueid = new IntegerField(default: 0, read_only: true, verbose_name: 'Unique ID', help_text: 'The unique ID of the tunnel.');
+        $this->uniqueid = new IntegerField(
+            default: 0,
+            read_only: true,
+            verbose_name: 'Unique ID',
+            help_text: 'The unique ID of the tunnel.',
+        );
         $this->version = new IntegerField(
             default: 0,
             read_only: true,
             verbose_name: 'Version',
             help_text: 'The IKE version used by the tunnel.',
         );
-        $this->state = new StringField(default: '', read_only: true, verbose_name: 'State', help_text: 'The current state of the tunnel.');
+        $this->state = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'State',
+            help_text: 'The current state of the tunnel.',
+        );
         $this->local_host = new StringField(
             default: '',
             read_only: true,

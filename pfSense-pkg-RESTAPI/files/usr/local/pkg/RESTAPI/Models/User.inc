@@ -77,7 +77,11 @@ class User extends Model {
             verbose_name: 'Privileges',
             help_text: 'The privileges assigned to this local user.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this local user.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disable this local user.',
+        );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,

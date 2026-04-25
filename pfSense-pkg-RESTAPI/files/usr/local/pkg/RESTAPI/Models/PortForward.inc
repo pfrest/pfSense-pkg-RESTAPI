@@ -127,7 +127,11 @@ class PortForward extends Model {
                 'the `destination_port` value. In the event that the `desintation_port` is a range, this value should ' .
                 'be the first value in that range.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this port forward rule.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disables this port forward rule.',
+        );
         $this->nordr = new BooleanField(
             default: false,
             verbose_name: 'No Redirect',

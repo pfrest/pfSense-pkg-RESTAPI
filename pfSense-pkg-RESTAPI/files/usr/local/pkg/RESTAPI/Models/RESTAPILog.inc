@@ -24,7 +24,11 @@ class RESTAPILog extends Model {
         $this->internal_callable = 'get_restapi_log';
         $this->many = true;
 
-        $this->text = new StringField(default: '', verbose_name: 'Text', help_text: 'The raw text of the REST API log entry.');
+        $this->text = new StringField(
+            default: '',
+            verbose_name: 'Text',
+            help_text: 'The raw text of the REST API log entry.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

@@ -77,7 +77,11 @@ class IPsecPhase1 extends Model {
             verbose_name: 'Description',
             help_text: 'A description for this IPsec phase 1 entry.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this IPsec phase 1 entry.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disables this IPsec phase 1 entry.',
+        );
         $this->iketype = new StringField(
             required: true,
             choices: ['ikev1', 'ikev2', 'auto'],
@@ -237,8 +241,16 @@ class IPsecPhase1 extends Model {
             verbose_name: 'PRF Select Enable',
             help_text: 'Enables or disables manual Pseudo-Random Function (PRF) selection.',
         );
-        $this->ikeport = new PortField(default: '500', verbose_name: 'IKE Port', help_text: 'The UDP port for IKE on the remote gateway.');
-        $this->nattport = new PortField(default: '4500', verbose_name: 'NAT-T Port', help_text: 'The UDP port for NAT-T on the remote gateway.');
+        $this->ikeport = new PortField(
+            default: '500',
+            verbose_name: 'IKE Port',
+            help_text: 'The UDP port for IKE on the remote gateway.',
+        );
+        $this->nattport = new PortField(
+            default: '4500',
+            verbose_name: 'NAT-T Port',
+            help_text: 'The UDP port for NAT-T on the remote gateway.',
+        );
         $this->dpd_delay = new IntegerField(
             default: 10,
             allow_null: true,

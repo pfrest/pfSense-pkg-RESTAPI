@@ -20,7 +20,12 @@ class Table extends Model {
         $this->many = true;
 
         $this->name = new StringField(required: true, verbose_name: 'Name', help_text: 'The name of the table');
-        $this->entries = new StringField(many: true, delimiter: ' ', verbose_name: 'Entries', help_text: 'The entries currently in the table.');
+        $this->entries = new StringField(
+            many: true,
+            delimiter: ' ',
+            verbose_name: 'Entries',
+            help_text: 'The entries currently in the table.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

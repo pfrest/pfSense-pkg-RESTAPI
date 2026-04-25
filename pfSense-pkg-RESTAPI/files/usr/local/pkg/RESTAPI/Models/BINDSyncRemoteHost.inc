@@ -48,7 +48,11 @@ class BINDSyncRemoteHost extends Model {
             verbose_name: 'IP Address',
             help_text: 'The IP address/hostname of the remote host.',
         );
-        $this->syncport = new PortField(required: true, verbose_name: 'Sync Port', help_text: 'The remote host port to use for syncing.');
+        $this->syncport = new PortField(
+            required: true,
+            verbose_name: 'Sync Port',
+            help_text: 'The remote host port to use for syncing.',
+        );
         $this->username = new StringField(
             required: true,
             verbose_name: 'Username',

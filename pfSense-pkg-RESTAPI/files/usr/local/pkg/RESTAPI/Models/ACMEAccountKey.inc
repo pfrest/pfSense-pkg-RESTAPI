@@ -40,7 +40,12 @@ class ACMEAccountKey extends Model {
         ];
 
         # Define model Fields
-        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the ACME account key.');
+        $this->name = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Name',
+            help_text: 'The name of the ACME account key.',
+        );
         $this->descr = new StringField(
             default: '',
             allow_empty: true,

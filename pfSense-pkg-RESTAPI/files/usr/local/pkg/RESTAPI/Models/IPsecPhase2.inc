@@ -83,7 +83,11 @@ class IPsecPhase2 extends Model {
             verbose_name: 'Description',
             help_text: 'A description for this IPsec phase 2 entry.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this IPsec phase 2 entry.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disables this IPsec phase 2 entry.',
+        );
         $this->mode = new StringField(
             required: true,
             choices: array_keys($p2_modes),

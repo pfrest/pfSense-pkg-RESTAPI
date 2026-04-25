@@ -109,8 +109,17 @@ class OpenVPNClient extends Model {
             verbose_name: 'Description',
             help_text: 'The description for this OpenVPN client.',
         );
-        $this->disable = new BooleanField(default: false, verbose_name: 'Disable', help_text: 'Disables this OpenVPN client.');
-        $this->mode = new StringField(required: true, choices: ['p2p_tls'], verbose_name: 'Mode', help_text: 'The OpenVPN client mode.');
+        $this->disable = new BooleanField(
+            default: false,
+            verbose_name: 'Disable',
+            help_text: 'Disables this OpenVPN client.',
+        );
+        $this->mode = new StringField(
+            required: true,
+            choices: ['p2p_tls'],
+            verbose_name: 'Mode',
+            help_text: 'The OpenVPN client mode.',
+        );
         $this->dev_mode = new StringField(
             required: true,
             choices: ['tun', 'tap'],

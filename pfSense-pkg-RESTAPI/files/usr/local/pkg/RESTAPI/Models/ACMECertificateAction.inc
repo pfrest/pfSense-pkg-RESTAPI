@@ -32,7 +32,11 @@ class ACMECertificateAction extends Model {
             verbose_name: 'Status',
             help_text: 'The activation status of the ACME certificate.',
         );
-        $this->command = new StringField(required: true, verbose_name: 'Command', help_text: 'The command to execute on the ACME certificate.');
+        $this->command = new StringField(
+            required: true,
+            verbose_name: 'Command',
+            help_text: 'The command to execute on the ACME certificate.',
+        );
         $this->method = new StringField(
             required: true,
             choices: ['shellcommand', 'php_command', 'servicerestart', 'xmlrpcservicerestart'],

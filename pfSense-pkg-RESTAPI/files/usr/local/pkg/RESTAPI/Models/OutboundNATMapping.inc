@@ -57,9 +57,21 @@ class OutboundNATMapping extends Model {
             verbose_name: 'Protocol',
             help_text: 'The protocol this rule should match. Use `null` for any protocol.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this outbound NAT rule.');
-        $this->nonat = new BooleanField(default: false, verbose_name: 'No NAT', help_text: 'Do not NAT traffic matching this rule.');
-        $this->nosync = new BooleanField(default: false, verbose_name: 'No Sync', help_text: 'Do not sync this rule to HA peers.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disable this outbound NAT rule.',
+        );
+        $this->nonat = new BooleanField(
+            default: false,
+            verbose_name: 'No NAT',
+            help_text: 'Do not NAT traffic matching this rule.',
+        );
+        $this->nosync = new BooleanField(
+            default: false,
+            verbose_name: 'No Sync',
+            help_text: 'Do not sync this rule to HA peers.',
+        );
         $this->source = new FilterAddressField(
             required: true,
             allow_ipaddr: false,

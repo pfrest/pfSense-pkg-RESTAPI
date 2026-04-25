@@ -69,7 +69,11 @@ class DHCPServer extends Model {
                 'DHCP server to match the interface specified here. Leaving this field empty will retain the ' .
                 'existing interface.',
         );
-        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enable the DHCP server for this interface.');
+        $this->enable = new BooleanField(
+            default: false,
+            verbose_name: 'Enable',
+            help_text: 'Enable the DHCP server for this interface.',
+        );
         $this->range_from = new StringField(
             default: '',
             allow_empty: true,

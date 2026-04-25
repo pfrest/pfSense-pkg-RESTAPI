@@ -49,7 +49,11 @@ class StaticRoute extends Model {
             verbose_name: 'Description',
             help_text: 'Sets a description for administrative reference.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this static route.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disable this static route.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

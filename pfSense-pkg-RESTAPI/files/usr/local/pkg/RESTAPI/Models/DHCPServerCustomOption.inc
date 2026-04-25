@@ -50,7 +50,11 @@ class DHCPServerCustomOption extends Model {
             verbose_name: 'Type',
             help_text: 'The type of value to configure for the option.',
         );
-        $this->value = new Base64Field(required: true, verbose_name: 'Value', help_text: 'The value to configure for the option.');
+        $this->value = new Base64Field(
+            required: true,
+            verbose_name: 'Value',
+            help_text: 'The value to configure for the option.',
+        );
         parent::__construct($id, $parent_id, $data, ...$options);
     }
 

@@ -24,7 +24,11 @@ class AuthLog extends Model {
         $this->internal_callable = 'get_auth_log';
         $this->many = true;
 
-        $this->text = new StringField(default: '', verbose_name: 'Text', help_text: 'The raw text of the auth log entry.');
+        $this->text = new StringField(
+            default: '',
+            verbose_name: 'Text',
+            help_text: 'The raw text of the auth log entry.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

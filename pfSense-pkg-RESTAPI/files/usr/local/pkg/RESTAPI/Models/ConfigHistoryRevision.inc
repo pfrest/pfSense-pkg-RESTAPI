@@ -23,8 +23,16 @@ class ConfigHistoryRevision extends Model {
         $this->many = true;
 
         # Set model fields
-        $this->time = new UnixTimeField(required: true, verbose_name: 'Time', help_text: 'The time the configuration change was made.');
-        $this->description = new StringField(default: '', verbose_name: 'Description', help_text: 'The description of the configuration change.');
+        $this->time = new UnixTimeField(
+            required: true,
+            verbose_name: 'Time',
+            help_text: 'The time the configuration change was made.',
+        );
+        $this->description = new StringField(
+            default: '',
+            verbose_name: 'Description',
+            help_text: 'The description of the configuration change.',
+        );
         $this->version = new StringField(
             default: '',
             verbose_name: 'Version',

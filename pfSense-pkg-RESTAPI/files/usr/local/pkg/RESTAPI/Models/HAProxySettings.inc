@@ -55,7 +55,11 @@ class HAProxySettings extends Model {
         $this->verbose_name = 'HAProxy Settings';
 
         # Set model fields
-        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enables or disable HAProxy on the system.');
+        $this->enable = new BooleanField(
+            default: false,
+            verbose_name: 'Enable',
+            help_text: 'Enables or disable HAProxy on the system.',
+        );
         $this->maxconn = new IntegerField(
             default: null,
             allow_null: true,

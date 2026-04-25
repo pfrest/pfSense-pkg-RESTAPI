@@ -17,7 +17,12 @@ class CommandPrompt extends Model {
     public IntegerField $result_code;
     public function __construct(mixed $id = null, mixed $parent_id = null, mixed $data = [], mixed ...$options) {
         # Define Model Fields
-        $this->command = new StringField(required: true, write_only: true, verbose_name: 'Command', help_text: 'The command to be executed.');
+        $this->command = new StringField(
+            required: true,
+            write_only: true,
+            verbose_name: 'Command',
+            help_text: 'The command to be executed.',
+        );
         $this->output = new StringField(
             allow_null: true,
             read_only: true,

@@ -32,7 +32,11 @@ class EmailNotificationSettings extends Model {
         $this->many = false;
 
         # Set model fields
-        $this->disable = new BooleanField(default: false, verbose_name: 'Disable', help_text: 'Disables SMTP notifications.');
+        $this->disable = new BooleanField(
+            default: false,
+            verbose_name: 'Disable',
+            help_text: 'Disables SMTP notifications.',
+        );
         $this->ipaddress = new StringField(
             default: '',
             allow_empty: true,
@@ -40,8 +44,16 @@ class EmailNotificationSettings extends Model {
             verbose_name: 'IP Address',
             help_text: 'The IP address or hostname of the SMTP server.',
         );
-        $this->port = new PortField(default: '25', verbose_name: 'Port', help_text: 'The port number of the SMTP server.');
-        $this->timeout = new IntegerField(default: 20, verbose_name: 'Timeout', help_text: 'The timeout (in seconds) for the SMTP connection.');
+        $this->port = new PortField(
+            default: '25',
+            verbose_name: 'Port',
+            help_text: 'The port number of the SMTP server.',
+        );
+        $this->timeout = new IntegerField(
+            default: 20,
+            verbose_name: 'Timeout',
+            help_text: 'The timeout (in seconds) for the SMTP connection.',
+        );
         $this->ssl = new BooleanField(
             default: false,
             verbose_name: 'SSL',

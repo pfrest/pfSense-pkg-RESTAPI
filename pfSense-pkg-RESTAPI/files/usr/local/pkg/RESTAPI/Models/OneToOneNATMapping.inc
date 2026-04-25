@@ -38,7 +38,11 @@ class OneToOneNATMapping extends Model {
             verbose_name: 'Interface',
             help_text: 'The interface this 1:1 NAT mapping applies to.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disables this 1:1 NAT mapping.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disables this 1:1 NAT mapping.',
+        );
         $this->nobinat = new BooleanField(
             default: false,
             verbose_name: 'No Binat',

@@ -30,8 +30,18 @@ class BINDView extends Model {
         $this->verbose_name = 'BIND View';
 
         # Set model fields
-        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the view.');
-        $this->descr = new StringField(default: '', allow_empty: true, verbose_name: 'Description', help_text: 'A description for the view.');
+        $this->name = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Name',
+            help_text: 'The name of the view.',
+        );
+        $this->descr = new StringField(
+            default: '',
+            allow_empty: true,
+            verbose_name: 'Description',
+            help_text: 'A description for the view.',
+        );
         $this->recursion = new BooleanField(
             default: false,
             indicates_true: 'yes',

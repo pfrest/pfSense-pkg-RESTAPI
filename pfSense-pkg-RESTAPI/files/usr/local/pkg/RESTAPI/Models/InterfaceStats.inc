@@ -80,7 +80,11 @@ class InterfaceStats extends Model {
             verbose_name: 'MTU',
             help_text: 'The MTU of the interface.',
         );
-        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Whether the interface is enabled.');
+        $this->enable = new BooleanField(
+            default: false,
+            verbose_name: 'Enable',
+            help_text: 'Whether the interface is enabled.',
+        );
         $this->status = new StringField(
             default: '',
             allow_empty: true,
@@ -123,28 +127,56 @@ class InterfaceStats extends Model {
             verbose_name: 'IPv6 Subnet',
             help_text: 'The IPv6 subnet of the interface.',
         );
-        $this->inerrs = new IntegerField(default: 0, verbose_name: 'Inbound Errors', help_text: 'The number of inbound errors on the interface.');
-        $this->outerrs = new IntegerField(default: 0, verbose_name: 'Outbound Errors', help_text: 'The number of outbound errors on the interface.');
-        $this->collisions = new IntegerField(default: 0, verbose_name: 'Collisions', help_text: 'The number of collisions on the interface.');
-        $this->inbytes = new IntegerField(default: 0, verbose_name: 'Inbound Bytes', help_text: 'The number of inbound bytes on the interface.');
+        $this->inerrs = new IntegerField(
+            default: 0,
+            verbose_name: 'Inbound Errors',
+            help_text: 'The number of inbound errors on the interface.',
+        );
+        $this->outerrs = new IntegerField(
+            default: 0,
+            verbose_name: 'Outbound Errors',
+            help_text: 'The number of outbound errors on the interface.',
+        );
+        $this->collisions = new IntegerField(
+            default: 0,
+            verbose_name: 'Collisions',
+            help_text: 'The number of collisions on the interface.',
+        );
+        $this->inbytes = new IntegerField(
+            default: 0,
+            verbose_name: 'Inbound Bytes',
+            help_text: 'The number of inbound bytes on the interface.',
+        );
         $this->inbytespass = new IntegerField(
             default: 0,
             verbose_name: 'Inbound Bytes (Pass)',
             help_text: 'The number of inbound bytes passed on the interface.',
         );
-        $this->outbytes = new IntegerField(default: 0, verbose_name: 'Outbound Bytes', help_text: 'The number of outbound bytes on the interface.');
+        $this->outbytes = new IntegerField(
+            default: 0,
+            verbose_name: 'Outbound Bytes',
+            help_text: 'The number of outbound bytes on the interface.',
+        );
         $this->outbytespass = new IntegerField(
             default: 0,
             verbose_name: 'Outbound Bytes (Pass)',
             help_text: 'The number of outbound bytes passed on the interface.',
         );
-        $this->inpkts = new IntegerField(default: 0, verbose_name: 'Inbound Packets', help_text: 'The number of inbound packets on the interface.');
+        $this->inpkts = new IntegerField(
+            default: 0,
+            verbose_name: 'Inbound Packets',
+            help_text: 'The number of inbound packets on the interface.',
+        );
         $this->inpktspass = new IntegerField(
             default: 0,
             verbose_name: 'Inbound Packets (Pass)',
             help_text: 'The number of inbound packets passed on the interface.',
         );
-        $this->outpkts = new IntegerField(default: 0, verbose_name: 'Outbound Packets', help_text: 'The number of outbound packets on the interface.');
+        $this->outpkts = new IntegerField(
+            default: 0,
+            verbose_name: 'Outbound Packets',
+            help_text: 'The number of outbound packets on the interface.',
+        );
         $this->outpktspass = new IntegerField(
             default: 0,
             verbose_name: 'Outbound Packets (Pass)',

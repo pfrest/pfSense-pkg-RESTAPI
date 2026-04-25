@@ -57,7 +57,11 @@ class ARPTable extends Model {
             verbose_name: 'Interface',
             help_text: 'The interface where the ARP entry was registered.',
         );
-        $this->type = new StringField(read_only: true, verbose_name: 'Type', help_text: 'The type of connection this host utilizes.');
+        $this->type = new StringField(
+            read_only: true,
+            verbose_name: 'Type',
+            help_text: 'The type of connection this host utilizes.',
+        );
         $this->permanent = new BooleanField(
             read_only: true,
             indicates_true: true,
@@ -65,7 +69,11 @@ class ARPTable extends Model {
             verbose_name: 'Permanent',
             help_text: 'Indicates whether the ARP entry is permanent in the ARP table.',
         );
-        $this->expires = new StringField(read_only: true, verbose_name: 'Expires', help_text: 'The expiration time for this ARP entry.');
+        $this->expires = new StringField(
+            read_only: true,
+            verbose_name: 'Expires',
+            help_text: 'The expiration time for this ARP entry.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

@@ -143,7 +143,11 @@ class FirewallRule extends Model {
             help_text: 'Th ICMP subtypes this rule applies to. This field is only applicable when ' .
                 '`ipprotocol` is `inet` and `protocol` is `icmp`.',
         );
-        $this->source = new FilterAddressField(required: true, verbose_name: 'Source', help_text: 'The source address this rule applies to.');
+        $this->source = new FilterAddressField(
+            required: true,
+            verbose_name: 'Source',
+            help_text: 'The source address this rule applies to.',
+        );
         $this->source_port = new PortField(
             default: null,
             allow_alias: true,
@@ -177,7 +181,11 @@ class FirewallRule extends Model {
             verbose_name: 'Description',
             help_text: 'A description detailing the purpose or justification of this firewall rule.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Enable or disable this firewall rule.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Enable or disable this firewall rule.',
+        );
         $this->log = new BooleanField(
             default: false,
             verbose_name: 'Log',

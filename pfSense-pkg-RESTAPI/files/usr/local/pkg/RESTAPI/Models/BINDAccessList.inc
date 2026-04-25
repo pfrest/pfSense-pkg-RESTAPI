@@ -25,7 +25,12 @@ class BINDAccessList extends Model {
         $this->verbose_name = 'BIND Access List';
 
         # Set model fields
-        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the access list.');
+        $this->name = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Name',
+            help_text: 'The name of the access list.',
+        );
         $this->description = new StringField(
             default: '',
             allow_empty: true,

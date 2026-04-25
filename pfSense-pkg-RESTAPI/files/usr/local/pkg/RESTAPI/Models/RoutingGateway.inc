@@ -65,7 +65,11 @@ class RoutingGateway extends Model {
             verbose_name: 'Description',
             help_text: 'Sets a descriptions for the gateway.',
         );
-        $this->disabled = new BooleanField(default: false, verbose_name: 'Disabled', help_text: 'Disable this gateway.');
+        $this->disabled = new BooleanField(
+            default: false,
+            verbose_name: 'Disabled',
+            help_text: 'Disable this gateway.',
+        );
         $this->ipprotocol = new StringField(
             required: true,
             choices: ['inet', 'inet6'],
@@ -103,7 +107,11 @@ class RoutingGateway extends Model {
             help_text: "Disable actions from taking place when gateway events occur. The gateway will always be
                 considered up.",
         );
-        $this->force_down = new BooleanField(default: false, verbose_name: 'Force Down', help_text: 'Always consider this gateway to be up.');
+        $this->force_down = new BooleanField(
+            default: false,
+            verbose_name: 'Force Down',
+            help_text: 'Always consider this gateway to be up.',
+        );
         $this->dpinger_dont_add_static_route = new BooleanField(
             default: false,
             verbose_name: 'Dpinger No Static Route',

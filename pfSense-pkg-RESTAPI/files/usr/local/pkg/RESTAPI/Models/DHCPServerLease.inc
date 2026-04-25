@@ -31,17 +31,42 @@ class DHCPServerLease extends Model {
         $this->always_apply = true;
 
         # Set model fields
-        $this->ip = new StringField(default: null, allow_null: true, verbose_name: 'IP', help_text: 'The IP address of the lease.');
-        $this->mac = new StringField(default: null, allow_null: true, verbose_name: 'MAC', help_text: 'The MAC address of the lease.');
-        $this->hostname = new StringField(default: null, allow_null: true, verbose_name: 'Hostname', help_text: 'The hostname of the lease.');
+        $this->ip = new StringField(
+            default: null,
+            allow_null: true,
+            verbose_name: 'IP',
+            help_text: 'The IP address of the lease.',
+        );
+        $this->mac = new StringField(
+            default: null,
+            allow_null: true,
+            verbose_name: 'MAC',
+            help_text: 'The MAC address of the lease.',
+        );
+        $this->hostname = new StringField(
+            default: null,
+            allow_null: true,
+            verbose_name: 'Hostname',
+            help_text: 'The hostname of the lease.',
+        );
         $this->if = new InterfaceField(
             default: null,
             allow_null: true,
             verbose_name: 'Interface Name',
             help_text: 'The interface the lease was registered on.',
         );
-        $this->starts = new StringField(default: null, allow_null: true, verbose_name: 'Starts', help_text: 'The start time of the lease.');
-        $this->ends = new StringField(default: null, allow_null: true, verbose_name: 'Ends', help_text: 'The end time of the lease.');
+        $this->starts = new StringField(
+            default: null,
+            allow_null: true,
+            verbose_name: 'Starts',
+            help_text: 'The start time of the lease.',
+        );
+        $this->ends = new StringField(
+            default: null,
+            allow_null: true,
+            verbose_name: 'Ends',
+            help_text: 'The end time of the lease.',
+        );
         $this->active_status = new StringField(
             default: null,
             allow_null: true,
@@ -56,7 +81,12 @@ class DHCPServerLease extends Model {
             verbose_name: 'Online Status',
             help_text: 'The online status of the lease.',
         );
-        $this->descr = new StringField(default: null, allow_null: true, verbose_name: 'Description', help_text: 'The description of the lease.');
+        $this->descr = new StringField(
+            default: null,
+            allow_null: true,
+            verbose_name: 'Description',
+            help_text: 'The description of the lease.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

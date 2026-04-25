@@ -65,7 +65,12 @@ class WireGuardPeer extends Model {
             verbose_name: 'Port',
             help_text: 'The port used by the remote peer.',
         );
-        $this->descr = new StringField(default: '', allow_empty: true, verbose_name: 'Description', help_text: 'The description for this peer.');
+        $this->descr = new StringField(
+            default: '',
+            allow_empty: true,
+            verbose_name: 'Description',
+            help_text: 'The description for this peer.',
+        );
         $this->persistentkeepalive = new IntegerField(
             default: null,
             allow_null: true,
@@ -73,7 +78,12 @@ class WireGuardPeer extends Model {
             verbose_name: 'Persistent Keepalive',
             help_text: 'The interval (in seconds) for Keep Alive packets sent to this peer. Set to `null` to disable.',
         );
-        $this->publickey = new StringField(required: true, unique: true, verbose_name: 'Public Key', help_text: 'The public key for this peer.');
+        $this->publickey = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Public Key',
+            help_text: 'The public key for this peer.',
+        );
         $this->presharedkey = new StringField(
             default: '',
             allow_empty: true,

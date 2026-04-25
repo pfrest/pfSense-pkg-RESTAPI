@@ -34,7 +34,11 @@ class SystemVersion extends Model {
             help_text: 'The base pfSense version. For pfSense CE, this will be the major and minor version but not ' .
                 'the patch. For pfSense Plus, this will be the version year and month but not the patch.',
         );
-        $this->patch = new StringField(read_only: true, verbose_name: 'Patch', help_text: "The pfSense build's patch version.");
+        $this->patch = new StringField(
+            read_only: true,
+            verbose_name: 'Patch',
+            help_text: "The pfSense build's patch version.",
+        );
         $this->buildtime = new StringField(
             read_only: true,
             verbose_name: 'Build Time',

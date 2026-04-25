@@ -39,7 +39,11 @@ class HAProxyFile extends Model {
             verbose_name: 'Type',
             help_text: 'The type of file. Use `null` to assume an Errorfile.',
         );
-        $this->content = new Base64Field(required: true, verbose_name: 'Content', help_text: 'The content of this file.');
+        $this->content = new Base64Field(
+            required: true,
+            verbose_name: 'Content',
+            help_text: 'The content of this file.',
+        );
 
         parent::__construct($id, $parent_id, $data, ...$options);
     }

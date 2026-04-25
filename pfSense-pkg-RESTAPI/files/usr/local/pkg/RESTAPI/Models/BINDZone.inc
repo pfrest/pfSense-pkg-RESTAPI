@@ -58,8 +58,18 @@ class BINDZone extends Model {
         $this->verbose_name = 'BIND Zone';
 
         # Set model fields
-        $this->disabled = new BooleanField(default: false, indicates_true: 'on', verbose_name: 'Disabled', help_text: 'Disable this BIND zone.');
-        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of this BIND zone.');
+        $this->disabled = new BooleanField(
+            default: false,
+            indicates_true: 'on',
+            verbose_name: 'Disabled',
+            help_text: 'Disable this BIND zone.',
+        );
+        $this->name = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Name',
+            help_text: 'The name of this BIND zone.',
+        );
         $this->description = new StringField(
             default: '',
             allow_empty: true,

@@ -17,16 +17,16 @@ const RESERVED_FIELD_NAMES = [
     'append',
     'remove',
     'reverse',
-    'api_host',            # used by ansible collection
-    'api_port',            # used by ansible collection
-    'api_protocol',        # used by ansible collection
-    'api_username',        # used by ansible collection
-    'api_key',             # used by ansible collection
-    'validate_certs',      # used by ansible collection
-    'objects',             # used by ansible collection
-    'lookup_fields',       # used by ansible collection
+    'api_host', # used by ansible collection
+    'api_port', # used by ansible collection
+    'api_protocol', # used by ansible collection
+    'api_username', # used by ansible collection
+    'api_key', # used by ansible collection
+    'validate_certs', # used by ansible collection
+    'objects', # used by ansible collection
+    'lookup_fields', # used by ansible collection
     'parent_lookup_query', # used by ansible collection
-    'query_params',        # used by ansible collection
+    'query_params', # used by ansible collection
 ];
 
 /**

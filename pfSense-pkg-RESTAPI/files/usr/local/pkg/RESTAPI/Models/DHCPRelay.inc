@@ -27,7 +27,11 @@ class DHCPRelay extends Model {
         $this->always_apply = true;
 
         # Set model fields
-        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enables or disables the DHCP relay.');
+        $this->enable = new BooleanField(
+            default: false,
+            verbose_name: 'Enable',
+            help_text: 'Enables or disables the DHCP relay.',
+        );
         $this->interface = new InterfaceField(
             default: [],
             many: true,

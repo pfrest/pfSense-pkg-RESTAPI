@@ -31,8 +31,18 @@ class Package extends Model {
             verbose_name: 'Name',
             help_text: 'The name of the pfSense package.',
         );
-        $this->shortname = new StringField(default: '', read_only: true, verbose_name: 'Short Name', help_text: "The package's shortname.");
-        $this->descr = new StringField(default: '', read_only: true, verbose_name: 'Description', help_text: "The package's description.");
+        $this->shortname = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'Short Name',
+            help_text: "The package's shortname.",
+        );
+        $this->descr = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'Description',
+            help_text: "The package's description.",
+        );
         $this->installed_version = new StringField(
             default: '',
             read_only: true,

@@ -31,8 +31,17 @@ class Service extends Model {
             verbose_name: 'Action',
             help_text: 'The action to perform against this service.',
         );
-        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The internal name of the service.');
-        $this->description = new StringField(read_only: true, verbose_name: 'Description', help_text: 'The full descriptive name of the service.');
+        $this->name = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Name',
+            help_text: 'The internal name of the service.',
+        );
+        $this->description = new StringField(
+            read_only: true,
+            verbose_name: 'Description',
+            help_text: 'The full descriptive name of the service.',
+        );
         $this->enabled = new BooleanField(
             read_only: true,
             indicates_true: true,

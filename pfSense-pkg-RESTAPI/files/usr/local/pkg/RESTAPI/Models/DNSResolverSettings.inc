@@ -40,7 +40,11 @@ class DNSResolverSettings extends Model {
         $this->subsystem = 'unbound';
 
         # Set model fields
-        $this->enable = new BooleanField(default: false, verbose_name: 'Enable', help_text: 'Enables or disables the DNS Resolver service.');
+        $this->enable = new BooleanField(
+            default: false,
+            verbose_name: 'Enable',
+            help_text: 'Enables or disables the DNS Resolver service.',
+        );
         $this->port = new PortField(
             default: '53',
             allow_alias: false,
@@ -113,8 +117,16 @@ class DNSResolverSettings extends Model {
             verbose_name: 'System Domain Local Zone Type',
             help_text: 'The type of local zone used for the system domain.',
         );
-        $this->dnssec = new BooleanField(default: false, verbose_name: 'DNSSEC', help_text: 'Enables or disables DNSSEC validation.');
-        $this->python = new BooleanField(default: false, verbose_name: 'Python', help_text: 'Enables or disables the Python module.');
+        $this->dnssec = new BooleanField(
+            default: false,
+            verbose_name: 'DNSSEC',
+            help_text: 'Enables or disables DNSSEC validation.',
+        );
+        $this->python = new BooleanField(
+            default: false,
+            verbose_name: 'Python',
+            help_text: 'Enables or disables the Python module.',
+        );
         $this->python_order = new StringField(
             default: 'pre_validator',
             choices: ['pre_validator', 'post_validator'],

@@ -52,11 +52,36 @@ class IPsecChildSAStatus extends Model {
             verbose_name: 'Name',
             help_text: 'The name of the connection ID for the child SA.',
         );
-        $this->uniqueid = new IntegerField(default: 0, read_only: true, verbose_name: 'Unique ID', help_text: 'The unique ID of the child SA.');
-        $this->reqid = new IntegerField(default: 0, read_only: true, verbose_name: 'Reqid', help_text: 'The request ID of the child SA.');
-        $this->state = new StringField(default: '', read_only: true, verbose_name: 'State', help_text: 'The current state of the child SA.');
-        $this->mode = new StringField(default: '', read_only: true, verbose_name: 'Mode', help_text: 'The mode of the child SA.');
-        $this->protocol = new StringField(default: '', read_only: true, verbose_name: 'Protocol', help_text: 'The protocol of the child SA.');
+        $this->uniqueid = new IntegerField(
+            default: 0,
+            read_only: true,
+            verbose_name: 'Unique ID',
+            help_text: 'The unique ID of the child SA.',
+        );
+        $this->reqid = new IntegerField(
+            default: 0,
+            read_only: true,
+            verbose_name: 'Reqid',
+            help_text: 'The request ID of the child SA.',
+        );
+        $this->state = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'State',
+            help_text: 'The current state of the child SA.',
+        );
+        $this->mode = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'Mode',
+            help_text: 'The mode of the child SA.',
+        );
+        $this->protocol = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'Protocol',
+            help_text: 'The protocol of the child SA.',
+        );
         $this->encap = new BooleanField(
             default: false,
             read_only: true,

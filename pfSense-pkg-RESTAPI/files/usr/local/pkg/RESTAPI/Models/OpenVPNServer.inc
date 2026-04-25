@@ -132,7 +132,11 @@ class OpenVPNServer extends Model {
             verbose_name: 'Description',
             help_text: 'The description for this OpenVPN server.',
         );
-        $this->disable = new BooleanField(default: false, verbose_name: 'Disable', help_text: 'Disables this OpenVPN server.');
+        $this->disable = new BooleanField(
+            default: false,
+            verbose_name: 'Disable',
+            help_text: 'Disables this OpenVPN server.',
+        );
         $this->mode = new StringField(
             required: true,
             choices: ['p2p_tls', 'server_tls', 'server_user', 'server_tls_user'],

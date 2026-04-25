@@ -24,9 +24,24 @@ class AvailablePackage extends Model {
         $this->cache_class = 'AvailablePackageCache';
 
         # Set model fields
-        $this->name = new StringField(required: true, unique: true, verbose_name: 'Name', help_text: 'The name of the pfSense package.');
-        $this->shortname = new StringField(default: '', read_only: true, verbose_name: 'Short Name', help_text: "The package's shortname.");
-        $this->descr = new StringField(default: '', read_only: true, verbose_name: 'Description', help_text: "The package's description.");
+        $this->name = new StringField(
+            required: true,
+            unique: true,
+            verbose_name: 'Name',
+            help_text: 'The name of the pfSense package.',
+        );
+        $this->shortname = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'Short Name',
+            help_text: "The package's shortname.",
+        );
+        $this->descr = new StringField(
+            default: '',
+            read_only: true,
+            verbose_name: 'Description',
+            help_text: "The package's description.",
+        );
         $this->version = new StringField(
             default: '',
             read_only: true,
