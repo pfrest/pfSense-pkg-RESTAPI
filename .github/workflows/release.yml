@@ -42,6 +42,6 @@ jobs:
           /usr/local/bin/VBoxManage snapshot ${{matrix.freebsd_version}} restore initial
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: pfSense-${{ matrix.pfsense_version }}-pkg-API.pkg
