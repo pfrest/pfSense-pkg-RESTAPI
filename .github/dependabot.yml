@@ -48,20 +48,3 @@ updates:
       npm:
         patterns:
           - "*"
-
-  # LEGACY BRANCH (v1)
-  - package-ecosystem: "composer"
-    directory: "/"
-    target-branch: "legacy"
-    schedule:
-      interval: "monthly"
-  - package-ecosystem: "pip"
-    directory: "/"
-    target-branch: "legacy"
-    schedule:
-      interval: "monthly"
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    target-branch: "legacy"
-    schedule:
-      interval: "monthly"
