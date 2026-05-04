@@ -11,16 +11,31 @@ updates:
     target-branch: "master"
     schedule:
       interval: "monthly"
+    groups:
+      composer:
+        patterns:
+          - "*"
+
   - package-ecosystem: "pip"
     directory: "/"
     target-branch: "master"
     schedule:
       interval: "monthly"
+    groups:
+      pip:
+        patterns:
+          - "*"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "master"
     schedule:
       interval: "monthly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
   - package-ecosystem: "npm"
     directory: "/"
     target-branch: "master"
@@ -29,6 +44,10 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "chore"
+    groups:
+      npm:
+        patterns:
+          - "*"
 
   # LEGACY BRANCH (v1)
   - package-ecosystem: "composer"
