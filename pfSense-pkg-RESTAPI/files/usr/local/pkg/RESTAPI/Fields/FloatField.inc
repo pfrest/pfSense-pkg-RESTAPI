@@ -10,8 +10,7 @@ use RESTAPI\Core\Field;
 /**
  * Defines a Field object for validating and storing a floating point number.
  */
-class FloatField extends Field
-{
+class FloatField extends Field {
     /**
      * Defines the FloatField object and sets its options.
      * @param bool $required If `true`, this field is required to have a value at all times.
