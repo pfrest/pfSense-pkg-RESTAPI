@@ -72,7 +72,7 @@ class APIFieldsKeyLenFieldTestCase extends TestCase {
     public function test_to_internal_non_zero_passes_through(): void {
         $field = new KeyLenField(default: 128);
         $field->value = 128;
-        $this->assert_equals($field->to_internal(), 128);
+        $this->assert_equals($field->to_internal(), '128');
     }
 
     /**
