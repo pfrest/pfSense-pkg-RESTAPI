@@ -5,6 +5,7 @@ namespace RESTAPI\Fields;
 require_once 'RESTAPI/autoloader.inc';
 require_once 'RESTAPI/Fields/InterfaceField.inc';
 
+use RESTAPI\Core\Field;
 use RESTAPI\Models\FirewallAlias;
 use RESTAPI\Models\NetworkInterface;
 use RESTAPI\Responses\ServerError;

@@ -5,11 +5,12 @@ namespace RESTAPI\Fields;
 require_once 'RESTAPI/autoloader.inc';
 
 use RESTAPI;
+use RESTAPI\Core\Field;
 
 /**
  * Defines a Field that contains a unique ID. This field will automatically populate a unique ID that is immutable.
  */
-class UIDField extends RESTAPI\Core\Field {
+class UIDField extends Field {
     /**
      * Defines the UIDField object and sets its options.
      * @param string $prefix A specific string to prefix to the generated UID.

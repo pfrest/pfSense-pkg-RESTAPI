@@ -5,6 +5,7 @@ namespace RESTAPI\Fields;
 require_once 'RESTAPI/autoloader.inc';
 
 use RESTAPI;
+use RESTAPI\Core\Field;
 use RESTAPI\Responses\ServerError;
 
 /**

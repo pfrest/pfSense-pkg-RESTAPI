@@ -6,6 +6,7 @@ require_once 'RESTAPI/Fields/StringField.inc';
 require_once 'RESTAPI/autoloader.inc';
 
 use RESTAPI;
+use RESTAPI\Core\Field;
 use RESTAPI\Core\Model;
 use RESTAPI\Core\ModelSet;
 use RESTAPI\Models\NetworkInterface;
