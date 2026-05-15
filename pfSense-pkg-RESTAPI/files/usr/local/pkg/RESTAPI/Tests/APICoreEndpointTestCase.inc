@@ -944,6 +944,7 @@ class APICoreEndpointTestCase extends TestCase {
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
+        $_SERVER['HTTP_ACCEPT'] = 'application/json';
         $_SERVER['HTTP_PREFER'] = 'dry-run';
         $_SERVER['QUERY_STRING'] = 'name=prefer_dry_run_alias&type=host';
 
