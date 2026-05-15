@@ -441,6 +441,10 @@ class Model {
         $this->skip_init = $options['skip_init'] ?? false;
         unset($options['skip_init']);
 
+        # Obtain the dry_run flag if given. Ensure this defaults to false.
+        $this->dry_run = $options['dry_run'] ?? false;
+        unset($options['dry_run']);
+
         return $options;
     }
 

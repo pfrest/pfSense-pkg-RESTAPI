@@ -152,12 +152,13 @@ class ModelSet {
 
     /**
      * Deletes all Model objects within this ModelSet.
+     * @param bool $dry_run Run through the delete request but don't actually delete anything
      * @return ModelSet The ModelSet object with all Model objects that were deleted.
      */
-    public function delete(): ModelSet {
+    public function delete(bool $dry_run = false): ModelSet {
         # Run the delete method for each model object in this ModelSet
         # Note: We have to do this in reverse order to avoid index issues when deleting objects.
-        $this->run_model_method(method_name: 'delete', reverse: true);
+        $this->run_model_method(method_name: 'delete', reverse: true, dry_run: $dry_run);
         return $this;
     }
 
@@ -166,10 +167,16 @@ class ModelSet {
      * @param string $method_name The name of the Model method to run for each model object in this model set.
      * @param bool $use_id_as_key Use each Model object's `id` property value as the return array keys.
      * @param bool $reverse Reverse the order of which the model objects are processed.
+     * @param bool $dry_run Sets the `dry_run` property of each Model object to true before running the method.
      * @return array The return value of method call for each model object. Results are stored in the same order as
      * the model objects were passed in during construction.
      */
-    private function run_model_method(string $method_name, bool $use_id_as_key = false, bool $reverse = false): array {
+    private function run_model_method(
+        string $method_name,
+        bool $use_id_as_key = false,
+        bool $reverse = false,
+        bool $dry_run = false,
+    ): array {
         # Variables
         $results = [];
         $model_objects = $reverse ? array_reverse($this->model_objects) : $this->model_objects;
@@ -177,6 +184,7 @@ class ModelSet {
         # Loop through each model object and call its to_representation() method
         foreach ($model_objects as $loop_count => $model_object) {
             $id = $use_id_as_key ? $model_object->id : $loop_count;
+            $model_object->dry_run = $dry_run;
             $results[$id] = $model_object->$method_name();
         }
 
