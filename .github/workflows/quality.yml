@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: psf/black@c6755bb741b6481d6b3d3bb563c83fa060db96c9 # 26.3.1
+      - uses: psf/black@d2490e24dad33b8f68c77602ee29160de0fea24b # 26.5.0
 
   lint_php:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: "Setup PHP ${{ matrix.PHP_VERSION }}"
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
         with:
           php-version: "${{ matrix.PHP_VERSION }}"
           coverage: "none"
