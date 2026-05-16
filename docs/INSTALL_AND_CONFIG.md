@@ -39,7 +39,7 @@ pkg-static add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/dow
 **Install on pfSense Plus**
 
 ```bash
-pkg-static -C /dev/null add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-25.11-pkg-RESTAPI.pkg
+pkg-static -C /dev/null add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-26.03-pkg-RESTAPI.pkg
 ```
 
 !!! Important
