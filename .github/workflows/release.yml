@@ -10,7 +10,7 @@ concurrency: build
 env:
   SWAGGER_UI_VERSION: "5.17.10"
   PYTHON_VERSION: "3.10"
-  DEFAULT_PFSENSE_VERSION: "2.8.0"
+  DEFAULT_PFSENSE_VERSION: "2.8.1"
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
