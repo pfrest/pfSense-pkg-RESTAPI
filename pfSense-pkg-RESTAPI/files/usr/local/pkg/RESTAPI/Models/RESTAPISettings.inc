@@ -129,8 +129,8 @@ class RESTAPISettings extends Model {
             indicates_true: 'enabled',
             indicates_false: 'disabled',
             verbose_name: 'allow development packages',
-            help_text: 'Enables or disables using the development (-devel) variant of pfSense packages ' .
-                'required by specific API endpoints.',
+            help_text: 'Enables or disables allowing the use of development (-devel) variants of pfSense packages ' .
+                'when a package is required by specific API endpoints. Use of development packages is at your own risk.',
         );
         $this->hateoas = new BooleanField(
             default: false,

@@ -42,6 +42,7 @@ class SystemRESTAPISettingsForm extends Form {
             'fields' => [
                 'hateoas',
                 'allow_pre_releases',
+                'allow_development_packages',
                 'ha_sync',
                 'ha_sync_validate_certs',
                 'ha_sync_hosts',
