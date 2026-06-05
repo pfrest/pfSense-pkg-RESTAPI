@@ -148,8 +148,7 @@ class WireGuardTunnel extends Model {
     /**
      * Extends the default _update method to ensure addresses are removed if the tunnel has an interface assignment
      */
-    public function _update(): void
-    {
+    public function _update(): void {
         # Remove any existing addresses if this tunnel has an existing interface assignment
         if (NetworkInterface::query(if: $this->name->value)->exists()) {
             $this->addresses->value = null;
