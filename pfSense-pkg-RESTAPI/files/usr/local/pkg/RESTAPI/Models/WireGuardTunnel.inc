@@ -151,7 +151,7 @@ class WireGuardTunnel extends Model {
     public function _update(): void {
         # Remove any existing addresses if this tunnel has an existing interface assignment
         if (NetworkInterface::query(if: $this->name->value)->exists()) {
-            $this->addresses->value = null;
+            $this->addresses->value = [];
         }
 
         parent::_update();
