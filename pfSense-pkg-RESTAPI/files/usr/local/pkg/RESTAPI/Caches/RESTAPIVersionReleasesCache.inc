@@ -33,7 +33,7 @@ class RESTAPIVersionReleasesCache extends Cache {
         $releases = json_decode($releases_json, true);
 
         # If we don't have an 'assets' key, the response is invalid. Log the response, keep the existing cache
-        if (!is_array($releases) or !array_key_exists('assets', $releases)) {
+        if (!is_array($releases) or !array_key_exists(0, $releases) or !array_key_exists('assets', $releases[0])) {
             Cache::log(
                 level: LOG_ERR,
                 message: "Releases data is malformed, received $releases_json. Keeping existing cache.",
