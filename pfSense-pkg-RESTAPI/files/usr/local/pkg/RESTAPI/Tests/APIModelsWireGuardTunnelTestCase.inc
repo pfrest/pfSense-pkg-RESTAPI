@@ -117,6 +117,60 @@ class APIModelsWireGuardTunnelTestCase extends TestCase {
     }
 
     /**
+     * Checks that the `addresses` field is removed before an update when the tunnel has an existing interface
+     * assignment, since addresses are derived from the assigned interface's configured IPs instead.
+     */
+    public function test_addresses_removed_before_update_when_interface_is_assigned(): void {
+        # Create a WireGuardTunnel to test with
+        $tunnel = new WireGuardTunnel(privatekey: 'KG0BA4UyPilHH5qnXCfr6Lw8ynecOPor88tljLy3AHk=', async: false);
+        $tunnel->create(apply: true);
+
+        # Assign a NetworkInterface for this tunnel
+        $if = new NetworkInterface(
+            if: $tunnel->name->value,
+            descr: 'WGTEST',
+            enable: true,
+            typev4: 'none',
+            typev6: 'none',
+            async: false,
+        );
+        $if->create();
+
+        # Update the tunnel with addresses while it has an interface assignment
+        # pre_validate_update() should scrub the addresses before validation runs
+        $tunnel->from_representation(addresses: [['address' => '172.20.99.1', 'mask' => 30]]);
+        $tunnel->update(apply: false);
+
+        # Ensure the addresses were removed before the update was processed
+        $this->assert_is_empty($tunnel->addresses->value);
+
+        # Delete the interface and the tunnel
+        $if->delete(apply: true);
+        $tunnel->delete(apply: true);
+    }
+
+    /**
+     * Checks that the `addresses` field is left intact before an update when the tunnel has no existing
+     * interface assignment.
+     */
+    public function test_addresses_retained_on_update_when_no_interface_assigned(): void {
+        # Create a WireGuardTunnel to test with
+        $tunnel = new WireGuardTunnel(privatekey: 'KG0BA4UyPilHH5qnXCfr6Lw8ynecOPor88tljLy3AHk=', async: false);
+        $tunnel->create(apply: true);
+
+        # Update the tunnel with addresses without an interface assignment
+        # pre_validate_update() should leave the addresses intact
+        $tunnel->from_representation(addresses: [['address' => '172.20.99.1', 'mask' => 30]]);
+        $tunnel->update(apply: true);
+
+        # Ensure the addresses were retained during the update
+        $this->assert_is_not_empty($tunnel->addresses->value);
+
+        # Delete the tunnel
+        $tunnel->delete(apply: true);
+    }
+
+    /**
      * Checks that the tunnel is properly configured on the backend after creating, updating and deleting
      */
     public function test_crud(): void {
