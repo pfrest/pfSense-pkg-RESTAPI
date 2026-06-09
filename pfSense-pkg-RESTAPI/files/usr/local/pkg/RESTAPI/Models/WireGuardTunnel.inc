@@ -146,23 +146,23 @@ class WireGuardTunnel extends Model {
     }
 
     /**
-     * Extends the default _update method to ensure addresses are removed if the tunnel has an interface assignment
-     */
-    public function _update(): void {
-        # Remove any existing addresses if this tunnel has an existing interface assignment
-        if (NetworkInterface::query(if: $this->name->value)->exists()) {
-            $this->addresses->value = [];
-        }
-
-        parent::_update();
-    }
-
-    /**
      * Obtains the next available WireGuard tunnel interface name.
      * @return string The next available WireGuard tunnel interface name (i.e. tun_wg0)
      */
     public static function get_next_tunnel_name(): string {
         return next_wg_if();
+    }
+
+    /**
+     * Adds pre-validation logic to scrub addresses from this WireGuardTunnel if it has an existing interface
+     * assignment.
+     */
+    protected function pre_validate_update(): void {
+        # If this tunnel is assigned to an existing pfSense interface, scrub any addresses from the `addresses` field
+        # since the addresses for this tunnel will be derived from the assigned interface's configured IPs instead.
+        if (NetworkInterface::query(if: $this->name->value)->exists()) {
+            $this->addresses->value = [];
+        }
     }
 
     /**
