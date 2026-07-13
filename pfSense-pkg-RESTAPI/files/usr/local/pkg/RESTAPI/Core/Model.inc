@@ -2463,6 +2463,10 @@ class Model {
                 $model_object->id = count($new_objects->model_objects);
                 $model_object->validate(modelset: $new_objects);
                 $new_objects->model_objects[] = $model_object;
+
+                # In the event that the model can reference itself (e.g. FirewallAlias), ensure the model cache is
+                # updated so ForeignModelField can accurately find referenced objects.
+                self::get_model_cache()::cache_modelset($new_objects);
             }
 
             self::clear_model_cache();

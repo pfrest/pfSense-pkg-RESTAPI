@@ -94,7 +94,7 @@ class FreeRADIUSUser extends Model {
             allow_null: false,
             sensitive: true,
             minimum_length: 4,
-            maximum_length: 4,
+            maximum_length: 8,
             verbose_name: 'MOTP PIN',
             internal_name: 'varusersmotppin',
             conditions: ['motp_enable' => true],
