@@ -62,8 +62,8 @@ class LogSettings extends Model {
         );
         $this->reverseorder = new BooleanField(
             default: false,
-            internal_name: 'reverse', # We can't use 'reverse' as the field name because it is a reserved field name
-            verbose_name: 'Reverse Order',
+            verbose_name: 'Reverse Order', # We can't use 'reverse' as the field name because it is a reserved field name
+            internal_name: 'reverse',
             help_text: 'Reverse the order of log entries.',
         );
         $this->nentries = new IntegerField(
@@ -142,15 +142,15 @@ class LogSettings extends Model {
         );
         $this->enableremotelogging = new BooleanField(
             default: false,
-            internal_name: 'enable',
             verbose_name: 'Enable Remote Logging',
+            internal_name: 'enable',
             help_text: 'Enable remote logging.',
         );
         $this->ipprotocol = new StringField(
             default: 'ipv4',
             choices: ['ipv4', 'ipv6'],
-            conditions: ['enableremotelogging' => true],
             verbose_name: 'IP Protocol',
+            conditions: ['enableremotelogging' => true],
             help_text: 'The IP protocol to use for remote logging.',
         );
         $this->sourceip = new InterfaceField(
@@ -158,110 +158,110 @@ class LogSettings extends Model {
             allow_localhost_interface: true,
             allow_custom: [''],
             allow_empty: true,
-            conditions: ['enableremotelogging' => true],
             verbose_name: 'Source IP',
+            conditions: ['enableremotelogging' => true],
             help_text: 'The interface to use as the source IP address for remote logging.',
         );
         $this->remoteserver = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Remote Server',
             conditions: ['enableremotelogging' => true],
             validators: [new IPAddressValidator(allow_fqdn: true, allow_port: true)],
-            verbose_name: 'Remote Server',
             help_text: 'The first remote syslog server to send log entries to.',
         );
         $this->remoteserver2 = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Remote Server 2',
             conditions: ['enableremotelogging' => true, '!remoteserver' => null],
             validators: [new IPAddressValidator(allow_fqdn: true, allow_port: true)],
-            verbose_name: 'Remote Server 2',
             help_text: 'The second remote syslog server to send log entries to.',
         );
         $this->remoteserver3 = new StringField(
             default: null,
             allow_null: true,
+            verbose_name: 'Remote Server 3',
             conditions: ['enableremotelogging' => true, '!remoteserver' => null, '!remoteserver2' => null],
             validators: [new IPAddressValidator(allow_fqdn: true, allow_port: true)],
-            verbose_name: 'Remote Server 3',
             help_text: 'The third remote syslog server to send log entries to.',
         );
         $this->logall = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true],
             verbose_name: 'Log All',
+            conditions: ['enableremotelogging' => true],
             help_text: 'Log everything to the remote syslog server(s).',
         );
         $this->filter = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Filter',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log filter events to the remote syslog server(s).',
         );
         $this->dhcp = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'DHCP',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log DHCP events to the remote syslog server(s).',
         );
         $this->auth = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Auth',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log authentication events to the remote syslog server(s).',
         );
         $this->portalauth = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Portal Auth',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log captive portal authentication events to the remote syslog server(s).',
         );
         $this->vpn = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'VPN',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log VPN events to the remote syslog server(s).',
         );
         $this->dpinger = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Dpinger',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log gateway monitoring events to the remote syslog server(s).',
         );
         $this->hostapd = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Host APD',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log wireless authentication events to the remote syslog server(s).',
         );
         $this->system = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'System',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log system events to the remote syslog server(s).',
         );
         $this->resolver = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Resolver',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log DNS resolver events to the remote syslog server(s).',
         );
         $this->ppp = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'PPP',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log PPP events to the remote syslog server(s).',
         );
         $this->routing = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'Routing',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log routing events to the remote syslog server(s).',
         );
         $this->ntpd = new BooleanField(
             default: false,
-            conditions: ['enableremotelogging' => true, '!logall' => true],
             verbose_name: 'NTPd',
+            conditions: ['enableremotelogging' => true, '!logall' => true],
             help_text: 'Log NTP events to the remote syslog server(s).',
         );
 
