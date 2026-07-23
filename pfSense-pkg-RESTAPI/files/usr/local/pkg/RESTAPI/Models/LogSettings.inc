@@ -123,7 +123,7 @@ class LogSettings extends Model {
         $this->logfilesize = new IntegerField(
             default: 512000,
             minimum: 100000,
-            maximum: 2147483648,
+            maximum: PHP_INT_MAX,
             verbose_name: 'Log File Size',
             help_text: 'The maximum size of the log file in kilobytes.',
         );
