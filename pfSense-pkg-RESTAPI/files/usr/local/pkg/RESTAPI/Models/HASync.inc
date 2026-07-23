@@ -74,12 +74,7 @@ class HASync extends Model {
         $this->pfsyncpeerip = new StringField(
             default: '',
             allow_empty: true,
-            validators: [
-                new IPAddressValidator(
-                    allow_ipv4: true,
-                    allow_ipv6: false,
-                ),
-            ],
+            validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
             help_text: 'The peer IP address used by pfsync.',
         );
 
@@ -87,12 +82,7 @@ class HASync extends Model {
         $this->synchronizetoip = new StringField(
             default: '',
             allow_empty: true,
-            validators: [
-                new IPAddressValidator(
-                    allow_ipv4: true,
-                    allow_ipv6: false,
-                ),
-            ],
+            validators: [new IPAddressValidator(allow_ipv4: true, allow_ipv6: false)],
             help_text: 'The remote pfSense host IP address used for XMLRPC configuration synchronization.',
         );
 
@@ -148,12 +138,7 @@ class HASync extends Model {
      * When disabled, the XML key should be removed.
      */
     private function sync_flag(string $help_text): BooleanField {
-        return new BooleanField(
-            default: false,
-            indicates_true: 'on',
-            indicates_false: null,
-            help_text: $help_text,
-        );
+        return new BooleanField(default: false, indicates_true: 'on', indicates_false: null, help_text: $help_text);
     }
 
     /**

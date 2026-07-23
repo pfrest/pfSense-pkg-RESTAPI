@@ -18,7 +18,8 @@ class SystemHASyncEndpoint extends Endpoint {
         $this->tag = 'System';
 
         $this->get_help_text = 'Reads pfSense High Availability synchronization settings.';
-        $this->patch_help_text = 'Updates pfSense High Availability synchronization settings and applies the configuration.';
+        $this->patch_help_text =
+            'Updates pfSense High Availability synchronization settings and applies the configuration.';
 
         parent::__construct();
     }
