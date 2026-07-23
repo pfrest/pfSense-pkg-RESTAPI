@@ -191,6 +191,13 @@ class FirewallRule extends Model {
             verbose_name: 'Log',
             help_text: 'Enable or disable logging of traffic that matches this rule.',
         );
+        $this->dscp = new StringField(
+            default: '',
+            choices: ['af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'VA', 'EF', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', '0x01', '0x02', '0x04'],
+            allow_empty: true,
+            verbose_name: 'DSCP',
+            help_text: 'The DSCP value this firewall rule should match.',
+        );
         $this->tag = new StringField(
             default: '',
             allow_empty: true,

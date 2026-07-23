@@ -3,6 +3,7 @@
 namespace RESTAPI\Core;
 
 use RESTAPI\Models\CronJob;
+use RESTAPI\Models\RESTAPISettings;
 use RESTAPI\Responses\FailedDependencyError;
 use RESTAPI\Responses\ServerError;
 use RESTAPI\Responses\ServiceUnavailableError;
@@ -119,10 +120,18 @@ class Dispatcher {
      * @throws FailedDependencyError When a package requires a PHP include file that could not be found.
      */
     private function check_required_packages(): void {
+        # Check if the user has opted in to using development (-devel) package variants
+        $pkg_config = RESTAPISettings::get_pkg_config();
+        $allow_development_packages = ($pkg_config['allow_development_packages'] ?? '') === 'enabled';
+
         # Loop through each required package and ensure it is present on the system.
         foreach ($this->required_packages as $pkg) {
-            # Return an error if the package is not installed
-            if (!is_pkg_installed($pkg)) {
+            # When the development packages setting is enabled, also accept the -devel variant of the package
+            $devel_pkg = $pkg . '-devel';
+            $pkg_installed = is_pkg_installed($pkg) || ($allow_development_packages && is_pkg_installed($devel_pkg));
+
+            # Return an error if neither the package nor its -devel variant (when allowed) is installed
+            if (!$pkg_installed) {
                 throw new FailedDependencyError(
                     message: "The requested action requires the '$pkg' package but it is not installed.",
                     response_id: 'DISPATCHER_MISSING_REQUIRED_PACKAGE',

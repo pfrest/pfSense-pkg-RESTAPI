@@ -32,7 +32,16 @@ class RESTAPIVersionReleasesCache extends Cache {
         );
         $releases = json_decode($releases_json, true);
 
-        # Return the fetched releases if in a valid format, otherwise retain the existing cache
-        return is_array($releases) ? $releases : $this->read();
+        # If we don't have an 'assets' key, the response is invalid. Log the response, keep the existing cache
+        if (!is_array($releases) or !array_key_exists(0, $releases) or !array_key_exists('assets', $releases[0])) {
+            Cache::log(
+                level: LOG_ERR,
+                message: "Releases data is malformed, received $releases_json. Keeping existing cache.",
+            );
+            return $this->read();
+        }
+
+        # Return the fetched releases
+        return $releases;
     }
 }

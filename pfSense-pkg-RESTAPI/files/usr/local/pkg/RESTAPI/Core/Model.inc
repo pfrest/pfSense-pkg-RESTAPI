@@ -1830,6 +1830,13 @@ class Model {
     }
 
     /**
+     * Initializes the 'pre_validate_update()' method. This method is intended to be overridden by a child model class
+     * and is called immediately before validating update actions. This is useful for conditions that need to be
+     * considered before validation occurs, such as scrubbing certain fields.
+     */
+    protected function pre_validate_update(): void {}
+
+    /**
      * Initializes the default 'pre_apply_update' method. This method is intended to be overridden by a child model class and
      * is called immediately before the 'apply' method for update actions only. This method runs regardless of whether
      * an apply was requested. By default, this method simply calls the global 'pre_apply' method.
@@ -2352,6 +2359,9 @@ class Model {
             $this->remove_array_changes();
         }
 
+        # Run the pre-validate method to allow for any adjustments to the object before validation occurs
+        $this->pre_validate_update();
+
         # Ensure all object Fields and validations succeed for proceeding.
         if ($this->validate(requires_id: true)) {
             # When dry_run is enabled, skip the actual write/apply phase but still report the would-be result
@@ -2453,6 +2463,10 @@ class Model {
                 $model_object->id = count($new_objects->model_objects);
                 $model_object->validate(modelset: $new_objects);
                 $new_objects->model_objects[] = $model_object;
+
+                # In the event that the model can reference itself (e.g. FirewallAlias), ensure the model cache is
+                # updated so ForeignModelField can accurately find referenced objects.
+                self::get_model_cache()::cache_modelset($new_objects);
             }
 
             self::clear_model_cache();

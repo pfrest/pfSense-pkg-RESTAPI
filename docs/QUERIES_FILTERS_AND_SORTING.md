@@ -56,10 +56,11 @@ value array contains a given value for array fields.
 
 Search for objects whose field value is within a given array of values (when the filter value is an array), or search
 for objects whose field value is a substring of a given string (when the filter value is a string).
+
 - Name: `in`
 - Examples: 
-  - `https://pfsense.example.com/api/v2/examples?fieldname__in=example`
-  - `https://pfsense.example.com/api/v2/examples?fieldname__in[]=example1&fieldname__in[]=example2`
+    - `https://pfsense.example.com/api/v2/examples?fieldname__in=example`
+    - `https://pfsense.example.com/api/v2/examples?fieldname__in[]=example1&fieldname__in[]=example2`
 
 ### Less Than (lt)
 
@@ -95,8 +96,8 @@ Search for objects whose field value matches a given format.
 
 - Name: `format`
 - Examples: 
-  - `https://pfsense.example.com/api/v2/examples?fieldname__format=ipv4`
-  - `https://pfsense.example.com/api/v2/examples?fieldname__format=email`
+    - `https://pfsense.example.com/api/v2/examples?fieldname__format=ipv4`
+    - `https://pfsense.example.com/api/v2/examples?fieldname__format=email`
 
 #### Supported Formats
 

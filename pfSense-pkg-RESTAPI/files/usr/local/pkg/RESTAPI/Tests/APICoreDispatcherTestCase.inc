@@ -6,6 +6,7 @@ use RESTAPI\Core\Dispatcher;
 use RESTAPI\Core\TestCase;
 use RESTAPI\Dispatchers\WireGuardApplyDispatcher;
 use RESTAPI\Models\Package;
+use RESTAPI\Models\RESTAPISettings;
 
 class APICoreDispatcherTestCase extends TestCase {
     /**
@@ -176,4 +177,100 @@ class APICoreDispatcherTestCase extends TestCase {
         # Remove the installed package
         $package->delete();
     }
+
+    /**
+     * Checks that a Dispatcher requiring a package that is not installed throws DISPATCHER_MISSING_REQUIRED_PACKAGE
+     * when the `allow_development_packages` setting is disabled (default).
+     */
+    public function test_required_package_missing_throws_by_default(): void {
+        # Ensure the allow_development_packages setting is disabled
+        $settings = new RESTAPISettings();
+        $settings->from_internal();
+        $original = $settings->allow_development_packages->value;
+
+        if ($original) {
+            $settings->allow_development_packages->value = false;
+            $settings->update(apply: false);
+        }
+
+        # A Dispatcher requiring a package that is not installed should fail
+        $this->assert_throws_response(
+            response_id: 'DISPATCHER_MISSING_REQUIRED_PACKAGE',
+            code: 424,
+            callable: function () {
+                $dispatcher = new RequiredPackagesTestDispatcher();
+                $dispatcher->required_packages = ['pfSense-pkg-some_package_we_dont_have'];
+                $dispatcher->process();
+            },
+        );
+    }
+
+    /**
+     * Checks that when `allow_development_packages` is enabled, a Dispatcher whose required package is not installed
+     * and whose -devel counterpart is also not installed still throws DISPATCHER_MISSING_REQUIRED_PACKAGE. Since we
+     * cannot install arbitrary packages in tests, we verify the inverse: a package whose -devel name also doesn't
+     * exist still fails even with the setting enabled.
+     */
+    public function test_devel_variant_still_fails_when_neither_installed(): void {
+        # Enable the allow_development_packages setting
+        $settings = new RESTAPISettings();
+        $settings->from_internal();
+        $settings->allow_development_packages->value = true;
+        $settings->update(apply: false);
+
+        # Even with the setting on, if neither the base package nor the -devel variant is installed, it should fail
+        $this->assert_throws_response(
+            response_id: 'DISPATCHER_MISSING_REQUIRED_PACKAGE',
+            code: 424,
+            callable: function () {
+                $dispatcher = new RequiredPackagesTestDispatcher();
+                $dispatcher->required_packages = ['pfSense-pkg-some_package_we_dont_have'];
+                $dispatcher->process();
+            },
+        );
+
+        # Restore the setting to its original value
+        $settings->allow_development_packages->value = false;
+        $settings->update(apply: false);
+    }
+
+    /**
+     * Checks that when `allow_development_packages` is enabled, a Dispatcher whose required base package is installed
+     * (using pfSense-pkg-RESTAPI as a proxy for the base package) still passes the required package check.
+     */
+    public function test_base_package_accepted_when_devel_enabled(): void {
+        # Enable the allow_development_packages setting
+        $settings = new RESTAPISettings();
+        $settings->from_internal();
+        $settings->allow_development_packages->value = true;
+        $settings->update(apply: false);
+
+        # The base package (pfSense-pkg-RESTAPI) is installed; the package check should still pass
+        $this->assert_does_not_throw(
+            callable: function () {
+                $dispatcher = new RequiredPackagesTestDispatcher();
+                $dispatcher->required_packages = ['pfSense-pkg-RESTAPI'];
+                $dispatcher->process();
+            },
+        );
+
+        # Restore the setting to its original value
+        $settings->allow_development_packages->value = false;
+        $settings->update(apply: false);
+    }
+}
+
+/**
+ * Defines a test-only Dispatcher used to exercise the $required_packages check without spawning a real background
+ * process. The $required_packages property is exposed publicly so individual tests can assign the package(s) to
+ * check, and _process() is intentionally a no-op so calling process() only runs the required package validation.
+ */
+class RequiredPackagesTestDispatcher extends Dispatcher {
+    public array $required_packages = [];
+
+    /**
+     * Overrides the default _process() with a no-op so tests can validate the package check in isolation.
+     * @param mixed ...$arguments Unused arguments accepted to match the parent signature.
+     */
+    protected function _process(mixed ...$arguments): void {}
 }
