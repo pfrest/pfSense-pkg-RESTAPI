@@ -332,6 +332,33 @@ class APIModelsFirewallRuleTestCase extends TestCase {
     }
 
     /**
+     * Checks that the `dscp` field is properly set in the pfctl rule
+     */
+    public function test_dscp() {
+        # Create a firewall rule to test with
+        $rule = new FirewallRule(
+            data: [
+                'type' => 'pass',
+                'interface' => ['lan'],
+                'ipprotocol' => 'inet',
+                'protocol' => 'tcp',
+                'source' => 'any',
+                'destination' => 'any',
+                'dscp' => 'af11',
+            ],
+            async: false,
+        );
+        $rule->create(apply: true);
+
+        # Ensure the pfctl rule with this rule object's tracker matches the requested DSCP value
+        $pfctl_rules = file_get_contents('/tmp/rules.debug');
+        $this->assert_str_contains($pfctl_rules, "tos af11 ridentifier {$rule->tracker->value}");
+
+        # Delete the firewall rule
+        $rule->delete(apply: true);
+    }
+
+    /**
      * Checks that firewall rules with `log` enabled have the log flag set in pfctl
      */
     public function test_log() {
