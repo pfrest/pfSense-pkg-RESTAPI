@@ -1196,6 +1196,7 @@ function sync() {
                 $protocol."://".$node.":".$port."/api/v1/system/api/sync",
                 "PUT",
                 $pkg_conf,
+                [],
                 $pkg_conf["hasync_username"],
                 $pkg_conf["hasync_password"]
             );
