@@ -66,7 +66,7 @@ jobs:
           path: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
 
       - name: Release
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           files: pfSense-${{ matrix.PFSENSE_VERSION }}-pkg-RESTAPI.pkg
 
@@ -131,7 +131,7 @@ jobs:
           path: schema.graphql
 
       - name: Release schemas
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           files: |
             native.json
