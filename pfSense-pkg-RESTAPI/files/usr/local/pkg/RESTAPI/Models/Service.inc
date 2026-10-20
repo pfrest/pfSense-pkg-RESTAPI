@@ -33,7 +33,6 @@ class Service extends Model {
         );
         $this->name = new StringField(
             required: true,
-            unique: true,
             verbose_name: 'Name',
             help_text: 'The internal name of the service.',
         );
