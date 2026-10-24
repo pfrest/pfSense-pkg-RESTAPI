@@ -26,7 +26,7 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
                 $interface = NetworkInterface::query(query_params: ['id' => $id])->first();
                 $represented = $mode === 'id' ? $id : $interface->$mode->value;
                 foreach (['_ipv4', '_ipv6'] as $suffix) {
-                    $field = $this->make_field();
+                    $field = $this->make_field(required: true);
                     $field->value = $represented . $suffix;
                     $this->assert_is_true(in_array($field->value, $field->choices, true));
                     $this->assert_is_true($field->validate());
