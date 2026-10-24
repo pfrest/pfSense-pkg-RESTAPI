@@ -83,6 +83,9 @@ class Field {
      *      Make this a required field. If false, a valid $default, $default_callable or $allow_null must be set.
      * @param bool $unique
      *      If true, $value must be unique among all parent Model objects (only for parent Models with $many set to true).
+     * @param bool $skip_unique_validation
+     *      If true, fields marked as unique will skip enforcement of the unique constraint. This is necessary for
+     *      fields that use $unique for schema or indexing purposes, but do not need the constraint enforced.
      * @param mixed $default
      *      The default $value for this field if none is assigned. The default specified here should be static. If the
      *      default for this field is dynamic in nature, use a $default_callable instead.
@@ -136,6 +139,7 @@ class Field {
         public string $type = '',
         public bool $required = false,
         public bool $unique = false,
+        public bool $skip_unique_validation = false,
         public mixed $default = null,
         public string $default_callable = '',
         public array $choices = [],
@@ -725,8 +729,8 @@ class Field {
      * @throws ServerError When $unique is enabled, but the parent model $context does not have $many enabled
      */
     private function check_field_unique(mixed $value, ?ModelSet $modelset = null): void {
-        # Only check this if `unique` is enabled
-        if ($this->unique) {
+        # Only check this if `unique` is enabled and the unique constraint is enforced
+        if ($this->unique and !$this->skip_unique_validation) {
             # Throw an error if unique is set but the model context is not a 'many' model.
             if (!$this->context->many) {
                 throw new ServerError(
