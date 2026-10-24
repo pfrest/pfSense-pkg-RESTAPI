@@ -36,8 +36,8 @@ class HAProxyFrontendAddress extends Model {
         );
         $this->extaddr_custom = new StringField(
             required: true,
-            conditions: ['extaddr' => 'custom'],
             verbose_name: 'Custom External Address',
+            conditions: ['extaddr' => 'custom'],
             help_text: 'The custom IPv4 or IPv6 address to use as the external address.',
         );
         $this->extaddr_port = new PortField(
