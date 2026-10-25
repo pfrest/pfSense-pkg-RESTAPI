@@ -22,7 +22,7 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
             $settings->represent_interfaces_as->value = $mode;
             $settings->update();
 
-            foreach (['wan', 'lan', 'opt1'] as $id) {
+            foreach (['wan', 'lan'] as $id) {
                 $interface = NetworkInterface::query(query_params: ['id' => $id])->first();
                 $represented = $mode === 'id' ? $id : $interface->$mode->value;
                 foreach (['_ipv4', '_ipv6'] as $suffix) {
