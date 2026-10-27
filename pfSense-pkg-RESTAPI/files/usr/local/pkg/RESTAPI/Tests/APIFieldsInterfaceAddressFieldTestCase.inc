@@ -49,7 +49,7 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
             $settings->represent_interfaces_as->value = $mode;
             $settings->update();
             $keywords = ['custom', 'any_ipv4', 'any_ipv6', 'localhost_ipv4', 'localhost_ipv6', 'WAN_ipv4'];
-            $field = $this->make_field(allow_custom: $keywords);
+            $field = $this->make_field(required: true, allow_custom: $keywords);
             foreach ($keywords as $keyword) {
                 $field->value = $keyword;
                 $this->assert_is_true($field->validate());
@@ -69,7 +69,7 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
         $settings = new RESTAPISettings();
         $settings->represent_interfaces_as->value = 'descr';
         $settings->update();
-        $field = $this->make_field();
+        $field = $this->make_field(required: true);
 
         foreach (['WAN', 'wan_ipv4', 'missing_ipv6', 'WAN_ipv5', 'WAN:ip', 'WAN_ipv4_extra', 'any_ipv4'] as $value) {
             $field->value = $value;
@@ -88,7 +88,7 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
         $settings = new RESTAPISettings();
         $settings->represent_interfaces_as->value = 'id';
         $settings->update();
-        $field = $this->make_field(interface_query: ['id' => 'lan']);
+        $field = $this->make_field(required: true, interface_query: ['id' => 'lan']);
         $this->assert_equals(array_keys($field->get_interface_choices()), ['lan_ipv4', 'lan_ipv6']);
         $field->value = 'wan_ipv4';
         $this->assert_equals($field->get_related_model(), null);
@@ -108,7 +108,7 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
         $settings->update();
 
         foreach ([',', null] as $delimiter) {
-            $field = $this->make_field(many: true, delimiter: $delimiter, allow_custom: ['any_ipv4']);
+            $field = $this->make_field(required: true, many: true, delimiter: $delimiter, allow_custom: ['any_ipv4']);
             $field->value = ['WAN_ipv4', 'LAN_ipv6', 'any_ipv4'];
             $internal = ['wan_ipv4', 'lan_ipv6', 'any_ipv4'];
             $internal = $delimiter === null ? $internal : implode($delimiter, $internal);
