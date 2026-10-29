@@ -7,6 +7,7 @@ require_once 'RESTAPI/autoloader.inc';
 use RESTAPI;
 use RESTAPI\Core\Auth;
 use RESTAPI\Core\Model;
+use RESTAPI\Core\ModelSet;
 use RESTAPI\Dispatchers\FirewallApplyDispatcher;
 use RESTAPI\Fields\BooleanField;
 use RESTAPI\Fields\FilterAddressField;
@@ -334,11 +335,10 @@ class FirewallRule extends Model {
                 'floating firewall rules.',
         );
         $this->tracker = new UnixTimeField(
-            editable: false,
-            read_only: true,
             auto_add_now: true,
             verbose_name: 'Tracker',
-            help_text: 'The internal tracking ID for this firewall rule.',
+            help_text: 'The internal tracking ID for this firewall rule. Defaults to the current Unix timestamp ' .
+                'for single-rule creation, or a unique random numeric value when replacing all rules.',
         );
         $this->associated_rule_id = new StringField(
             unique: true,
@@ -387,6 +387,37 @@ class FirewallRule extends Model {
         );
 
         parent::__construct($id, $parent_id, $data, ...$options);
+    }
+
+    /**
+     * Supplies unique random trackers for bulk replacement rules that omit their tracker.
+     * @param array $data The requested firewall rule representations.
+     * @param ModelSet $initial_objects The firewall rules present before replacement.
+     * @return array The representations with missing trackers populated.
+     */
+    protected function pre_validate_replace_all(array $data, ModelSet $initial_objects): array {
+        # Reserve supplied trackers up front, including those on rules later in the request
+        $used_trackers = array_column($data, 'tracker');
+        foreach ($initial_objects->model_objects as $rule) {
+            $used_trackers[] = $rule->tracker->value;
+        }
+
+        foreach ($data as $index => $rule) {
+            # Leave explicit values and malformed representations to the normal validation flow
+            if (!is_array($rule) or array_key_exists('tracker', $rule)) {
+                continue;
+            }
+
+            # Use timestamp-sized IDs within the signed 32-bit range and retry any collision
+            do {
+                $tracker = random_int(1000000000, 2147483647);
+            } while (in_array($tracker, $used_trackers));
+
+            $data[$index]['tracker'] = $tracker;
+            $used_trackers[] = $tracker;
+        }
+
+        return $data;
     }
 
     /**

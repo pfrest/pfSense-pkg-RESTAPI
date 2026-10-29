@@ -1871,6 +1871,17 @@ class Model {
     }
 
     /**
+     * Prepares representation data before validating a `replace_all()` request, including dry runs.
+     * Override this method to supply operation-specific defaults without changing other CRUD actions.
+     * @param array $data The requested Model representations.
+     * @param ModelSet $initial_objects The existing Model objects before replacement.
+     * @return array The prepared Model representations to validate and replace.
+     */
+    protected function pre_validate_replace_all(array $data, ModelSet $initial_objects): array {
+        return $data;
+    }
+
+    /**
      * Performs steps and processes required to apply changes after the `replace_all()` method runs. This can be
      * overridden to add custom steps to apply after replace all actions only. Defaults to simply calling `apply()`.
      * @param ModelSet $initial_objects A ModelSet containing each existing object for this Model as they were when
@@ -2445,6 +2456,9 @@ class Model {
         # into `apply_replace_all()` so that method can gracefully bring down these objects before replacing them
         # if needed.
         $initial_objects = $this->query(parent_id: $this->parent_id);
+
+        # Prepare operation-specific defaults before validation or any configuration changes
+        $data = $this->pre_validate_replace_all($data, $initial_objects);
 
         # Obtain any Models that are deemed protected to ensure they do not removed in the next step.
         $new_objects = new ModelSet();
