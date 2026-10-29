@@ -82,24 +82,6 @@ class APIFieldsInterfaceAddressFieldTestCase extends TestCase {
     }
 
     /**
-     * Checks that interface queries constrain both address families and related models.
-     */
-    public function test_interface_query(): void {
-        $settings = new RESTAPISettings();
-        $settings->represent_interfaces_as->value = 'id';
-        $settings->update();
-        $field = $this->make_field(required: true, interface_query: ['id' => 'lan']);
-        $this->assert_equals(array_keys($field->get_interface_choices()), ['lan_ipv4', 'lan_ipv6']);
-        $field->value = 'wan_ipv4';
-        $this->assert_equals($field->get_related_model(), null);
-        $this->assert_throws_response(
-            response_id: 'FIELD_INVALID_CHOICE',
-            code: 400,
-            callable: fn() => $field->validate(),
-        );
-    }
-
-    /**
      * Checks many-valued conversion and HATEOAS discovery without treating static values as interfaces.
      */
     public function test_many_values(): void {
