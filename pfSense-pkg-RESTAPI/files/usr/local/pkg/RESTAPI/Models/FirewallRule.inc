@@ -335,6 +335,7 @@ class FirewallRule extends Model {
                 'floating firewall rules.',
         );
         $this->tracker = new UnixTimeField(
+            required: true,
             auto_add_now: true,
             verbose_name: 'Tracker',
             help_text: 'The internal tracking ID for this firewall rule. Defaults to the current Unix timestamp ' .
