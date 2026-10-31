@@ -1106,6 +1106,32 @@ class APIModelsFirewallRuleTestCase extends TestCase {
     }
 
     /**
+     * Checks that a single ICMP rule can be dry-run replaced without a missing ModelSet signature error.
+     */
+    public function test_replace_all_dry_run_single_icmp_rule(): void {
+        $initial_rules = FirewallRule::get_config('filter/rule');
+        $rules = (new FirewallRule(dry_run: true))->replace_all(
+            data: [
+                [
+                    'interface' => ['wan'],
+                    'ipprotocol' => 'inet',
+                    'protocol' => 'icmp',
+                    'source' => 'any',
+                    'destination' => 'any',
+                    'type' => 'pass',
+                ],
+            ],
+        );
+
+        $this->assert_equals($rules->signature, FirewallRule::get_class_fqn());
+        $this->assert_equals($rules->count(), 1);
+        $this->assert_equals($rules->first()->protocol->value, 'icmp');
+        $this->assert_type($rules->first()->tracker->value, 'integer');
+        $this->assert_is_false(FirewallRule::get_model_cache()::has_modelset(FirewallRule::get_class_fqn()));
+        $this->assert_equals(FirewallRule::get_config('filter/rule'), $initial_rules);
+    }
+
+    /**
      * Checks that tracker values can be supplied on creation and edited afterward.
      */
     public function test_tracker_is_editable(): void {

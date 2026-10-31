@@ -2,6 +2,8 @@
 
 namespace RESTAPI\Tests;
 
+require_once 'RESTAPI/autoloader.inc';
+
 use ReflectionClass;
 use RESTAPI;
 use RESTAPI\Caches\RESTAPIVersionReleasesCache;
@@ -1421,6 +1423,54 @@ class APICoreModelTestCase extends RESTAPI\Core\TestCase {
 
         # Ensure the cache was cleared after deletion
         $this->assert_is_false(FirewallAlias::get_model_cache()::has_modelset(FirewallAlias::get_class_fqn()));
+    }
+
+    /**
+     * Checks that dry-run replacement caches a signed simulated set for nested references without persisting it.
+     */
+    public function test_replace_all_dry_run_cache_supports_self_references(): void {
+        $initial_config = FirewallAlias::get_config('aliases/alias');
+        $initial_names = array_column(FirewallAlias::read_all()->to_representation(), 'name');
+        $aliases = new FirewallAlias(dry_run: true);
+        $replacement = $aliases->replace_all(
+            data: [
+                ['name' => 'PFREST_DRYRUN_BASE', 'type' => 'host', 'address' => ['127.0.0.1']],
+                ['name' => 'PFREST_DRYRUN_CHILD', 'type' => 'host', 'address' => ['PFREST_DRYRUN_BASE']],
+                ['name' => 'PFREST_DRYRUN_NESTED', 'type' => 'host', 'address' => ['PFREST_DRYRUN_CHILD']],
+            ],
+        );
+
+        $this->assert_equals($replacement->signature, FirewallAlias::get_class_fqn());
+        $this->assert_equals($replacement->count(), 3);
+        $this->assert_equals($replacement->model_objects[2]->address->value, ['PFREST_DRYRUN_CHILD']);
+        $this->assert_is_false(FirewallAlias::get_model_cache()::has_modelset(FirewallAlias::get_class_fqn()));
+        $this->assert_equals(FirewallAlias::get_config('aliases/alias'), $initial_config);
+        $this->assert_equals(array_column(FirewallAlias::read_all()->to_representation(), 'name'), $initial_names);
+    }
+
+    /**
+     * Checks that failed dry-run replacement does not leave partially validated objects in the cache.
+     */
+    public function test_replace_all_dry_run_clears_cache_on_validation_error(): void {
+        $initial_config = FirewallAlias::get_config('aliases/alias');
+        $initial_names = array_column(FirewallAlias::read_all()->to_representation(), 'name');
+
+        $this->assert_throws_response(
+            response_id: 'FIELD_MUST_BE_UNIQUE',
+            code: 400,
+            callable: function () {
+                (new FirewallAlias(dry_run: true))->replace_all(
+                    data: [
+                        ['name' => 'PFREST_DRYRUN_DUPLICATE', 'type' => 'host', 'address' => ['127.0.0.1']],
+                        ['name' => 'PFREST_DRYRUN_DUPLICATE', 'type' => 'host', 'address' => ['127.0.0.2']],
+                    ],
+                );
+            },
+        );
+
+        $this->assert_is_false(FirewallAlias::get_model_cache()::has_modelset(FirewallAlias::get_class_fqn()));
+        $this->assert_equals(FirewallAlias::get_config('aliases/alias'), $initial_config);
+        $this->assert_equals(array_column(FirewallAlias::read_all()->to_representation(), 'name'), $initial_names);
     }
 
     /**
