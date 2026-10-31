@@ -34,6 +34,7 @@ class Service extends Model {
         $this->name = new StringField(
             required: true,
             unique: true,
+            skip_unique_validation: true, # We aren't creating new services, just actioning. No need to validate.
             verbose_name: 'Name',
             help_text: 'The internal name of the service.',
         );

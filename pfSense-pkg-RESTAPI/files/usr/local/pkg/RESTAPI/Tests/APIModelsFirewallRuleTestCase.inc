@@ -2,6 +2,8 @@
 
 namespace RESTAPI\Tests;
 
+require_once 'RESTAPI/autoloader.inc';
+
 use RESTAPI\Core\Auth;
 use RESTAPI\Core\Command;
 use RESTAPI\Core\TestCase;
@@ -1019,6 +1021,162 @@ class APIModelsFirewallRuleTestCase extends TestCase {
             $this->assert_equals($rule->created_by->value, "$client->username@$client->ip_address (API)");
             $this->assert_equals($rule->updated_by->value, "$client->username@$client->ip_address (API)");
         }
+    }
+
+    /**
+     * Checks that bulk replacements generate unique timestamp-sized trackers and persist them unchanged.
+     */
+    public function test_replace_all_randomizes_trackers(): void {
+        $data = array_fill(0, 100, [
+            'type' => 'pass',
+            'interface' => ['lan'],
+            'ipprotocol' => 'inet',
+            'source' => 'any',
+            'destination' => 'any',
+        ]);
+        $rule_model = new FirewallRule();
+
+        # Repeat the same replacement to ensure IDs are not reused from the previous ruleset
+        foreach (range(1, 2) as $attempt) {
+            $initial_trackers = array_column(FirewallRule::read_all()->to_representation(), 'tracker');
+            $rules = $rule_model->replace_all(data: $data);
+            $trackers = array_column($rules->to_representation(), 'tracker');
+
+            $this->assert_equals(count($trackers), 100);
+            $this->assert_equals(count(array_unique($trackers)), 100);
+            $this->assert_is_empty(array_intersect($initial_trackers, $trackers));
+            foreach ($trackers as $tracker) {
+                $this->assert_type($tracker, 'integer');
+                $this->assert_is_greater_than_or_equal($tracker, 1000000000);
+                $this->assert_is_less_than_or_equal($tracker, 2147483647);
+            }
+            $this->assert_equals(array_column(FirewallRule::read_all()->to_representation(), 'tracker'), $trackers);
+        }
+    }
+
+    /**
+     * Checks that bulk replacement preserves supplied trackers alongside generated trackers.
+     */
+    public function test_replace_all_preserves_supplied_trackers(): void {
+        $data = array_fill(0, 4, [
+            'type' => 'pass',
+            'interface' => ['lan'],
+            'ipprotocol' => 'inet',
+            'source' => 'any',
+            'destination' => 'any',
+        ]);
+        $data[1]['tracker'] = 1700000000;
+        $data[3]['tracker'] = 1700000001;
+
+        $rules = (new FirewallRule())->replace_all(data: $data);
+        $trackers = array_column($rules->to_representation(), 'tracker');
+
+        $this->assert_equals($trackers[1], 1700000000);
+        $this->assert_equals($trackers[3], 1700000001);
+        $this->assert_equals(count(array_unique($trackers)), 4);
+        $this->assert_equals(array_column(FirewallRule::read_all()->to_representation(), 'tracker'), $trackers);
+    }
+
+    /**
+     * Checks that dry-run bulk replacements generate trackers without changing the saved rules.
+     */
+    public function test_replace_all_dry_run_randomizes_trackers(): void {
+        $initial_rules = FirewallRule::get_config('filter/rule');
+        $data = array_fill(0, 20, [
+            'type' => 'pass',
+            'interface' => ['lan'],
+            'ipprotocol' => 'inet',
+            'source' => 'any',
+            'destination' => 'any',
+        ]);
+        $data[19]['tracker'] = 1700000000;
+
+        $rules = (new FirewallRule(dry_run: true))->replace_all(data: $data);
+        $trackers = array_column($rules->to_representation(), 'tracker');
+
+        $this->assert_equals(count($trackers), 20);
+        $this->assert_equals(count(array_unique($trackers)), 20);
+        $this->assert_equals($trackers[19], 1700000000);
+        foreach ($trackers as $tracker) {
+            $this->assert_type($tracker, 'integer');
+            $this->assert_is_greater_than_or_equal($tracker, 1000000000);
+            $this->assert_is_less_than_or_equal($tracker, 2147483647);
+        }
+        $this->assert_equals(FirewallRule::get_config('filter/rule'), $initial_rules);
+    }
+
+    /**
+     * Checks that a single ICMP rule can be dry-run replaced without a missing ModelSet signature error.
+     */
+    public function test_replace_all_dry_run_single_icmp_rule(): void {
+        $initial_rules = FirewallRule::get_config('filter/rule');
+        $rules = (new FirewallRule(dry_run: true))->replace_all(
+            data: [
+                [
+                    'interface' => ['wan'],
+                    'ipprotocol' => 'inet',
+                    'protocol' => 'icmp',
+                    'source' => 'any',
+                    'destination' => 'any',
+                    'type' => 'pass',
+                ],
+            ],
+        );
+
+        $this->assert_equals($rules->signature, FirewallRule::get_class_fqn());
+        $this->assert_equals($rules->count(), 1);
+        $this->assert_equals($rules->first()->protocol->value, 'icmp');
+        $this->assert_type($rules->first()->tracker->value, 'integer');
+        $this->assert_is_false(FirewallRule::get_model_cache()::has_modelset(FirewallRule::get_class_fqn()));
+        $this->assert_equals(FirewallRule::get_config('filter/rule'), $initial_rules);
+    }
+
+    /**
+     * Checks that tracker values can be supplied on creation and edited afterward.
+     */
+    public function test_tracker_is_editable(): void {
+        $rule = new FirewallRule(
+            data: [
+                'type' => 'pass',
+                'interface' => ['lan'],
+                'ipprotocol' => 'inet',
+                'source' => 'any',
+                'destination' => 'any',
+                'tracker' => 1700000000,
+            ],
+        );
+        $rule->create();
+        $this->assert_equals((new FirewallRule(id: $rule->id))->tracker->value, 1700000000);
+
+        $rule->from_representation(data: ['tracker' => 1700000001]);
+        $rule->update();
+        $this->assert_equals((new FirewallRule(id: $rule->id))->tracker->value, 1700000001);
+    }
+
+    /**
+     * Checks that single-rule creation retains the timestamp default and updates do not regenerate it.
+     */
+    public function test_single_rule_tracker_defaults_to_timestamp(): void {
+        $before = time();
+        $rule = new FirewallRule(
+            data: [
+                'type' => 'pass',
+                'interface' => ['lan'],
+                'ipprotocol' => 'inet',
+                'source' => 'any',
+                'destination' => 'any',
+            ],
+        );
+        $rule->create();
+        $tracker = $rule->tracker->value;
+
+        $this->assert_is_greater_than_or_equal($tracker, $before);
+        $this->assert_is_less_than_or_equal($tracker, time());
+        $this->assert_equals((new FirewallRule(id: $rule->id))->tracker->value, $tracker);
+
+        $rule->from_representation(data: ['descr' => 'Updated without changing tracker']);
+        $rule->update();
+        $this->assert_equals((new FirewallRule(id: $rule->id))->tracker->value, $tracker);
     }
 
     /**

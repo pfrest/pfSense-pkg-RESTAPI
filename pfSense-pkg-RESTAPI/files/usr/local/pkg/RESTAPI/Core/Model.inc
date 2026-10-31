@@ -1871,6 +1871,17 @@ class Model {
     }
 
     /**
+     * Prepares representation data before validating a `replace_all()` request, including dry runs.
+     * Override this method to supply operation-specific defaults without changing other CRUD actions.
+     * @param array $data The requested Model representations.
+     * @param ModelSet $initial_objects The existing Model objects before replacement.
+     * @return array The prepared Model representations to validate and replace.
+     */
+    protected function pre_validate_replace_all(array $data, ModelSet $initial_objects): array {
+        return $data;
+    }
+
+    /**
      * Performs steps and processes required to apply changes after the `replace_all()` method runs. This can be
      * overridden to add custom steps to apply after replace all actions only. Defaults to simply calling `apply()`.
      * @param ModelSet $initial_objects A ModelSet containing each existing object for this Model as they were when
@@ -2446,6 +2457,9 @@ class Model {
         # if needed.
         $initial_objects = $this->query(parent_id: $this->parent_id);
 
+        # Prepare operation-specific defaults before validation or any configuration changes
+        $data = $this->pre_validate_replace_all($data, $initial_objects);
+
         # Obtain any Models that are deemed protected to ensure they do not removed in the next step.
         $new_objects = new ModelSet();
         if ($this->protected_model_query) {
@@ -2456,21 +2470,28 @@ class Model {
         # do not mutate or persist the configuration. This still allows clients to detect duplicate or invalid
         # entries before applying the replacement.
         if ($this->dry_run) {
-            foreach ($data as $representation_object) {
-                unset($representation_object['id']);
-                $model_object = new $this(data: $representation_object, skip_init: true, client: $this->client);
-                # Assign a synthetic ID for uniqueness comparisons during validation
-                $model_object->id = count($new_objects->model_objects);
-                $model_object->validate(modelset: $new_objects);
-                $new_objects->model_objects[] = $model_object;
+            # Use the root signature so self-references resolve against the simulated replacement set
+            $new_objects = new ModelSet(model_objects: $new_objects->model_objects, signature: $this->get_class_fqn());
 
-                # In the event that the model can reference itself (e.g. FirewallAlias), ensure the model cache is
-                # updated so ForeignModelField can accurately find referenced objects.
-                self::get_model_cache()::cache_modelset($new_objects);
+            try {
+                foreach ($data as $representation_object) {
+                    # Discard stale queries and indexes before caching the growing replacement set
+                    self::clear_model_cache();
+                    self::get_model_cache()::cache_modelset($new_objects);
+
+                    unset($representation_object['id']);
+                    $model_object = new $this(data: $representation_object, skip_init: true, client: $this->client);
+                    # Assign a synthetic ID for uniqueness comparisons during validation
+                    $model_object->id = count($new_objects->model_objects);
+                    $model_object->validate(modelset: $new_objects);
+                    $new_objects->model_objects[] = $model_object;
+                }
+
+                return $new_objects;
+            } finally {
+                # Never retain simulated objects, including when validation throws an error
+                self::clear_model_cache();
             }
-
-            self::clear_model_cache();
-            return $new_objects;
         }
 
         # Before beginning validation, empty the stored values in the config path. Retain protected Models (if any).
