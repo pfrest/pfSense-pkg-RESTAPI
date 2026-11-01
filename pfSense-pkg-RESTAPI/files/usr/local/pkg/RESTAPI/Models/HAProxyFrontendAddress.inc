@@ -19,7 +19,7 @@ class HAProxyFrontendAddress extends Model {
     public StringField $extaddr_custom;
     public PortField $extaddr_port;
     public BooleanField $extaddr_ssl;
-    public StringField $exaddr_advanced;
+    public StringField $extaddr_advanced;
 
     /**
      * Defines the HAProxy frontend address fields and configuration location.
@@ -67,7 +67,7 @@ class HAProxyFrontendAddress extends Model {
             verbose_name: 'External Address SSL',
             help_text: 'Enables or disables using SSL/TLS for this address.',
         );
-        $this->exaddr_advanced = new StringField(
+        $this->extaddr_advanced = new StringField(
             default: '',
             allow_empty: true,
             verbose_name: 'Advanced External Address',
