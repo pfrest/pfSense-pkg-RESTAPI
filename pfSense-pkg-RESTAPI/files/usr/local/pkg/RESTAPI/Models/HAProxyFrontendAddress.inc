@@ -70,6 +70,8 @@ class HAProxyFrontendAddress extends Model {
         $this->exaddr_advanced = new StringField(
             default: '',
             allow_empty: true,
+            # Preserve the public API spelling while using the key consumed by the HAProxy package.
+            internal_name: 'extaddr_advanced',
             verbose_name: 'Advanced External Address',
             help_text: 'The advanced configuration to apply to this address.',
         );
