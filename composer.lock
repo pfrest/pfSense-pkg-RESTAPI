@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "firebase/php-jwt",
-            "version": "v7.2.0",
+            "version": "v7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/php-jwt.git",
-                "reference": "f502cdbf279cd7532060b041f7c22a05208c0b93"
+                "reference": "0501f5729b9e2448516674aff07c7d1727869b8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/f502cdbf279cd7532060b041f7c22a05208c0b93",
-                "reference": "f502cdbf279cd7532060b041f7c22a05208c0b93",
+                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/0501f5729b9e2448516674aff07c7d1727869b8e",
+                "reference": "0501f5729b9e2448516674aff07c7d1727869b8e",
                 "shasum": ""
             },
             "require": {
@@ -76,22 +76,22 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/php-jwt/issues",
-                "source": "https://github.com/googleapis/php-jwt/tree/v7.2.0"
+                "source": "https://github.com/googleapis/php-jwt/tree/v7.2.1"
             },
-            "time": "2026-09-21T19:29:58+00:00"
+            "time": "2026-09-28T17:51:46+00:00"
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.37.2",
+            "version": "v15.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "f2a5d802213eb231d17a21badbda22b01435f177"
+                "reference": "efa6b239d48f9ebe37ac0407d04a091b3685a869"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/f2a5d802213eb231d17a21badbda22b01435f177",
-                "reference": "f2a5d802213eb231d17a21badbda22b01435f177",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/efa6b239d48f9ebe37ac0407d04a091b3685a869",
+                "reference": "efa6b239d48f9ebe37ac0407d04a091b3685a869",
                 "shasum": ""
             },
             "require": {
@@ -104,13 +104,13 @@
                 "amphp/http-server": "^2.1 || ^3",
                 "dms/phpunit-arraysubset-asserts": "dev-master",
                 "ergebnis/composer-normalize": "^2.28",
-                "friendsofphp/php-cs-fixer": "3.95.18",
+                "friendsofphp/php-cs-fixer": "3.95.27",
                 "mll-lab/php-cs-fixer-config": "5.13.0",
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "2.2.8",
-                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpstan/phpstan": "2.2.17",
+                "phpstan/phpstan-phpunit": "2.0.21",
                 "phpstan/phpstan-strict-rules": "2.0.12",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
                 "psr/http-message": "^1 || ^2",
@@ -146,7 +146,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.37.2"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.39.0"
             },
             "funding": [
                 {
@@ -158,7 +158,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-08-14T06:29:42+00:00"
+            "time": "2026-10-25T16:45:38+00:00"
         }
     ],
     "packages-dev": [],
