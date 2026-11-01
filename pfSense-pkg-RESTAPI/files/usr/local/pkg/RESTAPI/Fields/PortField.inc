@@ -25,6 +25,7 @@ class PortField extends Field {
      * @param bool $required If `true`, this field is required to have a value at all times.
      * @param bool $unique If `true`, this field must be unique from all other parent model objects. Enabling this
      * option requires the Model $context to be set AND the Model $context must have a `config_path` set.
+     * @param bool $skip_unique_validation If `true`, skip uniqueness enforcement while retaining the `unique` metadata.
      * @param mixed|null $default Assign a default string value to assign this Field if no value is present.
      * @param array $choices An array of value choices this Field can be assigned. This can either be an indexed array
      * of the exact choice values, or an associative array where the array key is the exact choice value and the array
@@ -80,6 +81,7 @@ class PortField extends Field {
     public function __construct(
         bool $required = false,
         bool $unique = false,
+        bool $skip_unique_validation = false,
         mixed $default = null,
         array $choices = [],
         string $choices_callable = '',
@@ -115,6 +117,7 @@ class PortField extends Field {
             type: 'string',
             required: $required,
             unique: $unique,
+            skip_unique_validation: $skip_unique_validation,
             default: $default,
             choices: $choices,
             choices_callable: $choices_callable,

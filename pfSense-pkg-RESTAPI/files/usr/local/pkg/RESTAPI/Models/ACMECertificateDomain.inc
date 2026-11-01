@@ -66,6 +66,7 @@ class ACMECertificateDomain extends Model {
     public StringField $azuredns_tenantid;
     public StringField $azuredns_appid;
     public StringField $azuredns_clientsecret;
+    public StringField $azuredns_managedidentity;
     public StringField $bookmyname_username;
     public StringField $bookmyname_password;
     public StringField $bunny_api_key;
@@ -750,6 +751,14 @@ class ACMECertificateDomain extends Model {
             conditions: ['method' => 'dns_azure'],
             verbose_name: 'Azure DNS Tenant ID',
             help_text: 'Azure Tenant ID',
+        );
+        $this->azuredns_managedidentity = new StringField(
+            default: '',
+            allow_empty: true,
+            verbose_name: 'Azure DNS Management Identity',
+            internal_name: 'dns_azureazuredns_managedidentity',
+            conditions: ['method' => 'dns_azure'],
+            help_text: 'Azure Management Identity',
         );
         $this->azuredns_appid = new StringField(
             default: '',

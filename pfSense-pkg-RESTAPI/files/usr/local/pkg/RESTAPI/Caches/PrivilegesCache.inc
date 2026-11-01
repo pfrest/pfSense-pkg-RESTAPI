@@ -17,7 +17,13 @@ class PrivilegesCache extends Cache {
      */
     public function get_data_to_cache(): array {
         # Use a variable to keep track of the privileges associated with this endpoint
-        $privs = [];
+        $privs = [
+            'page-system-restapi-documentation' => [
+                'name' => 'WebCfg - System:  RESTAPI Documentation',
+                'descr' => 'Allow access to the /api/v2/documentation page.',
+                'match' => ['api/v2/documentation*'],
+            ],
+        ];
 
         # Obtain privileges for each Endpoint class
         foreach (get_classes_from_namespace('\\RESTAPI\\Endpoints\\') as $endpoint_class) {

@@ -198,8 +198,9 @@ class RESTAPISettings extends Model {
             indicates_true: 'enabled',
             indicates_false: 'disabled',
             verbose_name: 'HA sync',
-            help_text: "Enables or disables syncing API settings to HA peers. When enabled, API settings from this
-            host will automatically be synced to any hosts defined in `ha_sync_hosts`.",
+            help_text: "Enables HA sync for REST API settings. When enabled, this host will be allowed to accept sync 
+                requests from peers. If `ha_sync_hosts` are also defined, this host will sync its settings to 
+                those hosts, which must also enable this setting to accept them.",
         );
         $this->ha_sync_validate_certs = new BooleanField(
             default: true,
@@ -225,7 +226,7 @@ class RESTAPISettings extends Model {
         $this->ha_sync_username = new StringField(
             default: '',
             allow_empty: true,
-            verbose_name: 'HA username',
+            verbose_name: 'HA sync username',
             help_text: "Sets the username to use when authenticating for HA sync processes. This user must be the present
             on all hosts defined in `ha_sync_hosts` and must hold the `page-all` privilege",
         );

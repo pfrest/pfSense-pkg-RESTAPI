@@ -2,8 +2,14 @@
 
 namespace RESTAPI\Tests;
 
+require_once 'RESTAPI/autoloader.inc';
+
+use ReflectionClass;
 use RESTAPI;
 use RESTAPI\Core\Field;
+use RESTAPI\Core\ModelSet;
+use RESTAPI\Fields\ForeignModelField;
+use RESTAPI\Fields\StringField;
 
 /**
  * Defines test case for testing RESTAPI\Core\Field.
@@ -150,6 +156,77 @@ class APICoreFieldTestCase extends RESTAPI\Core\TestCase {
         $this->assert_equals($test_field->delimiter, $delimiter);
         $this->assert_equals($test_field->help_text, $help_text);
         $this->assert_equals($test_field->internal_name, $internal_name);
+    }
+
+    /**
+     * Checks that every Field subclass supporting unique also forwards skip_unique_validation with a false default.
+     */
+    public function test_subclass_skip_unique_validation_argument(): void {
+        foreach (glob(__DIR__ . '/../Fields/*.inc') as $file) {
+            $class = 'RESTAPI\\Fields\\' . basename($file, '.inc');
+            $reflection = new ReflectionClass($class);
+            $parameters = [];
+            foreach ($reflection->getConstructor()->getParameters() as $parameter) {
+                $parameters[$parameter->getName()] = $parameter;
+            }
+
+            if (!isset($parameters['unique'])) {
+                continue;
+            }
+
+            $this->assert_is_true(isset($parameters['skip_unique_validation']));
+            $this->assert_equals($parameters['skip_unique_validation']->getDefaultValue(), false);
+            $this->assert_equals((string) $parameters['skip_unique_validation']->getType(), 'bool');
+            $options =
+                $class === ForeignModelField::class
+                    ? ['model_name' => 'Test', 'model_field' => 'test_string_unique']
+                    : [];
+
+            foreach ([false, true] as $unique) {
+                $options['unique'] = $unique;
+                unset($options['skip_unique_validation']);
+                $field = new $class(...$options);
+                $this->assert_equals($field->unique, $unique);
+                $this->assert_is_false($field->skip_unique_validation);
+
+                foreach ([false, true] as $skip_unique_validation) {
+                    $options['skip_unique_validation'] = $skip_unique_validation;
+                    $field = new $class(...$options);
+                    $this->assert_equals($field->unique, $unique);
+                    $this->assert_equals($field->skip_unique_validation, $skip_unique_validation);
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks that skipping uniqueness permits duplicates without removing metadata or bypassing type validation.
+     */
+    public function test_skip_unique_validation(): void {
+        $existing = new RESTAPI\Models\Test(test_string_unique: 'duplicate');
+        $existing->id = 0;
+        $modelset = new ModelSet(model_objects: [$existing]);
+        $field = new StringField(required: true, unique: true, skip_unique_validation: true);
+        $field->set_names('test_string_unique');
+        $field->context = new RESTAPI\Models\Test();
+        $field->value = 'duplicate';
+        $this->assert_is_true($field->validate(modelset: $modelset));
+        $this->assert_is_true($field->unique);
+
+        $field->skip_unique_validation = false;
+        $this->assert_throws_response(
+            response_id: 'FIELD_MUST_BE_UNIQUE',
+            code: 400,
+            callable: fn() => $field->validate(modelset: $modelset),
+        );
+
+        $field->skip_unique_validation = true;
+        $field->value = 123;
+        $this->assert_throws_response(
+            response_id: 'FIELD_INVALID_TYPE',
+            code: 400,
+            callable: fn() => $field->validate(modelset: $modelset),
+        );
     }
 
     /**

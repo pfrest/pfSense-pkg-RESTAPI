@@ -22,6 +22,7 @@ class SpecialNetworkField extends InterfaceField {
      * @param bool $required If `true`, this field is required to have a value at all times.
      * @param bool $unique If `true`, this field must be unique from all other parent model objects. Enabling this
      * option requires the Model $context to be set AND the Model $context must have a `config_path` set.
+     * @param bool $skip_unique_validation If `true`, skip uniqueness enforcement while retaining the `unique` metadata.
      * @param mixed|null $default Assign a default string value to assign this Field if no value is present.
      * execute to populate choices for this field. This callable must be a method assigned on this Field object OR the
      * parent Model object that returns an array of valid choices in the same format as $choices. This is helpful when
@@ -84,6 +85,7 @@ class SpecialNetworkField extends InterfaceField {
     public function __construct(
         bool $required = false,
         bool $unique = false,
+        bool $skip_unique_validation = false,
         mixed $default = null,
         public bool $allow_ipaddr = true,
         public bool $allow_subnet = true,
@@ -119,6 +121,7 @@ class SpecialNetworkField extends InterfaceField {
         parent::__construct(
             required: $required,
             unique: $unique,
+            skip_unique_validation: $skip_unique_validation,
             default: $default,
             interface_query: $interface_query,
             allow_interface_groups: $allow_interface_groups,

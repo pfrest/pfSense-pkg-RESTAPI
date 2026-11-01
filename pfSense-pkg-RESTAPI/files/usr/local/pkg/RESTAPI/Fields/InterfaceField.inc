@@ -28,6 +28,7 @@ class InterfaceField extends StringField {
      * @param bool $required If `true`, this field is required to have a value at all times.
      * @param bool $unique If `true`, this field must be unique from all other parent model objects. Enabling this
      * option requires the Model $context to be set AND the Model $context must have a `config_path` set.
+     * @param bool $skip_unique_validation If `true`, skip uniqueness enforcement while retaining the `unique` metadata.
      * @param mixed|null $default Assign a default string value to assign this Field if no value is present.
      * @param string $default_callable Defines a callable method that should be called to populate the default value
      * for this field. It is strongly encouraged to use a default callable when the default is variable and may change
@@ -81,6 +82,7 @@ class InterfaceField extends StringField {
     public function __construct(
         bool $required = false,
         bool $unique = false,
+        bool $skip_unique_validation = false,
         mixed $default = null,
         string $default_callable = '',
         public array $interface_query = [],
@@ -115,6 +117,7 @@ class InterfaceField extends StringField {
         parent::__construct(
             required: $required,
             unique: $unique,
+            skip_unique_validation: $skip_unique_validation,
             default: $default,
             default_callable: $default_callable,
             choices_callable: 'get_interface_choices',
