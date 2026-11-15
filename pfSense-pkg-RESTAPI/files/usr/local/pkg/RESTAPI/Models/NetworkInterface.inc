@@ -86,7 +86,12 @@ class NetworkInterface extends Model {
         );
         $this->enable = new BooleanField(
             required: false,
-            default: false,
+            # pfSense semantics: a MISSING enable tag in config.xml means the
+            # interface is ENABLED — the historical default. Defaulting to
+            # false made never-re-saved interfaces report enable=false (a
+            # false 'disabled' diagnosis on read, and an accidental disable
+            # if the value were ever written back wholesale).
+            default: true,
             verbose_name: 'Enable',
             help_text: 'Enable or disable this interface.',
         );
