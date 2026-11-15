@@ -876,4 +876,36 @@ class APIModelsNetworkInterfaceTestCase extends TestCase {
     }
 
     # TODO: Needs Tests to ensure other interface types are correctly configured on the backend
+
+    /**
+     * Checks that dhcp6_ia_pd_len accepts the GUI choices ('none' and the
+     * 16..0 IA-PD lengths) and rejects out-of-set values.
+     */
+    public function test_dhcp6_ia_pd_len_choices() {
+        $this->assert_does_not_throw(
+            callable: function () {
+                $test_model = new NetworkInterface();
+                $test_model->typev6->value = 'dhcp6';
+                $test_model->dhcp6_ia_pd_len->value = '0';
+            },
+        );
+
+        $this->assert_does_not_throw(
+            callable: function () {
+                $test_model = new NetworkInterface();
+                $test_model->typev6->value = 'dhcp6';
+                $test_model->dhcp6_ia_pd_len->value = 'none';
+            },
+        );
+
+        $this->assert_throws_response(
+            response_id: 'FIELD_INVALID_CHOICE',
+            code: 400,
+            callable: function () {
+                $test_model = new NetworkInterface();
+                $test_model->typev6->value = 'dhcp6';
+                $test_model->dhcp6_ia_pd_len->value = '999';
+            },
+        );
+    }
 }
