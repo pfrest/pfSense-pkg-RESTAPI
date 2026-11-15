@@ -52,9 +52,26 @@ class ConfigHistoryRevision extends Model {
      * @return array The configuration history as an array of objects.
      */
     protected function get_config_history(): array {
-        # Get our current configuration history, but remove the versions key. These are not needed for the Model.
-        $config_history = get_backups();
-        unset($config_history['versions']);
+        # pfSense versions that still ship get_backups() (config.lib.inc) use it directly. pfSense 26.x removed
+        # the function, so read the backup cache file directly instead — it carries the same per-backup data
+        # (description, filesize, version, path) keyed by backup time, plus non-backup metadata keys to skip.
+        if (function_exists('get_backups')) {
+            $config_history = get_backups();
+            unset($config_history['versions']);
+        } else {
+            global $g;
+            $config_history = [];
+            $cache_file = "{$g['cf_conf_path']}/backup/backup.cache";
+            if (is_file($cache_file)) {
+                $cache = unserialize_data(file_get_contents($cache_file), []);
+                foreach ($cache as $time => $entry) {
+                    if (!is_array($entry) || !is_numeric($time)) {
+                        continue;
+                    }
+                    $config_history[$time] = $entry;
+                }
+            }
+        }
 
         # Loop through each entry in the configuration history and normalize the data
         foreach ($config_history as &$entry) {

@@ -2,6 +2,7 @@
 
 # Include built-in pfSense libraries required for this package
 require_once 'config.inc';
+require_once 'config.lib.inc';
 require_once 'diag_arp.inc';
 require_once 'util.inc';
 require_once 'interfaces.inc';
