@@ -876,4 +876,44 @@ class APIModelsNetworkInterfaceTestCase extends TestCase {
     }
 
     # TODO: Needs Tests to ensure other interface types are correctly configured on the backend
+
+    /**
+     * Checks that a NEW descr value violating filter-name rules is rejected
+     * (FilterNameValidator now runs in validate_descr for changed values).
+     */
+    public function test_descr_new_value_rejects_reserved_name() {
+        $this->assert_throws_response(
+            response_id: 'FILTER_NAME_VALIDATOR_RESERVED_NAME_USED',
+            code: 400,
+            callable: function () {
+                $test_model = new NetworkInterface();
+                $test_model->if->value = 'igc0';
+                $test_model->validate_descr('LAN');
+            },
+        );
+    }
+
+    /**
+     * Checks that validate_descr accepts reserved legacy values when the
+     * descr is UNCHANGED from the initial object (regression: pfSense
+     * revalidates every field on PATCH; validating an unchanged value
+     * locked whole interfaces whose descr predates the rules).
+     */
+    public function test_descr_unchanged_legacy_value_not_revalidated() {
+        $this->assert_does_not_throw(
+            callable: function () {
+                $test_model = new NetworkInterface();
+                $test_model->if->value = 'igc0';
+
+                # Simulate a loaded object whose initial descr is a legacy
+                # reserved token (e.g. created before the validator existed)
+                $test_model->initial_object = $test_model->copy();
+                $test_model->initial_object->descr->value = 'LAN';
+                $test_model->descr->value = 'LAN';
+
+                # Unchanged descr -> no filter-name validation
+                $test_model->validate_descr('LAN');
+            },
+        );
+    }
 }

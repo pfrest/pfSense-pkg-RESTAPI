@@ -94,10 +94,7 @@ class NetworkInterface extends Model {
             required: true,
             unique: true,
             maximum_length: 128,
-            validators: [
-                new FilterNameValidator(),
-                new UniqueFromForeignModelValidator(model: 'FirewallAlias', field: 'name'),
-            ],
+            validators: [new UniqueFromForeignModelValidator(model: 'FirewallAlias', field: 'name')],
             verbose_name: 'Description',
             help_text: 'The descriptive name for this interface.',
         );
@@ -445,6 +442,16 @@ class NetworkInterface extends Model {
      * @returns string The validated $descr to set.
      * @throws ValidationError When the `$descr` value is invalid.     */
     public function validate_descr(string $descr): string {
+        # Only apply the filter-name validation when the descr CHANGES. pfSense
+        # revalidates every field on PATCH, so validating an unchanged value
+        # would lock entire interfaces whose pre-existing descr predates these
+        # rules (e.g. 'LAN', which matches a reserved pf filter token) — the
+        # GUI allows such interfaces to be edited without renaming.
+        $initial = $this->initial_object;
+        if ($initial !== null and $initial->descr->value === $descr) {
+            return $descr;
+        }
+
         # Ensure OpenVPN interfaces are 22 characters or less
         if (str_starts_with($this->if->value, 'ovpn') and strlen($descr) > 22) {
             throw new ValidationError(
@@ -476,6 +483,11 @@ class NetworkInterface extends Model {
                 response_id: 'NETWORK_INTERFACE_DESCR_GRE_MAX_LENGTH_EXCEEDED',
             );
         }
+
+        # Filter-name rules apply to NEW/CHANGED descr values only (moved
+        # from the field-level validator so unchanged legacy values are
+        # not re-validated on unrelated PATCHes).
+        (new FilterNameValidator())->validate($descr, 'descr');
 
         return $descr;
     }
