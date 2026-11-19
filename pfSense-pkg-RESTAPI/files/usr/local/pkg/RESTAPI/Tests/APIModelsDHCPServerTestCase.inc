@@ -677,4 +677,18 @@ class APIModelsDHCPServerTestCase extends TestCase {
         # Delete the test interface
         $interface->delete();
     }
+
+    /**
+     * Ensures OUI-partial MAC entries (vendor prefixes, a supported pfSense GUI feature) are accepted in
+     * mac_allow/mac_deny. Regression test: these fields are revalidated on every PATCH, so strict validation
+     * locked entire scopes containing legacy partial entries behind HTTP 400 MAC_ADDRESS_VALIDATOR_FAILED.
+     */
+    public function test_accept_oui_partial_mac_entries(): void {
+        $this->assert_does_not_throw(function (): void {
+            $dhcp_server = new DHCPServer(id: 'lan', async: false);
+            $dhcp_server->mac_deny->value = ['EC:71:DB', '00:60:6E', 'B8:27:EB'];
+            $dhcp_server->mac_allow->value = ['DC:A6:32'];
+            $dhcp_server->update();
+        });
+    }
 }
