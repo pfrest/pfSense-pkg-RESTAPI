@@ -31,6 +31,8 @@ jobs:
           - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
             PFSENSE_VERSION: "2.9.0"
           - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
+            PFSENSE_VERSION: "2.9.1"
+          - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
             PFSENSE_VERSION: "25.11.1"
           - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
             PFSENSE_VERSION: "26.03"
@@ -38,6 +40,8 @@ jobs:
             PFSENSE_VERSION: "26.03.1"
           - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
             PFSENSE_VERSION: "26.07"
+          - FREEBSD_VERSION: FreeBSD-16.0-CURRENT
+            PFSENSE_VERSION: "26.07.1"
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
