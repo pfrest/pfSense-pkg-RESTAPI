@@ -74,18 +74,18 @@ class DHCPServerAddressPool extends Model {
             allow_empty: true,
             many: true,
             maximum_length: 17,
-            validators: [new MACAddressValidator()],
+            validators: [new MACAddressValidator(allow_partial: true)],
             verbose_name: 'MAC Allow',
-            help_text: 'MAC addresses this DHCP server is allowed to provide leases for.',
+            help_text: 'MAC addresses this DHCP server is allowed to provide leases for. OUI prefixes (partial MACs, e.g. `EC:71:DB`) are accepted to match all devices of a vendor (GUI parity).',
         );
         $this->mac_deny = new StringField(
             default: [],
             allow_empty: true,
             many: true,
             maximum_length: 17,
-            validators: [new MACAddressValidator()],
+            validators: [new MACAddressValidator(allow_partial: true)],
             verbose_name: 'MAC Deny',
-            help_text: 'MAC addresses this DHCP server is not allowed to provide leases for.',
+            help_text: 'MAC addresses this DHCP server is not allowed to provide leases for. OUI prefixes (partial MACs, e.g. `EC:71:DB`) are accepted to match all devices of a vendor (GUI parity).',
         );
         $this->domainsearchlist = new StringField(
             default: [],
