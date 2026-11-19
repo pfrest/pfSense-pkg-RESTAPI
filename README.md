@@ -12,7 +12,7 @@ firewalls. It is designed to be light-weight, fast, and easy to use. This guide 
 API package and provide you with the information you need to configure and use the package effectively.
 
 > [!IMPORTANT]
-> This project will soon come to end. For more information on the path forward and migration to the official 
+> This project will soon come to end. For more information on the path forward and migration to the official
 > pfSense API, please refer to the [announcement](https://github.com/pfrest/pfSense-pkg-RESTAPI/discussions/962).
 
 ## Key Features

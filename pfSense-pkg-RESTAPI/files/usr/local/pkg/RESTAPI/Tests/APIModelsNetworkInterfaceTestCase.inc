@@ -916,7 +916,7 @@ class APIModelsNetworkInterfaceTestCase extends TestCase {
             },
         );
     }
-  
+
     /**
      * Checks that dhcp6_ia_pd_len accepts the GUI choices ('none' and the
      * 16..0 IA-PD lengths) and rejects out-of-set values.
