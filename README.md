@@ -11,6 +11,10 @@ The pfSense REST API package is an unofficial, open-source REST and GraphQL API 
 firewalls. It is designed to be light-weight, fast, and easy to use. This guide will help you get started with the REST
 API package and provide you with the information you need to configure and use the package effectively.
 
+> [!IMPORTANT]
+> This project will soon come to end. For more information on the path forward and migration to the official 
+> pfSense API, please refer to the [announcement](https://github.com/pfrest/pfSense-pkg-RESTAPI/discussions/962).
+
 ## Key Features
 
 - 200+ REST endpoints available for managing your firewall and associated services
