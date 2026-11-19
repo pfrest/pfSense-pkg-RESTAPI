@@ -52,7 +52,7 @@ class APIModelsNetworkInterfaceTestCase extends TestCase {
                 $test_model->if->value = 'ovpn1';
 
                 # Ensure the validation succeeds when value is an acceptable length
-                $test_model->validate_descr('length is ok');
+                $test_model->validate_descr('lengthisok');
             },
         );
     }
