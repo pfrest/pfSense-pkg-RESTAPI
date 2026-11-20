@@ -57,7 +57,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - PFSENSE_VERSION: pfSense-2.8.1-RELEASE
+          - PFSENSE_VERSION: pfSense-2.9.0-RELEASE
             FREEBSD_ID: freebsd15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
