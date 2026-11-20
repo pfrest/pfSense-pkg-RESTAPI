@@ -153,4 +153,12 @@ class APIModelsHAProxyBackendTestCase extends TestCase {
         $backend->advanced_backend->from_internal(base64_encode('test'));
         $this->assert_equals($backend->advanced_backend->value, 'test');
     }
+
+    /**
+     * Checks that the `haproxy_cookie_dynamic_cookie_key` field is hidden from representations by default.
+     */
+    public function test_dynamic_cookie_key_is_sensitive(): void {
+        $backend = new HAProxyBackend(persist_cookie_enabled: true, haproxy_cookie_dynamic_cookie_key: 'test');
+        $this->assert_is_false(array_key_exists('haproxy_cookie_dynamic_cookie_key', $backend->to_representation()));
+    }
 }

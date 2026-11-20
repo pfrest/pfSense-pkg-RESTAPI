@@ -39,6 +39,7 @@ class CertificatePKCS12Export extends Model {
         $this->passphrase = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             verbose_name: 'Passphrase',
             help_text: 'The passphrase to use when exporting the PKCS#12 archive. Leave empty for no passphrase.',
         );

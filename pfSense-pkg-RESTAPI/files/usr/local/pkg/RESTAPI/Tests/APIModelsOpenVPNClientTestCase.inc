@@ -290,4 +290,12 @@ class APIModelsOpenVPNClientTestCase extends TestCase {
         $ifconfig = new Command("ifconfig ovpnc{$ovpnc->vpnid->value}");
         $this->assert_equals($ifconfig->result_code, 1);
     }
+
+    /**
+     * Checks that the `tls` field is hidden from representations by default.
+     */
+    public function test_tls_is_sensitive(): void {
+        $ovpnc = new OpenVPNClient(tls: $this->tls_key);
+        $this->assert_is_false(array_key_exists('tls', $ovpnc->to_representation()));
+    }
 }

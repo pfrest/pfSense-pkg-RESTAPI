@@ -329,6 +329,7 @@ class HAProxyBackend extends Model {
         $this->haproxy_cookie_dynamic_cookie_key = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             conditions: ['persist_cookie_enabled' => true],
             verbose_name: 'HAProxy Dynamic Cookie Key',
             help_text: 'The dynamic cookie secret key. This is will be used to generate dynamic cookies ' .

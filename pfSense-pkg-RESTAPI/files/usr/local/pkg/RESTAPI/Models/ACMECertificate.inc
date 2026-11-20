@@ -78,6 +78,7 @@ class ACMECertificate extends Model {
         );
         $this->keypaste = new StringField(
             required: true,
+            sensitive: true,
             conditions: ['keylength' => 'custom'],
             validators: [new X509Validator(allow_crt: false, allow_prv: true, allow_rsa: true, allow_ecprv: true)],
             verbose_name: 'Key Paste',

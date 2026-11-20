@@ -92,6 +92,7 @@ class EmailNotificationSettings extends Model {
         );
         $this->password = new StringField(
             required: true,
+            sensitive: true,
             conditions: ['authentication_mechanism' => 'LOGIN'],
             verbose_name: 'Password',
             help_text: 'The password to use for SMTP authentication.',
