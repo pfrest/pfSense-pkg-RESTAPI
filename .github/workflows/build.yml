@@ -138,6 +138,8 @@ jobs:
             FREEBSD_ID: freebsd16
           - PFSENSE_VERSION: pfSense-2.9.1-RELEASE
             FREEBSD_ID: freebsd16
+          - PFSENSE_VERSION: pfSense-2.9.2-RELEASE
+            FREEBSD_ID: freebsd16
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

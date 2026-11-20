@@ -40,13 +40,13 @@ commands are included below for quick reference.
 Install on pfSense CE:
 
 ```bash
-pkg-static add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-2.9.1-pkg-RESTAPI.pkg
+pkg-static add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-2.9.2-pkg-RESTAPI.pkg
 ```
 
 Install on pfSense Plus:
 
 ```bash
-pkg-static -C /dev/null add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-26.07.1-pkg-RESTAPI.pkg
+pkg-static -C /dev/null add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-26.07.2-pkg-RESTAPI.pkg
 ```
 
 > [!WARNING]
