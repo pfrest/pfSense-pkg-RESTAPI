@@ -61,6 +61,8 @@ class NetworkInterface extends Model {
     public ForeignModelField $gatewayv6;
     public BooleanField $ipv6usev4iface;
     public BooleanField $slaacusev4iface;
+    public BooleanField $dhcp6prefixonly;
+    public StringField $dhcp6_ia_pd_len;
     public StringField $prefix_6rd;
     public StringField $gateway_6rd;
     public IntegerField $prefix_6rd_v4plen;
@@ -94,10 +96,7 @@ class NetworkInterface extends Model {
             required: true,
             unique: true,
             maximum_length: 128,
-            validators: [
-                new FilterNameValidator(),
-                new UniqueFromForeignModelValidator(model: 'FirewallAlias', field: 'name'),
-            ],
+            validators: [new UniqueFromForeignModelValidator(model: 'FirewallAlias', field: 'name')],
             verbose_name: 'Description',
             help_text: 'The descriptive name for this interface.',
         );
@@ -367,6 +366,43 @@ class NetworkInterface extends Model {
             verbose_name: 'SLAAC Use IPv4 Interface',
             help_text: 'Enable or disable IPv6 using the IPv4 connectivity link (PPPoE).',
         );
+
+        $this->dhcp6prefixonly = new BooleanField(
+            default: false,
+            conditions: ['typev6' => 'dhcp6'],
+            verbose_name: 'Request Only an IPv6 Prefix',
+            help_text: 'Only request an IPv6 prefix, do not request an IPv6 address.',
+        );
+        $this->dhcp6_ia_pd_len = new StringField(
+            required: false,
+            default: 'none',
+            allow_empty: false,
+            conditions: ['typev6' => 'dhcp6'],
+            choices: [
+                'none',
+                '0',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '11',
+                '12',
+                '13',
+                '14',
+                '15',
+                '16',
+            ],
+            internal_name: 'dhcp6-ia-pd-len',
+            maximum_length: 4,
+            verbose_name: 'DHCPv6 Prefix Delegation size',
+            help_text: 'The delegated prefix length provided by the DHCPv6 server. `none` disables delegation; numeric values are the IA-PD length (16 -> /48 ... 0 -> /64). Normally specified by the ISP.',
+        );
         $this->prefix_6rd = new StringField(
             required: true,
             unique: true,
@@ -445,6 +481,16 @@ class NetworkInterface extends Model {
      * @returns string The validated $descr to set.
      * @throws ValidationError When the `$descr` value is invalid.     */
     public function validate_descr(string $descr): string {
+        # Only apply the filter-name validation when the descr CHANGES. pfSense
+        # revalidates every field on PATCH, so validating an unchanged value
+        # would lock entire interfaces whose pre-existing descr predates these
+        # rules (e.g. 'LAN', which matches a reserved pf filter token) — the
+        # GUI allows such interfaces to be edited without renaming.
+        $initial = $this->initial_object;
+        if ($initial !== null and $initial->descr->value === $descr) {
+            return $descr;
+        }
+
         # Ensure OpenVPN interfaces are 22 characters or less
         if (str_starts_with($this->if->value, 'ovpn') and strlen($descr) > 22) {
             throw new ValidationError(
@@ -476,6 +522,11 @@ class NetworkInterface extends Model {
                 response_id: 'NETWORK_INTERFACE_DESCR_GRE_MAX_LENGTH_EXCEEDED',
             );
         }
+
+        # Filter-name rules apply to NEW/CHANGED descr values only (moved
+        # from the field-level validator so unchanged legacy values are
+        # not re-validated on unrelated PATCHes).
+        (new FilterNameValidator())->validate($descr, 'descr');
 
         return $descr;
     }

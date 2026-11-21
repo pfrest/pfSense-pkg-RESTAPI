@@ -11,6 +11,10 @@ The pfSense REST API package is an unofficial, open-source REST and GraphQL API 
 firewalls. It is designed to be light-weight, fast, and easy to use. This guide will help you get started with the REST
 API package and provide you with the information you need to configure and use the package effectively.
 
+> [!IMPORTANT]
+> This project will soon come to end. For more information on the path forward and migration to the official
+> pfSense API, please refer to the [announcement](https://github.com/pfrest/pfSense-pkg-RESTAPI/discussions/962).
+
 ## Key Features
 
 - 200+ REST endpoints available for managing your firewall and associated services
@@ -36,13 +40,13 @@ commands are included below for quick reference.
 Install on pfSense CE:
 
 ```bash
-pkg-static add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-2.8.1-pkg-RESTAPI.pkg
+pkg-static add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-2.9.2-pkg-RESTAPI.pkg
 ```
 
 Install on pfSense Plus:
 
 ```bash
-pkg-static -C /dev/null add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-26.03.1-pkg-RESTAPI.pkg
+pkg-static -C /dev/null add https://github.com/pfrest/pfSense-pkg-RESTAPI/releases/latest/download/pfSense-26.07.2-pkg-RESTAPI.pkg
 ```
 
 > [!WARNING]
