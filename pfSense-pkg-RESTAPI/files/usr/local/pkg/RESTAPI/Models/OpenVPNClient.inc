@@ -221,6 +221,7 @@ class OpenVPNClient extends Model {
         $this->tls = new Base64Field(
             default: null,
             allow_null: true,
+            sensitive: true,
             verbose_name: 'TLS',
             help_text: 'The TLS key this OpenVPN client will use to sign control channel packets with an HMAC ' .
                 'signature for authentication when establishing the tunnel.',

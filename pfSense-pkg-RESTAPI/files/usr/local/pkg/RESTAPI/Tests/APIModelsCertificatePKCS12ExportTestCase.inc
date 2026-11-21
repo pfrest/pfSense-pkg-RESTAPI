@@ -30,4 +30,12 @@ class APIModelsCertificatePKCS12ExportTestCase extends TestCase {
         $pkcs12 = openssl_pkcs12_read($model->binary_data->value, $certs, 'testpass');
         $this->assert_not_equals(false, $pkcs12);
     }
+
+    /**
+     * Ensure the `passphrase` field is hidden from representations by default.
+     */
+    public function test_passphrase_is_sensitive(): void {
+        $model = new CertificatePKCS12Export(passphrase: 'testpass');
+        $this->assert_is_false(array_key_exists('passphrase', $model->to_representation()));
+    }
 }

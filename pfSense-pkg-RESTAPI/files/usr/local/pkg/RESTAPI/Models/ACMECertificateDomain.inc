@@ -432,6 +432,7 @@ class ACMECertificateDomain extends Model {
         $this->nsupdate_key = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_nsupdatensupdate_key',
             conditions: ['method' => 'dns_nsupdate'],
             verbose_name: 'Nsupdate Key',
@@ -1060,6 +1061,7 @@ class ACMECertificateDomain extends Model {
         $this->da_api = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_dada_api',
             conditions: ['method' => 'dns_da'],
             verbose_name: 'DirectAdmin API',
@@ -1119,6 +1121,7 @@ class ACMECertificateDomain extends Model {
         $this->dnsimple_oauth_token = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_dnsimplednsimple_oauth_token',
             conditions: ['method' => 'dns_dnsimple'],
             verbose_name: 'DNSimple OAuth Token',
@@ -1448,6 +1451,7 @@ class ACMECertificateDomain extends Model {
         $this->gd_key = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_gdgd_key',
             conditions: ['method' => 'dns_gd'],
             verbose_name: 'GoDaddy Key',
@@ -1978,6 +1982,7 @@ class ACMECertificateDomain extends Model {
         $this->namecom_token = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_namecomnamecom_token',
             conditions: ['method' => 'dns_namecom'],
             verbose_name: 'Name.com Token',
@@ -2099,6 +2104,7 @@ class ACMECertificateDomain extends Model {
         $this->nic_clientsecret = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_nicnic_clientsecret',
             conditions: ['method' => 'dns_nic'],
             verbose_name: 'NIC Client Secret',
@@ -2201,6 +2207,7 @@ class ACMECertificateDomain extends Model {
         $this->oci_cli_key = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_ocioci_cli_key',
             conditions: ['method' => 'dns_oci'],
             verbose_name: 'OCI CLI Key',
@@ -2389,6 +2396,7 @@ class ACMECertificateDomain extends Model {
         $this->rackspace_apikey = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_rackspacerackspace_apikey',
             conditions: ['method' => 'dns_rackspace'],
             verbose_name: 'Rackspace API Key',
@@ -2456,6 +2464,7 @@ class ACMECertificateDomain extends Model {
         $this->scaleway_api_token = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_scalewayscaleway_api_token',
             conditions: ['method' => 'dns_scaleway'],
             verbose_name: 'Scaleway API Token',
@@ -2790,6 +2799,7 @@ class ACMECertificateDomain extends Model {
         $this->yc_sa_key_file_pem_b64 = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_ycyc_sa_key_file_pem_b64',
             conditions: ['method' => 'dns_yc'],
             verbose_name: 'Yc Sa Key File PEM B64',
@@ -2815,6 +2825,7 @@ class ACMECertificateDomain extends Model {
         $this->zone_key = new StringField(
             default: '',
             allow_empty: true,
+            sensitive: true,
             internal_name: 'dns_zonezone_key',
             conditions: ['method' => 'dns_zone'],
             verbose_name: 'Zone Key',

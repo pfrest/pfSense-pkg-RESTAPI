@@ -6,6 +6,7 @@ use RESTAPI\Core\TestCase;
 use RESTAPI\Models\ACMEAccountKey;
 use RESTAPI\Models\ACMEAccountKeyRegister;
 use RESTAPI\Models\ACMECertificate;
+use RESTAPI\Models\ACMECertificateDomain;
 use RESTAPI\Models\ACMECertificateIssue;
 use RESTAPI\Models\ACMECertificateRenew;
 
@@ -91,5 +92,34 @@ class APIModelsACMECertificateTestCase extends TestCase {
         # Delete the ACME certificate
         $cert->delete();
         $this->assert_equals(ACMECertificate::read_all()->count(), 0);
+    }
+
+    /**
+     * Checks that secret-bearing ACMECertificate and ACMECertificateDomain fields are hidden from representations
+     * by default.
+     */
+    public function test_sensitive_fields(): void {
+        # Ensure the custom private key is hidden
+        $cert = new ACMECertificate(keylength: 'custom', keypaste: 'test');
+        $this->assert_is_false(array_key_exists('keypaste', $cert->to_representation()));
+
+        # Ensure secret-bearing domain validation method fields are hidden
+        $fields = [
+            'nsupdate_key',
+            'da_api',
+            'dnsimple_oauth_token',
+            'gd_key',
+            'namecom_token',
+            'nic_clientsecret',
+            'oci_cli_key',
+            'rackspace_apikey',
+            'scaleway_api_token',
+            'yc_sa_key_file_pem_b64',
+            'zone_key',
+        ];
+        $domain = new ACMECertificateDomain(data: array_fill_keys($fields, 'test'));
+        foreach ($fields as $field) {
+            $this->assert_is_false(array_key_exists($field, $domain->to_representation()));
+        }
     }
 }
