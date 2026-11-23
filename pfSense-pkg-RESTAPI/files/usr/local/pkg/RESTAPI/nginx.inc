@@ -27,6 +27,7 @@ function restapi_plugin_nginx(mixed $pluginparams): string {
                 fastcgi_index  index.php;
                 fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
                 fastcgi_param  HTTP_PROXY  \"\";
+                fastcgi_param  HTTP_AUTHORIZATION \$http_authorization;
                 fastcgi_read_timeout 180;
                 include        /usr/local/etc/nginx/fastcgi_params;
             }",
