@@ -2,7 +2,10 @@
 
 namespace RESTAPI\Models;
 
+require_once 'RESTAPI/autoloader.inc';
+
 use RESTAPI\Core\Model;
+use RESTAPI\Core\ModelSet;
 use RESTAPI\Dispatchers\HAProxyApplyDispatcher;
 use RESTAPI\Fields\Base64Field;
 use RESTAPI\Fields\BooleanField;
@@ -10,6 +13,7 @@ use RESTAPI\Fields\ForeignModelField;
 use RESTAPI\Fields\IntegerField;
 use RESTAPI\Fields\NestedModelField;
 use RESTAPI\Fields\StringField;
+use RESTAPI\Responses\ValidationError;
 use RESTAPI\Validators\RegexValidator;
 
 /**
@@ -19,6 +23,9 @@ class HAProxyFrontend extends Model {
     public StringField $name;
     public StringField $descr;
     public StringField $status;
+    public BooleanField $secondary;
+    public StringField $primary_frontend;
+    public BooleanField $ssloffload;
     public NestedModelField $a_extaddr;
     public IntegerField $max_connections;
     public StringField $type;
@@ -37,6 +44,13 @@ class HAProxyFrontend extends Model {
     public StringField $advanced_bind;
     public Base64Field $advanced;
 
+    /**
+     * Defines the frontend fields and native HAProxy configuration mapping.
+     * @param mixed $id The frontend ID, if reading or updating an existing frontend.
+     * @param mixed $parent_id The parent ID accepted by the Model interface.
+     * @param mixed $data The frontend representation.
+     * @param mixed ...$options Additional Model options.
+     */
     public function __construct(mixed $id = null, mixed $parent_id = null, mixed $data = [], ...$options) {
         # Set model attributes
         $this->config_path = 'installedpackages/haproxy/ha_backends/item';
@@ -66,6 +80,30 @@ class HAProxyFrontend extends Model {
             verbose_name: 'Status',
             help_text: 'The activation status for this HAProxy frontend.',
         );
+        $this->secondary = new BooleanField(
+            default: false,
+            indicates_true: 'yes',
+            indicates_false: '',
+            verbose_name: 'Shared Frontend',
+            help_text: 'Merge this frontend into an existing primary frontend, sharing its listening addresses and mode.',
+        );
+        # ForeignModelField eagerly constructs its target Model, so a self-reference would recurse.
+        $this->primary_frontend = new StringField(
+            default: null,
+            allow_null: true,
+            allow_empty: true,
+            verbose_name: 'Primary Frontend',
+            help_text: 'The name of an existing non-shared frontend. Required when secondary is true. ' .
+                'When replacing all frontends, include the primary before its shared frontends.',
+        );
+        $this->ssloffload = new BooleanField(
+            default: false,
+            indicates_true: 'yes',
+            indicates_false: '',
+            verbose_name: 'Shared Frontend SSL Offloading',
+            help_text: 'Use this shared frontend\'s additional certificate settings. ' .
+                'This does not enable TLS on the primary frontend\'s listening addresses.',
+        );
         $this->a_extaddr = new NestedModelField(
             model_class: 'HAProxyFrontendAddress',
             default: [],
@@ -80,10 +118,12 @@ class HAProxyFrontend extends Model {
             help_text: 'The maximum number of connections allowed by this frontend.',
         );
         $this->type = new StringField(
-            required: true,
+            default: null,
+            allow_null: true,
+            conditions: ['secondary' => false],
             choices: ['http', 'https', 'tcp'],
             verbose_name: 'Type',
-            help_text: 'The processing type for this frontend.',
+            help_text: 'The processing type for this frontend. Shared frontends inherit their primary frontend\'s type.',
         );
         $this->ha_acls = new NestedModelField(
             model_class: 'HAProxyFrontendACL',
@@ -203,6 +243,54 @@ class HAProxyFrontend extends Model {
         );
 
         parent::__construct($id, $parent_id, $data, ...$options);
+    }
+
+    /**
+     * Validates shared relationships without changing other frontends during validation or dry runs.
+     * @throws ValidationError When a shared frontend has an invalid primary or an update would orphan its children.
+     */
+    public function validate_extra(): void {
+        $original_name = $this->initial_object?->name->value;
+        if (!$this->secondary->value and $this->type->value === null) {
+            throw new ValidationError(message: 'Field `type` is required.', response_id: 'FIELD_IS_REQUIRED');
+        }
+        if ($this->secondary->value) {
+            if (
+                !$this->primary_frontend->value or
+                $this->primary_frontend->value === $this->name->value or
+                $original_name !== null and $this->primary_frontend->value === $original_name or
+                !$this->query(query_params: ['name' => $this->primary_frontend->value, 'secondary' => false])->exists()
+            ) {
+                throw new ValidationError(
+                    message: 'A shared frontend must reference an existing, distinct, non-shared primary frontend.',
+                    response_id: 'HAPROXY_FRONTEND_INVALID_PRIMARY_FRONTEND',
+                );
+            }
+        }
+
+        # Reparent shared frontends before renaming their primary or converting it into another shared frontend.
+        if ($original_name and ($this->name->value !== $original_name or $this->secondary->value)) {
+            $children = $this->query(query_params: ['secondary' => true, 'primary_frontend' => $original_name]);
+            if ($children->exists()) {
+                throw new ValidationError(
+                    message: 'A primary frontend referenced by shared frontends cannot be renamed or made shared.',
+                    response_id: 'HAPROXY_FRONTEND_PRIMARY_IN_USE',
+                );
+            }
+        }
+    }
+
+    /**
+     * Includes shared frontends in the standard protection against deleting referenced objects.
+     * @return ModelSet The objects referencing this frontend.
+     */
+    public function get_model_references(): ModelSet {
+        $references = parent::get_model_references();
+        # Primaries created in the GUI may retain their own name in primary_frontend; these are not references.
+        $name = $this->initial_object?->name->value ?? $this->name->value;
+        $children = $this->query(query_params: ['secondary' => true, 'primary_frontend' => $name]);
+        $references->model_objects = array_merge($references->model_objects, $children->model_objects);
+        return $references;
     }
 
     /**
